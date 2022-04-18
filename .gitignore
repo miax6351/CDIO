@@ -4,6 +4,7 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+/app/src/main/assets/best-fp16.tflite
 .DS_Store
 /build
 /captures
@@ -11,3 +12,5 @@
 
 /.gradle/
 /.idea/
+
+
