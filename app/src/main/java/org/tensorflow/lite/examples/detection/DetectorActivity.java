@@ -51,7 +51,7 @@ import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 
 
 enum SolitaireStates {
-    INITIAL, ANALYZE_CARD_MOVE, DISPLAY_HIDDEN_CARD, PICK_DECK_CARD
+    INITIAL, ANALYZE_CARD_MOVE, DISPLAY_HIDDEN_CARD, PICKUP_DECK_CARD
     /*
     INITIAL PHASE: First 7 cards are recognized and inserted into LinkedList "columns"
     ANALYZE_CARD_MOVE: Analyze which cards can be moved to where, and tells player to move
@@ -107,6 +107,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static int cardColumnCounter = 0;
     private static SolitaireStates gameState = SolitaireStates.INITIAL;
     private static Card movingCard;
+    private static int waitTimeCount = 0;
 
     private static void initializeCardColumns() {
         if (cardColumns == null) {
@@ -331,6 +332,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                                         System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
                                                                 + cardColumns[i] + "**********");
                                                     }
+                                                    waitNSeconds(10);
                                                     gameState = SolitaireStates.ANALYZE_CARD_MOVE;
                                                 } else {
                                                     cardColumnCounter++;
@@ -343,9 +345,31 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                             System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
                                             gameState = handleCheckShownCards();
                                             break;
+
                                         case DISPLAY_HIDDEN_CARD:
+                                            System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
+                                            if(!recognizedCardsContains(result.getTitle().trim())){
+                                                recognizedCards.add(new Card(result.getTitle()));
+                                                System.out.println("------- Find lately opened card " + result.getTitle() + "-------");
+                                                for (int i = 0; i < 7; i++) {
+                                                    if (cardColumns[i].isEmpty())
+                                                        cardColumns[i].add(result.getTitle());
+                                                }
+                                                waitTimeCount = 0;
+                                                gameState = SolitaireStates.ANALYZE_CARD_MOVE;
+                                            } else {
+                                                System.out.println("----------- Please wait open card. wait " + waitTimeCount + " round");
+                                                waitNSeconds(2);
+                                                waitTimeCount++;
+                                                if (waitTimeCount == 10) {
+                                                    System.out.println("----------------- No card to open. The column is empty, move one pile of card to this empty column and open a card +++++++++++++++++++++++++++++++++++");
+                                                    gameState = SolitaireStates.DISPLAY_HIDDEN_CARD;
+                                                    waitTimeCount = 0;
+                                                }
+                                            }
                                             break;
-                                        case PICK_DECK_CARD:
+                                        case PICKUP_DECK_CARD:
+                                            System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
                                             break;
                                         default:
                                             break;
@@ -424,10 +448,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     private boolean isCardCanBeUsed(String cardString, String title) {
-        int number = 0, number1 = 0;
-        char color, newColor;
-        String cardMatch1 = "";
-        String cardMatch2 = "";
+        int number, number1;
+        char color;
+        String cardMatch1;
+        String cardMatch2;
         String temp = "";
         number = getCardNumber(title);
         color = getCardColor(title);
@@ -471,8 +495,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 cardMatch1 = getCardMatch(number1, 'h').trim();
                 cardMatch2 = getCardMatch(number1, 'd').trim();
             }
-            System.out.println("************ CARD MATCH 1 " + cardMatch1
-                    + "******** CARD MATCH 2: "+ cardMatch2 );
+            //System.out.println("************ CARD MATCH 1 " + cardMatch1
+                  //  + "******** CARD MATCH 2: "+ cardMatch2 );
             for (int j = 0; j < 7; j++) {
                 if (cardColumns[j].isEmpty() || (i == j))
                     continue;
@@ -491,7 +515,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
         }
         // no card can be moved, then pickup new card
-        return SolitaireStates.PICK_DECK_CARD;
+        return SolitaireStates.PICKUP_DECK_CARD;
     }
 
     private void waitNSeconds(int i) {
@@ -512,6 +536,17 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 return card;
         }
         return null;
+    }
+
+    private boolean recognizedCardsContains(String title) {
+        ListIterator listIterator = recognizedCards.listIterator();
+        while(listIterator.hasNext()){
+            Card card = new Card((String) listIterator.next().toString().trim());
+            if(card.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
