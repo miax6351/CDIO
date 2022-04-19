@@ -35,16 +35,32 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
 import org.tensorflow.lite.examples.detection.env.BorderedText;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
+import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.DetectorFactory;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
+
+
+enum SolitaireStates {
+    INITIAL, ANALYZE_CARD_MOVE, DISPLAY_HIDDEN_CARD, PICK_DECK_CARD
+    /*
+    INITIAL PHASE: First 7 cards are recognized and inserted into LinkedList "columns"
+    ANALYZE_CARD_MOVE: Analyze which cards can be moved to where, and tells player to move
+    DISPLAY_HIDDEN_CARD: Tells the player to display a hidden card
+    or move another column to an empty column
+    PICK_DECK_CARD: With nothing to move, tells the player to pick up a card from the deck
+     */
+}
+
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -87,17 +103,20 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
      */
 
     private static LinkedList[] cardColumns = null;
-    private static LinkedList recognizedCards = new LinkedList<String>();
+    private static LinkedList recognizedCards = new LinkedList<Card>();
     private static int cardColumnCounter = 0;
+    private static SolitaireStates gameState = SolitaireStates.INITIAL;
+    private static Card movingCard;
 
-    private static void initializeCardColumns(){
-        if (cardColumns == null){
+    private static void initializeCardColumns() {
+        if (cardColumns == null) {
             cardColumns = new LinkedList[7];
-            for (int i = 0; i < 7; i++){
-                cardColumns[i] = new LinkedList<String>();
+            for (int i = 0; i < 7; i++) {
+                cardColumns[i] = new LinkedList<Card>();
             }
         }
     }
+
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         final float textSizePx =
@@ -195,8 +214,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 if (detector == null) {
                     return;
                 }
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 LOGGER.e(e, "Exception in updateActiveModel()");
                 Toast toast =
@@ -299,20 +317,38 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 /*
                                 GAME LOGIC
                                  */
-                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE){
-                                    if (!recognizedCards.contains(result.getTitle())){
-                                        System.out.println("RECOGNIZED SPECIFIC CARD:" +result.getTitle());
-                                        recognizedCards.add(result.getTitle());
-                                        cardColumns[cardColumnCounter].add(result.getTitle());
+                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
 
-                                        if (cardColumnCounter == 6){
-                                            for (int i = 0; i < 7; i++){
-                                                System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
-                                                        + cardColumns[i] + "**********");
+                                    switch (gameState) {
+                                        case INITIAL:
+                                            if (!recognizedCards.contains(result.getTitle())) {
+                                                System.out.println("RECOGNIZED SPECIFIC CARD:" + result.getTitle());
+                                                recognizedCards.add(result.getTitle());
+                                                cardColumns[cardColumnCounter].add(result.getTitle());
+
+                                                if (cardColumnCounter == 6) {
+                                                    for (int i = 0; i < 7; i++) {
+                                                        System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
+                                                                + cardColumns[i] + "**********");
+                                                    }
+                                                    gameState = SolitaireStates.ANALYZE_CARD_MOVE;
+                                                } else {
+                                                    cardColumnCounter++;
+                                                }
+
                                             }
-                                        } else {
-                                            cardColumnCounter++;
-                                        }
+                                            break;
+
+                                        case ANALYZE_CARD_MOVE:
+                                            System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
+                                            gameState = handleCheckShownCards();
+                                            break;
+                                        case DISPLAY_HIDDEN_CARD:
+                                            break;
+                                        case PICK_DECK_CARD:
+                                            break;
+                                        default:
+                                            break;
                                     }
                                 }
 
@@ -362,4 +398,120 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     protected void setNumThreads(final int numThreads) {
         runInBackground(() -> detector.setNumThreads(numThreads));
     }
+
+    private int getCardNumber(String title) {
+        char[] toArray = title.toCharArray();
+        if ((char) (toArray[0]) == 'A')
+            return 1;
+        if ((char) (toArray[0]) == 'J')
+            return 11;
+        else if ((char) (toArray[0]) == 'Q')
+            return 12;
+        else if ((char) (toArray[0]) == 'K')
+            return 13;
+        else if (((char) (toArray[0]) == '1') && ((char) (toArray[1]) == '0'))
+            return 10;
+        return Integer.parseInt(toArray[0] + "");
+    }
+
+    private String getCardMatch(int i, char c) {
+        String returnText = "";
+        if (i == 1) return "A" + c + "";
+        if (i == 11) return "J" + c + "";
+        else if (i == 12) return "Q" + c + "";
+        else if (i == 13) return "K" + c + "";
+        return (String) (returnText + i) + c + "";
+    }
+
+    private boolean isCardCanBeUsed(String cardString, String title) {
+        int number = 0, number1 = 0;
+        char color, newColor;
+        String cardMatch1 = "";
+        String cardMatch2 = "";
+        String temp = "";
+        number = getCardNumber(title);
+        color = getCardColor(title);
+        number1 = number + 1;
+        if (color == 'h' || color == 'd') {
+            cardMatch1 = getCardMatch(number1, 'c').trim();
+            cardMatch2 = getCardMatch(number1, 's').trim();
+        } else {
+            cardMatch1 = getCardMatch(number1, 'h').trim();
+            cardMatch2 = getCardMatch(number1, 'd').trim();
+        }
+        if (cardString.equalsIgnoreCase(cardMatch1) || cardString.equalsIgnoreCase(cardMatch2))
+            return true;
+        return false;
+    }
+
+    private char getCardColor(String title) {
+        if (title.charAt(1) != '0')
+            return title.charAt(1);
+        return title.charAt(2);
+    }
+
+    private SolitaireStates handleCheckShownCards() {
+        int number, number1;
+        char color;
+        String cardMatch1 = "";
+        String cardMatch2 = "";
+        String temp = "";
+
+        // then check if some card can be move to another list
+        for (int i = 0; i < 7; i++) {
+            if (cardColumns[i].isEmpty())
+                continue;
+            number = getCardNumber(cardColumns[i].getFirst().toString().trim());
+            color = getCardColor(cardColumns[i].getFirst().toString().trim());
+            number1 = number + 1;
+            if (color == 'h' || color == 'd') {
+                cardMatch1 = getCardMatch(number1, 'c').trim();
+                cardMatch2 = getCardMatch(number1, 's').trim();
+            } else {
+                cardMatch1 = getCardMatch(number1, 'h').trim();
+                cardMatch2 = getCardMatch(number1, 'd').trim();
+            }
+            System.out.println("************ CARD MATCH 1 " + cardMatch1
+                    + "******** CARD MATCH 2: "+ cardMatch2 );
+            for (int j = 0; j < 7; j++) {
+                if (cardColumns[j].isEmpty() || (i == j))
+                    continue;
+                temp = cardColumns[j].getLast().toString().trim().toLowerCase(Locale.ROOT);
+                if ((temp.equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.equals(cardMatch2.toLowerCase()))) {
+                    movingCard = getCard(cardColumns[i].getFirst().toString().trim());
+                    for (int k = 0; k < 5; k++) {
+                        waitNSeconds(1);
+                        System.out.println("-------- card " + movingCard.getTitle() + " can be moved to " + cardColumns[j].getLast() + "--------");
+                    }
+                    cardColumns[j].addAll(cardColumns[i]);
+                    cardColumns[i].clear();
+                    waitNSeconds(10);
+                    return SolitaireStates.DISPLAY_HIDDEN_CARD;
+                }
+            }
+        }
+        // no card can be moved, then pickup new card
+        return SolitaireStates.PICK_DECK_CARD;
+    }
+
+    private void waitNSeconds(int i) {
+        try {
+            System.out.println("******* WAIT " + i + " SEC **********");
+            Thread.sleep(i * 1000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            ex.printStackTrace();
+        }
+    }
+
+    private Card getCard(String title) {
+        ListIterator listIterator = recognizedCards.listIterator();
+        while (listIterator.hasNext()) {
+            Card card = new Card((String) listIterator.next().toString().trim());
+            if (card.getTitle().equals(title))
+                return card;
+        }
+        return null;
+    }
+
 }
