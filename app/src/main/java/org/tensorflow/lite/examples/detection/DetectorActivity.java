@@ -54,7 +54,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static final Logger LOGGER = new Logger();
 
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
-    private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.3f;
+    private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
+    //confidence level where the card recognized is accepted. To avoid wrong recognition
+    private static final float RECOGNIZED_CARD_CONFIDENCE = 0.85f;
     private static final boolean MAINTAIN_ASPECT = true;
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 640);
     private static final boolean SAVE_PREVIEW_BITMAP = false;
@@ -80,6 +82,22 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     private BorderedText borderedText;
 
+    /*
+    Rows
+     */
+
+    private static LinkedList[] cardColumns = null;
+    private static LinkedList recognizedCards = new LinkedList<String>();
+    private static int cardColumnCounter = 0;
+
+    private static void initializeCardColumns(){
+        if (cardColumns == null){
+            cardColumns = new LinkedList[7];
+            for (int i = 0; i < 7; i++){
+                cardColumns[i] = new LinkedList<String>();
+            }
+        }
+    }
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         final float textSizePx =
@@ -214,6 +232,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     @Override
     protected void processImage() {
+        //initializing card columns
+        initializeCardColumns();
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
@@ -236,6 +256,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         if (SAVE_PREVIEW_BITMAP) {
             ImageUtils.saveBitmap(croppedBitmap);
         }
+
 
         runInBackground(
                 new Runnable() {
@@ -274,6 +295,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
                                 result.setLocation(location);
                                 mappedRecognitions.add(result);
+
+                                /*
+                                GAME LOGIC
+                                 */
+                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE){
+                                    if (!recognizedCards.contains(result.getTitle())){
+                                        System.out.println("RECOGNIZED SPECIFIC CARD:" +result.getTitle());
+                                        recognizedCards.add(result.getTitle());
+                                        cardColumns[cardColumnCounter].add(result.getTitle());
+
+                                        if (cardColumnCounter == 6){
+                                            for (int i = 0; i < 7; i++){
+                                                System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
+                                                        + cardColumns[i] + "**********");
+                                            }
+                                        } else {
+                                            cardColumnCounter++;
+                                        }
+                                    }
+                                }
+
                             }
                         }
 
