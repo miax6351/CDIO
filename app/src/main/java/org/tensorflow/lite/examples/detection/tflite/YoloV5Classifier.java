@@ -385,7 +385,7 @@ public class YoloV5Classifier implements Classifier {
 //        float[][][] outbuf = new float[1][output_box][labels.size() + 5];
         outData.rewind();
         outputMap.put(0, outData);
-        Log.d("YoloV5Classifier", "mObjThresh: " + getObjThresh());
+        //Log.d("YoloV5Classifier", "mObjThresh: " + getObjThresh());
 
         Object[] inputArray = {imgData};
         tfLite.runForMultipleInputsOutputs(inputArray, outputMap);
@@ -396,7 +396,7 @@ public class YoloV5Classifier implements Classifier {
         ArrayList<Recognition> detections = new ArrayList<Recognition>();
 
         float[][][] out = new float[1][output_box][numClass + 5];
-        Log.d("YoloV5Classifier", "out[0] detect start");
+        //Log.d("YoloV5Classifier", "out[0] detect start");
         for (int i = 0; i < output_box; ++i) {
             for (int j = 0; j < numClass + 5; ++j) {
                 if (isModelQuantized){
@@ -436,8 +436,8 @@ public class YoloV5Classifier implements Classifier {
 
                 final float w = out[0][i][2];
                 final float h = out[0][i][3];
-                Log.d("YoloV5Classifier",
-                        Float.toString(xPos) + ',' + yPos + ',' + w + ',' + h);
+                //Log.d("YoloV5Classifier",
+                     //   Float.toString(xPos) + ',' + yPos + ',' + w + ',' + h);
 
                 final RectF rect =
                         new RectF(
@@ -450,7 +450,7 @@ public class YoloV5Classifier implements Classifier {
             }
         }
 
-        Log.d("YoloV5Classifier", "detect end");
+        //Log.d("YoloV5Classifier", "detect end");
         final ArrayList<Recognition> recognitions = nms(detections);
 //        final ArrayList<Recognition> recognitions = detections;
         return recognitions;
