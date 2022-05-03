@@ -678,8 +678,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         while (!continueGame){
             inactiveCount++;
             // loop until player presses done
-            if (inactiveCount >= 1000)
+            if (inactiveCount >= 1000){
+                continueGame = true;
                 break;
+            }
+
         }
     }
 
