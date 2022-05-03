@@ -30,7 +30,10 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -85,6 +88,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private MultiBoxTracker tracker;
 
     private BorderedText borderedText;
+
+    private Snackbar snackbar;
+
+    private boolean continueGame = true;
 
     /*
     Rows
@@ -463,6 +470,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     movingCard = getCard(cardColumns[i].getFirst().toString().trim());
                     for (int k = 0; k < 5; k++) {
                         waitNSeconds(1);
+                        waitPlayerOption("Move " + movingCard.getTitle() + " to " + cardColumns[j].getLast());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + cardColumns[j].getLast() + " ************");
                     }
                     cardColumns[j].addAll(cardColumns[i]);
@@ -628,6 +636,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 cardColumns[i].addLast(resultCardTitle);
                                 recognizedCards.add(new Card(resultCardTitle));
                                 for (int k = 0; k < 10; k++) {
+                                    waitPlayerOption("Move new card: " + resultCardTitle +" to " + oldListLast );
                                     System.out.println("------ new card " + resultCardTitle + " can be moved to " + oldListLast + "----------------------");
                                     waitNSeconds(1);
                                 }
@@ -650,6 +659,26 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 }
                 break;
             default:
+                break;
+        }
+    }
+    public void waitPlayerOption (String snackbarText) {
+        continueGame = false;
+        snackbar = Snackbar
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
+                .setAction("Done", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueGame = true;
+                        return;
+                    }
+                });
+        snackbar.show();
+        int inactiveCount = 0;
+        while (!continueGame){
+            inactiveCount++;
+            // loop until player presses done
+            if (inactiveCount >= 1000)
                 break;
         }
     }
