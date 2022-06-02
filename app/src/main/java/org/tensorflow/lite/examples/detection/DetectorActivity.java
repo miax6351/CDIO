@@ -97,7 +97,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     Rows
      */
     private static LinkedList[] cardColumns = null;
-    private static LinkedList recognizedCards = new LinkedList<Card>();
+    public static LinkedList recognizedCards = new LinkedList<Card>();
 
     private static int cardColumnCounter = 0;
     private static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
@@ -322,8 +322,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 GAME LOGIC
                                  */
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
-                                    String resultCardTitle = result.getTitle().toString().trim();
-                                    playGame(resultCardTitle);
+                                    Card card = new Card(result.getTitle().toString().trim());
+                                    //String resultCardTitle = result.getTitle().toString().trim();
+                                    playGame(card);
                                 }
 
                             }
@@ -503,11 +504,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return null;
     }
 
-    private boolean recognizedCardsContains(String title) {
+    public static boolean recognizedCardsContains(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
-            Card card = new Card((String) listIterator.next().toString().trim());
-            if (card.getTitle().trim().equals(title)) {
+            Card columnCard = new Card((String) listIterator.next().toString().trim());
+            if (columnCard.equals(card)) {
                 return true;
             }
         }
@@ -571,13 +572,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return removeCard;
     }
 
-    private void playGame(String resultCardTitle) {
+    private void playGame(Card resultCard) {
         switch (gameState) {
             case INITIAL:
-                if (!recognizedCards.contains(resultCardTitle)) {
-                    System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCardTitle);
-                    recognizedCards.add(resultCardTitle);
-                    cardColumns[cardColumnCounter].add(resultCardTitle);
+                if (!recognizedCards.contains(resultCard)) {
+                    System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
+                    recognizedCards.add(resultCard);
+                    cardColumns[cardColumnCounter].add(resultCard);
 
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
@@ -600,12 +601,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
-                if (!recognizedCardsContains(resultCardTitle)) {
-                    recognizedCards.add(new Card(resultCardTitle));
-                    System.out.println("------- Find lately opened card " + resultCardTitle + "-------");
+                if (!recognizedCardsContains(resultCard)) {
+                    recognizedCards.add(new Card(resultCard.toString()));
+                    System.out.println("------- Find lately opened card " + resultCard + "-------");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty())
-                            cardColumns[i].add(resultCardTitle);
+                            cardColumns[i].add(resultCard);
                     }
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                 } else {
@@ -626,18 +627,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
                 boolean cardCanBeUsed = false;
-                if (!recognizedCardsContains(resultCardTitle)) {
-                    System.out.println("-------- find a new card " + resultCardTitle + "-------");
-                    if (!cardsToFoundationPile(resultCardTitle)){
+                if (!recognizedCardsContains(resultCard)) {
+                    System.out.println("-------- find a new card " + resultCard + "-------");
+                    if (!cardsToFoundationPile(resultCard.toString())){
                         for (int i = 0; i < 7; i++) {
-                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(cardColumns[i].getLast().toString().trim(), resultCardTitle)) {
+                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(cardColumns[i].getLast().toString().trim(), resultCard.toString())) {
                                 // add the new card to the list
                                 String oldListLast = cardColumns[i].getLast().toString().trim();
-                                cardColumns[i].addLast(resultCardTitle);
-                                recognizedCards.add(new Card(resultCardTitle));
+                                cardColumns[i].addLast(resultCard);
+                                recognizedCards.add(new Card(resultCard.toString()));
                                 for (int k = 0; k < 10; k++) {
-                                    waitPlayerOption("Move new card: " + resultCardTitle +" to " + oldListLast );
-                                    System.out.println("------ new card " + resultCardTitle + " can be moved to " + oldListLast + "----------------------");
+                                    waitPlayerOption("Move new card: " + resultCard +" to " + oldListLast );
+                                    System.out.println("------ new card " + resultCard + " can be moved to " + oldListLast + "----------------------");
                                     waitNSeconds(1);
                                 }
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
@@ -649,7 +650,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         for (int k = 0; k < 10; k++) {
-                            System.out.println("------- " + resultCardTitle + " cannot be used anywhere, pick a new card.");
+                            System.out.println("------- " + resultCard + " cannot be used anywhere, pick a new card.");
                             waitNSeconds(1);
                         }
                     }
