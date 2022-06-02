@@ -374,8 +374,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         runInBackground(() -> detector.setNumThreads(numThreads));
     }
 
-    private int getCardNumber(String title) {
-        char[] toArray = title.toCharArray();
+    public static int getCardNumber(Card card) {
+
+        char[] toArray = card.getTitle().toCharArray();
         if ((char) (toArray[0]) == 'A')
             return 1;
         if ((char) (toArray[0]) == 'J')
@@ -398,14 +399,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return (String) (returnText + i) + c + "";
     }
 
-    private boolean isCardCanBeUsed(String cardString, String title) {
+    public boolean isCardCanBeUsed(String cardString, Card card) {
         int number, number1;
         char color;
         String cardMatch1;
         String cardMatch2;
         String temp = "";
-        number = getCardNumber(title);
-        color = getCardColor(title);
+        number = getCardNumber(card);
+        color = getCardColor(card);
         number1 = number + 1;
         if (color == 'h' || color == 'd') {
             cardMatch1 = getCardMatch(number1, 'c').trim();
@@ -419,10 +420,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return false;
     }
 
-    private char getCardColor(String title) {
-        if (title.charAt(1) != '0')
-            return title.charAt(1);
-        return title.charAt(2);
+    private char getCardColor(Card card) {
+
+        if (card.getTitle().charAt(1) != '0')
+            return card.getTitle().charAt(1);
+        return card.getTitle().charAt(2);
     }
 
     private SOLITARE_STATES handleCheckShownCards() {
@@ -436,7 +438,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         for (int i = 0; i < 7; i++) {
             if (cardColumns[i].isEmpty())
                 continue;
-            if(cardsToFoundationPile(cardColumns[i].getLast().toString().trim())) {
+            if(cardsToFoundationPile((Card) cardColumns[i].getLast())) {
                 // this opened card should be moved out to finished card queue
                 if(cardColumns[i].size() == 0) {
                     // this is the last card in the list
@@ -451,8 +453,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         for (int i = 0; i < 7; i++) {
             if (cardColumns[i].isEmpty())
                 continue;
-            number = getCardNumber(cardColumns[i].getFirst().toString().trim());
-            color = getCardColor(cardColumns[i].getFirst().toString().trim());
+            number = getCardNumber((Card) cardColumns[i].getFirst());
+            color = getCardColor( ((Card) cardColumns[i].getFirst()));
             number1 = number + 1;
             if (color == 'h' || color == 'd') {
                 cardMatch1 = getCardMatch(number1, 'c').trim();
@@ -515,57 +517,57 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return false;
     }
 
-    private boolean cardsToFoundationPile(String title) {
+    private boolean cardsToFoundationPile(Card card) {
         boolean removeCard = false;
-        char lastColor = getCardColor(title);
+        char lastColor = getCardColor(card);
         switch (lastColor) {
             case 's':
-                if (spades.isEmpty() && title.toLowerCase(Locale.ROOT).charAt(0) == 'a') {
+                if (spades.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     spades.add(new Card("As"));
                     removeCard = true;
-                } else if (!spades.isEmpty() && (getCardNumber(title) == getCardNumber(spades.getLast().getTitle()) + 1)) {
-                    spades.add(new Card(title));
+                } else if (!spades.isEmpty() && (getCardNumber(card) == getCardNumber(spades.getLast()) + 1)) {
+                    spades.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
                 break;
             case 'c':
-                if (clubs.isEmpty() && title.toLowerCase(Locale.ROOT).charAt(0) == 'a') {
+                if (clubs.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     clubs.add(new Card("Ac"));
                     removeCard = true;
 
-                } else if (!clubs.isEmpty() && (getCardNumber(title) == getCardNumber(clubs.getLast().getTitle()) + 1)) {
-                    clubs.add(new Card(title));
+                } else if (!clubs.isEmpty() && (getCardNumber(card) == getCardNumber(clubs.getLast()) + 1)) {
+                    clubs.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
                 break;
             case 'h':
-                if (hearts.isEmpty() && title.toLowerCase(Locale.ROOT).charAt(0) == 'a') {
+                if (hearts.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     hearts.add(new Card("Ah"));
                     removeCard = true;
-                } else if (!hearts.isEmpty() && (getCardNumber(title) == getCardNumber(hearts.getLast().getTitle()) + 1)) {
-                    hearts.add(new Card(title));
+                } else if (!hearts.isEmpty() && (getCardNumber(card) == getCardNumber(hearts.getLast()) + 1)) {
+                    hearts.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
                 break;
             case 'd':
-                if (diamonds.isEmpty() && title.toLowerCase(Locale.ROOT).charAt(0) == 'a') {
+                if (diamonds.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     diamonds.add(new Card("Ad"));
                     removeCard = true;
-                } else if (!diamonds.isEmpty() && (getCardNumber(title) == getCardNumber(diamonds.getLast().getTitle()) + 1)) {
-                    diamonds.add(new Card(title));
+                } else if (!diamonds.isEmpty() && (getCardNumber(card) == getCardNumber(diamonds.getLast()) + 1)) {
+                    diamonds.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
                 break;
         }
         if(removeCard) {
             for (int i = 0; i < 7; i++) {
-                if(!cardColumns[i].isEmpty() && cardColumns[i].getLast().toString().trim().equalsIgnoreCase(title)) {
-                    cardColumns[i].remove(title);
+                if(!cardColumns[i].isEmpty() && cardColumns[i].getLast().toString().trim().equalsIgnoreCase(card.getTitle())) {
+                    cardColumns[i].remove(card);
                     break;
                 }
             }
             for(int i = 0; i < 5; i++) {
-                System.out.println("------ move card " + title + " to foundation pile ------");
+                System.out.println("------ move card " + card + " to foundation pile ------");
                 waitNSeconds(1);
             }
         }
@@ -629,9 +631,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)) {
                     System.out.println("-------- find a new card " + resultCard + "-------");
-                    if (!cardsToFoundationPile(resultCard.toString())){
+                    if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
-                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(cardColumns[i].getLast().toString().trim(), resultCard.toString())) {
+                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(cardColumns[i].getLast().toString().trim(), resultCard)) {
                                 // add the new card to the list
                                 String oldListLast = cardColumns[i].getLast().toString().trim();
                                 cardColumns[i].addLast(resultCard);
