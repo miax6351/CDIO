@@ -40,5 +40,14 @@ public class DetectorActivityTest {
         assertEquals(10, DetectorActivity.getCardNumber(card));
     }
 
+    @org.junit.Test
+    @org.testng.annotations.Test
+    public void isCardCanBeUsed() {
+        Card card = new Card("10h");
+        Card resultCard = new Card("9s");
+        Card card2 = new Card("5s");
+        assertEquals(true, DetectorActivity.isCardCanBeUsed(card, resultCard));
+        assertEquals(false, DetectorActivity.isCardCanBeUsed(card2, resultCard));
+    }
 
 }

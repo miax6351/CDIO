@@ -390,7 +390,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return Integer.parseInt(toArray[0] + "");
     }
 
-    private String getCardMatch(int i, char c) {
+    private static String getCardMatch(int i, char c) {
         String returnText = "";
         if (i == 1) return "A" + c + "";
         if (i == 11) return "J" + c + "";
@@ -399,14 +399,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return (String) (returnText + i) + c + "";
     }
 
-    public boolean isCardCanBeUsed(String cardString, Card card) {
+    public static boolean isCardCanBeUsed(Card card, Card resultCard) {
         int number, number1;
         char color;
         String cardMatch1;
         String cardMatch2;
         String temp = "";
-        number = getCardNumber(card);
-        color = getCardColor(card);
+        number = getCardNumber(resultCard);
+        color = getCardColor(resultCard);
         number1 = number + 1;
         if (color == 'h' || color == 'd') {
             cardMatch1 = getCardMatch(number1, 'c').trim();
@@ -415,12 +415,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             cardMatch1 = getCardMatch(number1, 'h').trim();
             cardMatch2 = getCardMatch(number1, 'd').trim();
         }
-        if (cardString.equalsIgnoreCase(cardMatch1) || cardString.equalsIgnoreCase(cardMatch2))
+        if (card.getTitle().equalsIgnoreCase(cardMatch1) || card.getTitle().equalsIgnoreCase(cardMatch2))
             return true;
         return false;
     }
 
-    private char getCardColor(Card card) {
+    private static char getCardColor(Card card) {
 
         if (card.getTitle().charAt(1) != '0')
             return card.getTitle().charAt(1);
@@ -633,7 +633,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     System.out.println("-------- find a new card " + resultCard + "-------");
                     if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
-                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(cardColumns[i].getLast().toString().trim(), resultCard)) {
+                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard)) {
                                 // add the new card to the list
                                 String oldListLast = cardColumns[i].getLast().toString().trim();
                                 cardColumns[i].addLast(resultCard);
