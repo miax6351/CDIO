@@ -31,6 +31,13 @@ android {
         abortOnError false
     }
     namespace 'org.tensorflow.lite.examples.detection'
+    sourceSets {
+        main {
+            java {
+                srcDirs 'src\\main\\java', 'src\\test', 'src\\main\\java\\test', 'src\\main\\java\\2', 'src\\test\\java'
+            }
+        }
+    }
 }
 
 // import DownloadModels task

@@ -1,7 +1,6 @@
-package org.tensorflow.lite.examples.detection;
-
 import static org.junit.Assert.*;
 
+import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
 import org.testng.annotations.Test;
 

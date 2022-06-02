@@ -507,7 +507,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static boolean recognizedCardsContains(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
-            Card columnCard = new Card((String) listIterator.next().toString().trim());
+            Card columnCard =  (Card)listIterator.next();
             if (columnCard.equals(card)) {
                 return true;
             }
