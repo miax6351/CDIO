@@ -473,11 +473,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 temp = ((Card) cardColumns[j].getLast());
                 if ((temp.getTitle().equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.getTitle().equals(cardMatch2.toLowerCase()))) {
                     movingCard = (Card) cardColumns[i].getFirst();
-                    for (int k = 0; k < 5; k++) {
-                        waitNSeconds(1);
+                    //for (int k = 0; k < 5; k++) {
+                        //waitNSeconds(1);
                         waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
-                    }
+                    //}
                     cardColumns[j].addAll(cardColumns[i]);
                     cardColumns[i].clear();
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
@@ -568,10 +568,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     break;
                 }
             }
-            for(int i = 0; i < 5; i++) {
-                System.out.println("------ move card " + card + " to foundation pile ------");
-                waitNSeconds(1);
-            }
+            //for(int i = 0; i < 5; i++) {
+                waitPlayerOption("------ move card " + card + " to foundation pile ------");
+                //waitNSeconds(1);
+           // }
         }
         return removeCard;
     }
