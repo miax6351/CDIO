@@ -322,9 +322,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 GAME LOGIC
                                  */
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
-                                    Card card = new Card(result.getTitle().trim());
-                                    //String resultCardTitle = result.getTitle().toString().trim();
-                                    playGame(card);
+                                        Card resultCard = new Card(result.getTitle().trim());
+                                            playGame(resultCard);
+
+
+
                                 }
 
                             }
@@ -497,14 +499,16 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-    public static Card getCard(Card card) {
+
+    //previous called getCard and returned Card
+    public static boolean isCardDuplicate(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
             Card columnCard = (Card)listIterator.next();
-            if (columnCard.equals(card))
-                return columnCard;
+            if (columnCard.getTitle().equals(card.getTitle()))
+                return true;
         }
-        return null;
+        return false;
     }
 
     public static boolean recognizedCardsContains(Card card) {
@@ -578,7 +582,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private void playGame(Card resultCard) {
         switch (gameState) {
             case INITIAL:
-                if (!recognizedCards.contains(resultCard)) {
+                if (isCardDuplicate(resultCard)==false) {
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
                     recognizedCards.add(resultCard);
                     cardColumns[cardColumnCounter].add(resultCard);
