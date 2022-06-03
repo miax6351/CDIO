@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#BAFFEB3B"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imagepopup"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/cardaces"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <TextView
+        android:id="@+id/RulesHeader"
+        android:text="Regler"
+        android:textAlignment="center"
+        android:textSize="32dp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imagepopup"
+        />
+
+    <TextView
+        android:id="@+id/RulesText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="1. Der vendes altid tre kort af gangen fra Stock til Talon. Når der ikke længere kan vendes tre kort fra Stock resterer der nul, ét eller to kort i Stock med billedsiden nedad. Kortene i Talon vendes samlet og placeres under eventuelt resterende kort i Stock. Bemærk at dette er en afvigelse fra reglerne i ovenstående artikel.
+\n 2. Man kan ’vende bunken’ så mange gange man ønsker.
+\n 3. Hvis Talon et tom og der resteret ét eller to kort i Stock er disse kort låst og kabalen kan ikke gå op.
+\n 4. Det er ikke tilladt at flytte kort tilbage til Talon.
+\n 5. Kabalen er løst, når alle kort er i Foundation."
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/RulesHeader" />
+
+    <Button
+        android:id="@+id/popUpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="30dp"
+        android:background="@color/black"
+        android:text="Continue"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/RulesText"
+        app:layout_constraintVertical_bias="0.292" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
