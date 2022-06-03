@@ -471,7 +471,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     continue;
                 temp = cardColumns[j].getLast().toString().trim().toLowerCase(Locale.ROOT);
                 if ((temp.equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.equals(cardMatch2.toLowerCase()))) {
-                    movingCard = getCard(cardColumns[i].getFirst().toString().trim());
+                    movingCard = getCard((Card)cardColumns[i].getFirst());
                     for (int k = 0; k < 5; k++) {
                         waitNSeconds(1);
                         waitPlayerOption("Move " + movingCard.getTitle() + " to " + cardColumns[j].getLast());
@@ -497,12 +497,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-    private Card getCard(String title) {
+    public static Card getCard(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
-            Card card = new Card((String) listIterator.next().toString().trim());
-            if (card.getTitle().trim().equals(title))
-                return card;
+            Card columnCard = (Card)listIterator.next();
+            if (columnCard.equals(card))
+                return columnCard;
         }
         return null;
     }

@@ -57,4 +57,17 @@ public class DetectorActivityTest {
         Card card = new Card("10h");
         assertEquals('h', DetectorActivity.getCardColor(card));
     }
+
+
+    @org.junit.Test
+    @org.testng.annotations.Test
+    public void getCard() {
+        Card card = new Card("10h");
+        Card card1 = new Card("5h");
+        DetectorActivity.recognizedCards.add(card);
+        DetectorActivity.recognizedCards.add(new Card("11h"));
+        DetectorActivity.recognizedCards.add(new Card("9s"));
+        assertEquals(card, DetectorActivity.getCard(card));
+        assertEquals(null, DetectorActivity.getCard(card1));
+    }
 }
