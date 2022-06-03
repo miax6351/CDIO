@@ -27,6 +27,7 @@
         android:textAlignment="center"
         android:textColor="#333333"
         android:textSize="32dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imagepopup" />
