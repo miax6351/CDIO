@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
 
-
+import java.util.LinkedList;
 
 
 public class DetectorActivityTest {
@@ -65,5 +65,31 @@ public class DetectorActivityTest {
         DetectorActivity.recognizedCards.add(new Card("9s"));
         assertEquals(card, DetectorActivity.getCard(card));
         assertEquals(null, DetectorActivity.getCard(card1));
+    }
+
+    @Test
+    public void playGame() {
+        Card card1 = new Card("4d");
+        Card card2 = new Card("9c");
+        Card card3 = new Card("10c");
+        Card card4 = new Card("7h");
+        Card card5 = new Card("3h");
+        Card card6 = new Card("3s");
+        Card card7 = new Card("7c");
+        //fra stock
+        Card card8 = new Card("Jc");
+        DetectorActivity activity = new DetectorActivity();
+        activity.TESTMODE = true;
+        activity.initializeCardColumns();
+        activity.playGame(card1);
+
+       activity.playGame(card2);
+        activity.playGame(card3);
+        activity.playGame(card4);
+        activity.playGame(card5);
+        activity.playGame(card6);
+        activity.playGame(card7);
+        activity.playGame(card1);
+        activity.playGame(card8);
     }
 }
