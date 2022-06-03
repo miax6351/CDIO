@@ -19,7 +19,6 @@
 
     <application
         android:allowBackup="false"
-        android:debuggable="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/launcher_icon"
         android:installLocation="internalOnly"
