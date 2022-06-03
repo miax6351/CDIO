@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#BAFFEB3B"
+        android:background="#ffef5e"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -26,7 +26,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="Welcome to"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="#333333"
                 android:textSize="25dp" />
 
             <TextView
@@ -37,27 +37,27 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="7 Solitaire"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="#333333"
                 android:textSize="40dp" />
 
             <ImageView
                 android:id="@+id/LandingAcesImage"
                 android:layout_width="wrap_content"
-                android:layout_height="180dp"
-                android:layout_marginTop="80dp"
-                app:srcCompat="@drawable/cardaces" />
+                android:layout_height="230dp"
+                android:layout_marginTop="50dp"
+                app:srcCompat="@drawable/icon_single" />
 
             <Button
                 android:id="@+id/LandingEnterButton"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="120dp"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="-4dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="#333333"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Enter"
-                android:textColor="@color/black"
-                android:layout_marginStart="75dp"
+                android:textColor="@color/white"
                 app:cornerRadius="15dp" />
 
         </LinearLayout>
