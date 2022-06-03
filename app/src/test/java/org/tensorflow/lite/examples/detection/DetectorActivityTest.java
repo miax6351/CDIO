@@ -4,9 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
 
 import java.util.LinkedList;
@@ -63,8 +60,8 @@ public class DetectorActivityTest {
         DetectorActivity.recognizedCards.add(card);
         DetectorActivity.recognizedCards.add(new Card("11h"));
         DetectorActivity.recognizedCards.add(new Card("9s"));
-        assertEquals(card, DetectorActivity.getCard(card));
-        assertEquals(null, DetectorActivity.getCard(card1));
+        assertEquals(card, DetectorActivity.isCardDuplicate(card));
+        assertEquals(null, DetectorActivity.isCardDuplicate(card1));
     }
 
     @Test
