@@ -96,6 +96,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     /*
     Rows
      */
+    public static boolean TESTMODE = false;
     private static LinkedList[] cardColumns = null;
     public static LinkedList recognizedCards = new LinkedList<Card>();
 
@@ -112,7 +113,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static LinkedList<Card> hearts = new LinkedList<>();
     private static LinkedList<Card> diamonds = new LinkedList<>();
 
-    private static void initializeCardColumns() {
+    public void initializeCardColumns() {
         if (cardColumns == null) {
             cardColumns = new LinkedList[7];
             for (int i = 0; i < 7; i++) {
@@ -433,7 +434,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         char color;
         String cardMatch1 = "";
         String cardMatch2 = "";
-        String temp = "";
+        Card temp;
 
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
@@ -469,13 +470,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             for (int j = 0; j < 7; j++) {
                 if (cardColumns[j].isEmpty() || (i == j))
                     continue;
-                temp = cardColumns[j].getLast().toString().trim().toLowerCase(Locale.ROOT);
-                if ((temp.equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.equals(cardMatch2.toLowerCase()))) {
+                temp = ((Card) cardColumns[j].getLast());
+                if ((temp.getTitle().equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.getTitle().equals(cardMatch2.toLowerCase()))) {
                     movingCard = (Card) cardColumns[i].getFirst();
                     for (int k = 0; k < 5; k++) {
                         waitNSeconds(1);
-                        waitPlayerOption("Move " + movingCard.getTitle() + " to " + cardColumns[j].getLast());
-                        System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + cardColumns[j].getLast() + " ************");
+                        waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
+                        System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                     }
                     cardColumns[j].addAll(cardColumns[i]);
                     cardColumns[i].clear();
@@ -575,7 +576,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return removeCard;
     }
 
-    private void playGame(Card resultCard) {
+    public void playGame(Card resultCard) {
         switch (gameState) {
             case INITIAL:
                 if (!recognizedCards.contains(resultCard)) {
@@ -589,7 +590,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
                                     + card.getTitle().trim() + "**********");
                         }
-                        waitNSeconds(5);
+                        //waitNSeconds(5);
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     } else {
                         cardColumnCounter++;
@@ -668,6 +669,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
     public void waitPlayerOption (String snackbarText) {
+        if (TESTMODE == true){
+            System.out.println(snackbarText);
+            return;
+        }
+
         continueGame = false;
         snackbar = Snackbar
                 .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
