@@ -1,4 +1,4 @@
-/*package org.tensorflow.lite.examples.detection;
+package org.tensorflow.lite.examples.detection;
 
 import static org.junit.Assert.*;
 
@@ -14,16 +14,16 @@ import org.tensorflow.lite.examples.detection.logic.Card;
 
 public class DetectorActivityTest {
 
-    @org.testng.annotations.Test
+    @Test
     public void testGetCardNumber() {
         Card card = new Card("10h");
         assertEquals(10, DetectorActivity.getCardNumber(card));
     }
 
-    @org.junit.Test
 
 
-    @org.testng.annotations.Test
+
+    @Test
     public void recognizedCardsContains() {
         Card card = new Card("10h");
         DetectorActivity.recognizedCards.add(card);
@@ -33,15 +33,13 @@ public class DetectorActivityTest {
         assertEquals(10, DetectorActivity.getCardNumber(card));
     }
 
-    @org.junit.Test
-    @org.testng.annotations.Test
+    @Test
     public void getCardNumber() {
         Card card = new Card("10h");
         assertEquals(10, DetectorActivity.getCardNumber(card));
     }
 
-    @org.junit.Test
-    @org.testng.annotations.Test
+    @Test
     public void isCardCanBeUsed() {
         Card card = new Card("10h");
         Card resultCard = new Card("9s");
@@ -51,16 +49,14 @@ public class DetectorActivityTest {
     }
 
 
-    @org.junit.Test
-    @org.testng.annotations.Test
+    @Test
     public void getCardColor() {
         Card card = new Card("10h");
         assertEquals('h', DetectorActivity.getCardColor(card));
     }
 
 
-    @org.junit.Test
-    @org.testng.annotations.Test
+    @Test
     public void getCard() {
         Card card = new Card("10h");
         Card card1 = new Card("5h");
@@ -70,4 +66,4 @@ public class DetectorActivityTest {
         assertEquals(card, DetectorActivity.getCard(card));
         assertEquals(null, DetectorActivity.getCard(card1));
     }
-}*/
+}
