@@ -420,10 +420,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return false;
     }
 
-    private static char getCardColor(Card card) {
+    public static char getCardColor(Card card) {
 
-        if (card.getTitle().charAt(1) != '0')
+        if (card.getTitle().charAt(1) != '0') {
             return card.getTitle().charAt(1);
+        }
         return card.getTitle().charAt(2);
     }
 

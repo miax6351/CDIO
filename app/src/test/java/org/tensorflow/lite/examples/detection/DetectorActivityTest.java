@@ -50,4 +50,11 @@ public class DetectorActivityTest {
         assertEquals(false, DetectorActivity.isCardCanBeUsed(card2, resultCard));
     }
 
+
+    @org.junit.Test
+    @org.testng.annotations.Test
+    public void getCardColor() {
+        Card card = new Card("10h");
+        assertEquals('h', DetectorActivity.getCardColor(card));
+    }
 }
