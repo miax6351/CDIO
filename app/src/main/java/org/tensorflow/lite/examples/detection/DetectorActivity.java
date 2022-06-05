@@ -100,6 +100,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static LinkedList[] cardColumns = null;
     public static LinkedList recognizedCards = new LinkedList<Card>();
 
+    //Test//
+    public static Card from;
+    public static Card to;
+    //Test//
+
     private static int cardColumnCounter = 0;
     private static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
     private static Card movingCard;
@@ -479,6 +484,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         //waitNSeconds(1);
                         waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
+                        //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
+                        from = movingCard;
+                        to = ((Card) cardColumns[j].getLast());
                     //}
                     cardColumns[j].addAll(cardColumns[i]);
                     cardColumns[i].clear();
@@ -579,7 +587,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
         return removeCard;
     }
-
+    //returns two cards for tests, should return void when no testing.
     public void playGame(Card resultCard) {
         switch (gameState) {
             case INITIAL:
@@ -672,6 +680,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 break;
         }
     }
+
     public void waitPlayerOption (String snackbarText) {
         if (TESTMODE == true){
             System.out.println(snackbarText);
@@ -700,5 +709,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         }
     }
+    final class MyResult{
+        private final Card from;
+        private final Card to;
 
+        MyResult(Card from, Card to) {
+            this.from = from;
+            this.to = to;
+        }
+    }
 }
