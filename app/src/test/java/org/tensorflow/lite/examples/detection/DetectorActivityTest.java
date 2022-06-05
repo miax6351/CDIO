@@ -175,7 +175,7 @@ public class DetectorActivityTest {
             activity.playGame(revealedCard);
             dowhile++;
         }while(dowhile <= 6);
-
+        //test
         board.PrintBoard(board);
 
 
