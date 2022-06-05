@@ -193,7 +193,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         final int modelIndex = modelView.getCheckedItemPosition();
         final int deviceIndex = deviceView.getCheckedItemPosition();
         String threads = threadsTextView.getText().toString().trim();
-        final int numThreads = Integer.parseInt(threads);
+        final int numThreads = 8;
 
         handler.post(() -> {
             if (modelIndex == currentModel && deviceIndex == currentDevice
