@@ -193,7 +193,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         final int modelIndex = modelView.getCheckedItemPosition();
         final int deviceIndex = deviceView.getCheckedItemPosition();
         String threads = threadsTextView.getText().toString().trim();
-        final int numThreads = 8;
+        final int numThreads = Integer.parseInt(threads);
 
         handler.post(() -> {
             if (modelIndex == currentModel && deviceIndex == currentDevice
@@ -653,23 +653,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(new Card(resultCard.toString()));
-                                for (int k = 0; k < 10; k++) {
+                                //for (int k = 0; k < 10; k++) {
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
                                     System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLast + "----------------------");
-                                    waitNSeconds(1);
-                                }
+                                //    waitNSeconds(1);
+                               // }
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 cardCanBeUsed = true;
                                 break;
                             }
                         }
                     }
-                    if (!cardCanBeUsed) {
+                    if (!cardCanBeUsed && !recognizedCardsContains(resultCard)) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                        for (int k = 0; k < 10; k++) {
-                            System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            waitNSeconds(1);
-                        }
+                        //for (int k = 0; k < 10; k++) {
+                            waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                            //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                            //waitNSeconds(1);
+                    //    }
                     }
 
                 } else {
@@ -690,7 +691,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         continueGame = false;
         snackbar = Snackbar
                 .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("Done", new View.OnClickListener() {
+                .setAction("Done" +
+                        "\n\n\n\n", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
