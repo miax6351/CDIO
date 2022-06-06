@@ -460,11 +460,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         // then check if some card can be move to another list
         for (int i = 0; i < 7; i++) {
-            if (cardColumns[i].isEmpty())
-                continue;
             number = getCardNumber((Card) cardColumns[i].getFirst());
             color = getCardColor( ((Card) cardColumns[i].getFirst()));
             number1 = number + 1;
+
+            // check if king is shown and can be moved to empty column
+            if (cardColumns[i].isEmpty()){
+                for (int j = 0; j < 7; j++) {
+                    number = getCardNumber((Card) cardColumns[j].getFirst());
+                    if (number == 13 && !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
+                        System.out.println("------ move card " + cardColumns[j].getFirst() + "to card column " + i + "------");
+                        cardColumns[j] = cardColumns[i];
+                        ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
+                        cardColumns[i].clear();
+                    }
+                }
+                continue;
+            }
+
             if (color == 'h' || color == 'd') {
                 cardMatch1 = getCardMatch(number1, 'c').trim();
                 cardMatch2 = getCardMatch(number1, 's').trim();

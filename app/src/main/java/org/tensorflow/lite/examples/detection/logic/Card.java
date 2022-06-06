@@ -2,6 +2,7 @@ package org.tensorflow.lite.examples.detection.logic;
 
 public class Card {
     private String title;
+    private boolean lockedPosition = false;
 
     public Card(String title) {
         this.title = title;
@@ -35,7 +36,11 @@ public class Card {
         return Integer.parseInt(toArray[0] + "");
     }
 
+    public void setLockedPosition(boolean lockedPosition) {
+        this.lockedPosition = lockedPosition;
+    }
 
-
-
+    public boolean getLockedPosition(){
+        return lockedPosition;
+    }
 }
