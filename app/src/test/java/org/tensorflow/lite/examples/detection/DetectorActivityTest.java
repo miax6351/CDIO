@@ -40,11 +40,11 @@ class Board{
         if(!coloumnCards.get(x-1).isEmpty()){
             return coloumnCards.get(x-1).get(coloumnCards.get(x-1).size()-1);
         }
-        return new Card(" ")     ;
+        return new Card("NA");
     }
     public Card nextDeckCard(){
         nextDeckInt += 3;
-        if (nextDeckInt > deck.size()){
+        if (nextDeckInt >= deck.size()){
             nextDeckInt = nextDeckInt - deck.size();
         }
         return deck.get(nextDeckInt);
@@ -177,7 +177,11 @@ public class DetectorActivityTest {
         activity.TESTMODE = true;
         activity.initializeCardColumns();
         for (int i = 0; i < 7; i++){
-            activity.playGame(board.getFrontOfRow(i+1));
+            Card frontOfRowCard = board.getFrontOfRow(i+1);
+            if (!frontOfRowCard.getTitle().equals("NA")){
+                activity.playGame(frontOfRowCard);
+            }
+
         }
         activity.playGame(board.getCurrentDeckCard());
         int dowhile = 1;
@@ -186,14 +190,14 @@ public class DetectorActivityTest {
                 board.nextDeckCard();
             }
             if (DetectorActivity.moveToFoundationTest == true){
-                if (DetectorActivity.getCardColor(DetectorActivity.from) == 'h'){
-                    board.finishDeck.get(0).add(DetectorActivity.from);
-                }else if (DetectorActivity.getCardColor(DetectorActivity.from) == 'c'){
-                    board.finishDeck.get(1).add(DetectorActivity.from);
-                }else if (DetectorActivity.getCardColor(DetectorActivity.from) == 'd'){
-                    board.finishDeck.get(2).add(DetectorActivity.from);
-                }else if (DetectorActivity.getCardColor(DetectorActivity.from) == 's'){
-                    board.finishDeck.get(3).add(DetectorActivity.from);
+                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'h'){
+                    board.finishDeck.get(0).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'c'){
+                    board.finishDeck.get(1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'd'){
+                    board.finishDeck.get(2).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 's'){
+                    board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.from).getLast());
                 }
                 for (int i = 0; i < board.coloumnCards.size(); i++){
                     if (board.getFrontOfRow(i+1) == DetectorActivity.from){
@@ -203,23 +207,28 @@ public class DetectorActivityTest {
                 }
             }
             for (int i = 0; i < board.coloumnCards.size(); i++) {
-                if (board.getFrontOfRow(i + 1) == DetectorActivity.from) {
+                if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.from).getLast()) {
                     board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
                     revealedCard = board.getFrontOfRow(i + 1);
                 }
                 if (board.getFrontOfRow(i + 1) == DetectorActivity.to) {
-                    board.getRow(i + 1).add(DetectorActivity.from);
+                    board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
                 }
             }
             board.PrintBoard(board);
             if (DetectorActivity.pickupDeckCard == true){
                 activity.playGame(board.getCurrentDeckCard());
 
-            }else{activity.playGame(revealedCard);}
+            }else{
+                if (!revealedCard.getTitle().equals("NA")){
+                activity.playGame(revealedCard);
+                }
+            }
             if(DetectorActivity.moveCard == true){
                 if(board.getCurrentDeckCard() == DetectorActivity.fromDeck){
                     for(int i = 0; i < board.coloumnCards.size(); i++){
-                        if (board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.to){
+
+                        if ((!board.getRow(i+1).isEmpty()) &&(board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.to)){
                             board.getRow(i+1).add(DetectorActivity.fromDeck);
                             board.deck.remove(board.getCurrentDeckCard());
                             board.nextDeckCard();

@@ -101,7 +101,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static LinkedList recognizedCards = new LinkedList<Card>();
 
     //Test//
-    public static Card from;
+    public static List<Card> from = new LinkedList<Card>();
     public static Card to;
     public static Boolean pickupDeckCard = false;
     public static Boolean moveCard = false;
@@ -109,6 +109,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static  Boolean testDraw = false;
     public static Boolean moveToFoundationTest = false;
     //Test//
+
 
     private static int cardColumnCounter = 0;
     private static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
@@ -472,8 +473,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             // check if king is shown and can be moved to empty column
             if (cardColumns[i].isEmpty()){
                 for (int j = 0; j < 7; j++) {
-                    number = getCardNumber((Card) cardColumns[j].getFirst());
-                    if (number == 13 && !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
+                    String kings = ((Card) cardColumns[j].getFirst()).getTitle();
+                    if ((kings.equals("Kh") && kings.equals("Kd") && kings.equals("Kc") && kings.equals("Ks")) &&  !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
                         System.out.println("------ move card " + cardColumns[j].getFirst() + "to card column " + i + "------");
                         cardColumns[j] = cardColumns[i];
                         ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
@@ -503,7 +504,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                         //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
-                        from = movingCard;
+                        from.addAll(cardColumns[i]);
                         to = ((Card) cardColumns[j].getLast());
                     //}
                     cardColumns[j].addAll(cardColumns[i]);
@@ -600,7 +601,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
             //for(int i = 0; i < 5; i++) {
                 waitPlayerOption("------ move card " + card.getTitle() + " to foundation pile ------");
-                from = card;
+                from.add(card);
                 moveToFoundationTest = true;
                 //waitNSeconds(1);
            // }
