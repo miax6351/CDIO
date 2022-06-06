@@ -206,13 +206,21 @@ public class DetectorActivityTest {
                     }
                 }
             }
-            for (int i = 0; i < board.coloumnCards.size(); i++) {
-                if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.from).getLast()) {
-                    board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
-                    revealedCard = board.getFrontOfRow(i + 1);
-                }
-                if (board.getFrontOfRow(i + 1) == DetectorActivity.to) {
-                    board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+            if (DetectorActivity.moveCardColoumn == true){
+                for (int i = 0; i < board.coloumnCards.size(); i++) {
+                    if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.from).getLast()) {
+                        for (int j = 0; j <= DetectorActivity.from.size()-1; j++){
+                            board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                        }
+                        revealedCard = board.getFrontOfRow(i + 1);
+                    }
+                    if (board.getFrontOfRow(i + 1) == DetectorActivity.to) {
+                        for (int j = 0; j <= DetectorActivity.from.size()-1; j++){
+                            //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                            board.getRow(i + 1).add(DetectorActivity.from.get(j));
+                        }
+
+                    }
                 }
             }
             board.PrintBoard(board);

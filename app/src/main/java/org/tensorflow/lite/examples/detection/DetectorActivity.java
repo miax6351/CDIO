@@ -108,6 +108,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static Card fromDeck;
     public static  Boolean testDraw = false;
     public static Boolean moveToFoundationTest = false;
+    public static Boolean moveCardColoumn = true;
     //Test//
 
 
@@ -504,6 +505,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                         //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
+                        moveCardColoumn = true;
+                        from.clear();
                         from.addAll(cardColumns[i]);
                         to = ((Card) cardColumns[j].getLast());
                     //}
@@ -615,6 +618,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         moveCard = false;
         testDraw = false;
         moveToFoundationTest = false;
+        moveCardColoumn = false;
         //TEST//
         switch (gameState) {
             case INITIAL:
