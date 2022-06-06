@@ -460,7 +460,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         // then check if some card can be move to another list
         for (int i = 0; i < 7; i++) {
-            if (cardColumns[i].isEmpty() )
+            if (cardColumns[i].isEmpty())
                 continue;
             number = getCardNumber((Card) cardColumns[i].getFirst());
             color = getCardColor( ((Card) cardColumns[i].getFirst()));
