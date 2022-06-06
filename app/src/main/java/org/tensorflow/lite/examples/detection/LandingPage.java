@@ -25,12 +25,10 @@ public class LandingPage extends AppCompatActivity {
         switchToDetector.setOnClickListener(new View.OnClickListener(){
 
             @Override
-            public void onClick(View view){
-                //switchActivities();
+            public void onClick(View view) {
                 CreateRulesDialog();
-            };
-
-
+                //switchActivities();
+            }
         });
 
     }
@@ -60,9 +58,11 @@ public class LandingPage extends AppCompatActivity {
             public void onClick(View view) {
 
                 dialog.dismiss();
-                //switchActivities();
+                switchActivities();
             }
         });
 
     }
+
+
 }
