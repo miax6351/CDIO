@@ -19,6 +19,13 @@ public class Card {
         else if (i == 13) return "K" + c + "";
         return (String) (returnText + i) + c + "";
     }
+    public static char getCardColor(Card card) {
+
+        if (card.getTitle().charAt(1) != '0') {
+            return card.getTitle().charAt(1);
+        }
+        return card.getTitle().charAt(2);
+    }
 
     public int getCardNumber(String title) {
         char[] toArray = title.toCharArray();

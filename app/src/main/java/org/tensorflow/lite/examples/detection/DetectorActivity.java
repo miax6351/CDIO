@@ -103,6 +103,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     //Test//
     public static Card from;
     public static Card to;
+    public static Boolean pickupDeckCard = false;
+    public static Boolean moveCard = false;
+    public static Card fromDeck;
+    public static  Boolean testDraw = false;
+    public static Boolean moveToFoundationTest = false;
     //Test//
 
     private static int cardColumnCounter = 0;
@@ -117,6 +122,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static LinkedList<Card> clubs = new LinkedList<>();
     private static LinkedList<Card> hearts = new LinkedList<>();
     private static LinkedList<Card> diamonds = new LinkedList<>();
+    private static LinkedList<Card> finishedCard = new LinkedList<>();
 
     public void initializeCardColumns() {
         if (cardColumns == null) {
@@ -457,7 +463,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 return SOLITARE_STATES.ANALYZE_CARD_MOVE;
             }
         }
-
         // then check if some card can be move to another list
         for (int i = 0; i < 7; i++) {
             if (cardColumns[i].isEmpty())
@@ -575,13 +580,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
         if(removeCard) {
             for (int i = 0; i < 7; i++) {
-                if(!cardColumns[i].isEmpty() && cardColumns[i].getLast().toString().trim().equalsIgnoreCase(card.getTitle())) {
+                if(!cardColumns[i].isEmpty() && ((Card)cardColumns[i].getLast()).getTitle().equalsIgnoreCase(card.getTitle())) {
                     cardColumns[i].remove(card);
                     break;
                 }
             }
             //for(int i = 0; i < 5; i++) {
-                waitPlayerOption("------ move card " + card + " to foundation pile ------");
+                waitPlayerOption("------ move card " + card.getTitle() + " to foundation pile ------");
+                from = card;
+                moveToFoundationTest = true;
                 //waitNSeconds(1);
            // }
         }
@@ -589,6 +596,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
     //returns two cards for tests, should return void when no testing.
     public void playGame(Card resultCard) {
+        //TEST//
+        pickupDeckCard = false;
+        moveCard = false;
+        testDraw = false;
+        moveToFoundationTest = false;
+        //TEST//
         switch (gameState) {
             case INITIAL:
                 if (isCardDuplicate(resultCard)==false) {
@@ -643,21 +656,33 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 break;
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
+                //TEST//
+                pickupDeckCard = true;
+                moveCard = false;
+                //TEST
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)) {
                     System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
                     if (!cardsToFoundationPile(resultCard)){
+
                         for (int i = 0; i < 7; i++) {
-                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard)) {
+                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
                                 // add the new card to the list
                                 String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(new Card(resultCard.toString()));
-                                for (int k = 0; k < 10; k++) {
+                                //for (int k = 0; k < 10; k++) {
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
                                     System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLast + "----------------------");
-                                    waitNSeconds(1);
-                                }
+
+
+                                        fromDeck = resultCard;
+                                        to = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
+                                        moveCard = true;
+
+
+                                    //waitNSeconds(1);
+                                //}
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 cardCanBeUsed = true;
                                 break;
@@ -666,14 +691,19 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     }
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                        for (int k = 0; k < 10; k++) {
-                            System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            waitNSeconds(1);
-                        }
+                        //for (int k = 0; k < 10; k++) {
+                            //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                            waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                            testDraw = true;
+                            //  waitNSeconds(1);
+                        //}
                     }
 
                 } else {
-                    waitNSeconds(2);
+                    if(TESTMODE == false){
+                        waitNSeconds(2);
+                    }
+
                 }
                 break;
             default:
