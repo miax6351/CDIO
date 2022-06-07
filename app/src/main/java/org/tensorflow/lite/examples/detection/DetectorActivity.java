@@ -445,8 +445,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
-            if (cardColumns[i].isEmpty())
+            if (cardColumns[i].isEmpty()) {
+                moveKingToEmptyColumn(i);
                 continue;
+            }
             if(cardsToFoundationPile((Card) cardColumns[i].getLast())) {
                 // this opened card should be moved out to finished card queue
                 if(cardColumns[i].size() == 0) {
@@ -466,15 +468,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             // check if king is shown and can be moved to empty column
             if (cardColumns[i].isEmpty()){
-                for (int j = 0; j < 7; j++) {
-                    number = getCardNumber((Card) cardColumns[j].getFirst());
-                    if (number == 13 && !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
-                        System.out.println("------ move card " + cardColumns[j].getFirst() + "to card column " + i + "------");
-                        cardColumns[j] = cardColumns[i];
-                        ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
-                        cardColumns[i].clear();
-                    }
-                }
+
                 continue;
             }
 
@@ -543,6 +537,21 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
         return false;
     }
+
+    public void moveKingToEmptyColumn(int i){
+            int columnCard = getCardNumber((Card) cardColumns[i].getFirst());
+            if (cardColumns[i].isEmpty()) {
+                for (int j = 0; j < 7; j++) {
+                    columnCard = getCardNumber((Card) cardColumns[j].getFirst());
+                    if (columnCard == 13 && !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
+                        System.out.println("------ move card " + cardColumns[j].getFirst() + "to card column " + i + "------");
+                        cardColumns[j] = cardColumns[i];
+                        ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
+                        cardColumns[i].clear();
+                    }
+                }
+            }
+        }
 
     private boolean cardsToFoundationPile(Card card) {
         boolean removeCard = false;
