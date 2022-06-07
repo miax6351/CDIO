@@ -626,6 +626,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         if(removeCard) {
             for (int i = 0; i < 7; i++) {
                 if(!cardColumns[i].isEmpty() && ((Card)cardColumns[i].getLast()).getTitle().equalsIgnoreCase(card.getTitle())) {
+                    //TEST//
+                    DetectorActivity.fromTest.clear();
+                    //TEST//
                     cardColumns[i].remove(card);
                     break;
                 }

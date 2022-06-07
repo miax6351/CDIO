@@ -202,7 +202,7 @@ public class DetectorActivityTest {
                     board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
                 }
                 for (int i = 0; i < board.coloumnCards.size(); i++){
-                    if (board.getFrontOfRow(i+1).getTitle().equals(DetectorActivity.fromTest)){
+                    if (board.getFrontOfRow(i+1).equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
                         board.getRow(i+1).remove(board.coloumnCards.get(i).size()-1);
                         revealedCard = board.getFrontOfRow(i+1);
                     }
