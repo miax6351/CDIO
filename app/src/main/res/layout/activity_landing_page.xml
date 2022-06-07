@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffef5e"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/LandingWelcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Welcome to"
+                android:textAlignment="center"
+                android:textColor="#333333"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/LandingGameName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="7 Solitaire"
+                android:textAlignment="center"
+                android:textColor="#333333"
+                android:textSize="40dp" />
+
+            <ImageView
+                android:id="@+id/LandingAcesImage"
+                android:layout_width="wrap_content"
+                android:layout_height="230dp"
+                android:layout_marginTop="50dp"
+                app:srcCompat="@drawable/icon_single" />
+
+            <Button
+                android:id="@+id/LandingEnterButton"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="-4dp"
+                android:backgroundTint="#333333"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Enter"
+                android:textColor="@color/white"
+                app:cornerRadius="15dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
