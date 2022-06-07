@@ -102,14 +102,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static LinkedList deckCards = new LinkedList<Card>();
 
     //Test//
-    public static List<Card> from = new LinkedList<Card>();
-    public static Card to;
-    public static Boolean pickupDeckCard = false;
-    public static Boolean moveCard = false;
-    public static Card fromDeck;
-    public static  Boolean testDraw = false;
+    public static List<Card> fromTest = new LinkedList<Card>();
+    public static Card toTest;
+    public static Boolean pickupDeckCardTest = false;
+    public static Boolean moveCardTest = false;
+    public static Card fromDeckTest;
+    public static  Boolean drawTest = false;
     public static Boolean moveToFoundationTest = false;
-    public static Boolean moveCardColoumn = true;
+    public static Boolean moveCardColoumnTest = true;
     //Test//
 
 
@@ -424,16 +424,28 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         String temp = "";
         number = getCardNumber(resultCard);
         color = getCardColor(resultCard);
+
         number1 = number + 1;
         if (color == 'h' || color == 'd') {
             cardMatch1 = getCardMatch(number1, 'c').trim();
             cardMatch2 = getCardMatch(number1, 's').trim();
-        } else {
+        }  else {
             cardMatch1 = getCardMatch(number1, 'h').trim();
             cardMatch2 = getCardMatch(number1, 'd').trim();
         }
         if (card.getTitle().equalsIgnoreCase(cardMatch1) || card.getTitle().equalsIgnoreCase(cardMatch2))
             return true;
+        return false;
+    }
+
+    public Boolean isKingMovable(Card card){
+        if (card.getTitle().equals("Kh") && card.getTitle().equals("Kd") && card.getTitle().equals("Kc") && card.getTitle().equals("Ks")) {
+            for (int i = 0; i < 7; i++){
+                if (cardColumns[i].isEmpty()){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -506,10 +518,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                         //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
-                        moveCardColoumn = true;
-                        from.clear();
-                        from.addAll(cardColumns[i]);
-                        to = ((Card) cardColumns[j].getLast());
+                        moveCardColoumnTest = true;
+                        fromTest.clear();
+                        fromTest.addAll(cardColumns[i]);
+                        toTest = ((Card) cardColumns[j].getLast());
                     //}
                     cardColumns[j].addAll(cardColumns[i]);
                     cardColumns[i].clear();
@@ -547,7 +559,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
             Card columnCard =  (Card)listIterator.next();
-            if (columnCard.equals(card)) {
+            if (columnCard.getTitle().equals(card.getTitle())) {
                 return true;
             }
         }
@@ -605,7 +617,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
             //for(int i = 0; i < 5; i++) {
                 waitPlayerOption("------ move card " + card.getTitle() + " to foundation pile ------");
-                from.add(card);
+                fromTest.add(card);
                 moveToFoundationTest = true;
                 //waitNSeconds(1);
            // }
@@ -615,11 +627,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     //returns two cards for tests, should return void when no testing.
     public void playGame(Card resultCard) {
         //TEST//
-        pickupDeckCard = false;
-        moveCard = false;
-        testDraw = false;
+        pickupDeckCardTest = false;
+        moveCardTest = false;
+        drawTest = false;
         moveToFoundationTest = false;
-        moveCardColoumn = false;
+        moveCardColoumnTest = false;
         //TEST//
         switch (gameState) {
             case INITIAL:
@@ -639,7 +651,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     } else {
                         cardColumnCounter++;
                     }
-
                 }
                 break;
 
@@ -651,7 +662,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 if (!recognizedCardsContains(resultCard)) {
-                    recognizedCards.add(new Card(resultCard.toString()));
+                    recognizedCards.add(new Card(resultCard.getTitle()));
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty())
@@ -670,14 +681,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         waitTimeCount = 0;
+                       // pickupDeckCard = true;
                     }
                 }
                 break;
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
                 //TEST//
-                pickupDeckCard = true;
-                moveCard = false;
+                pickupDeckCardTest = true;
+                moveCardTest = false;
                 //TEST
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)) {
@@ -689,15 +701,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 // add the new card to the list
                                 String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
                                 cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.toString()));
+                                recognizedCards.add(new Card(resultCard.getTitle()));
                                 //for (int k = 0; k < 10; k++) {
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
                                     System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLast + "----------------------");
 
 
-                                        fromDeck = resultCard;
-                                        to = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
-                                        moveCard = true;
+                                        fromDeckTest = resultCard;
+                                        toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
+                                        moveCardTest = true;
 
 
                                     //waitNSeconds(1);
@@ -713,7 +725,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         //for (int k = 0; k < 10; k++) {
                             //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                             waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            testDraw = true;
+                            drawTest = true;
                             //  waitNSeconds(1);
                         //}
                     }

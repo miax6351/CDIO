@@ -186,45 +186,46 @@ public class DetectorActivityTest {
         activity.playGame(board.getCurrentDeckCard());
         int dowhile = 1;
         do {
-            if (DetectorActivity.testDraw == true){
+
+            if (DetectorActivity.drawTest == true){
                 board.nextDeckCard();
             }
             if (DetectorActivity.moveToFoundationTest == true){
-                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'h'){
-                    board.finishDeck.get(0).add(((LinkedList<Card>) DetectorActivity.from).getLast());
-                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'c'){
-                    board.finishDeck.get(1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
-                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'd'){
-                    board.finishDeck.get(2).add(((LinkedList<Card>) DetectorActivity.from).getLast());
-                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 's'){
-                    board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'h'){
+                    board.finishDeck.get(0).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'c'){
+                    board.finishDeck.get(1).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'd'){
+                    board.finishDeck.get(2).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 's'){
+                    board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
                 }
                 for (int i = 0; i < board.coloumnCards.size(); i++){
-                    if (board.getFrontOfRow(i+1) == DetectorActivity.from){
+                    if (board.getFrontOfRow(i+1) == DetectorActivity.fromTest){
                         board.getRow(i+1).remove(board.coloumnCards.get(i).size()-1);
                         revealedCard = board.getFrontOfRow(i+1);
                     }
                 }
             }
-            if (DetectorActivity.moveCardColoumn == true){
+            if (DetectorActivity.moveCardColoumnTest == true){
                 for (int i = 0; i < board.coloumnCards.size(); i++) {
-                    if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.from).getLast()) {
-                        for (int j = 0; j <= DetectorActivity.from.size()-1; j++){
+                    if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.fromTest).getLast()) {
+                        for (int j = 0; j <= DetectorActivity.fromTest.size()-1; j++){
                             board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
                         }
                         revealedCard = board.getFrontOfRow(i + 1);
                     }
-                    if (board.getFrontOfRow(i + 1) == DetectorActivity.to) {
-                        for (int j = 0; j <= DetectorActivity.from.size()-1; j++){
+                    if (board.getFrontOfRow(i + 1) == DetectorActivity.toTest) {
+                        for (int j = 0; j <= DetectorActivity.fromTest.size()-1; j++){
                             //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
-                            board.getRow(i + 1).add(DetectorActivity.from.get(j));
+                            board.getRow(i + 1).add(DetectorActivity.fromTest.get(j));
                         }
 
                     }
                 }
             }
             board.PrintBoard(board);
-            if (DetectorActivity.pickupDeckCard == true){
+            if (DetectorActivity.pickupDeckCardTest == true){
                 activity.playGame(board.getCurrentDeckCard());
 
             }else{
@@ -232,12 +233,12 @@ public class DetectorActivityTest {
                 activity.playGame(revealedCard);
                 }
             }
-            if(DetectorActivity.moveCard == true){
-                if(board.getCurrentDeckCard() == DetectorActivity.fromDeck){
+            if(DetectorActivity.moveCardTest == true){
+                if(board.getCurrentDeckCard() == DetectorActivity.fromDeckTest){
                     for(int i = 0; i < board.coloumnCards.size(); i++){
 
-                        if ((!board.getRow(i+1).isEmpty()) &&(board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.to)){
-                            board.getRow(i+1).add(DetectorActivity.fromDeck);
+                        if ((!board.getRow(i+1).isEmpty()) &&(board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.toTest)){
+                            board.getRow(i+1).add(DetectorActivity.fromDeckTest);
                             board.deck.remove(board.getCurrentDeckCard());
                             board.nextDeckCard();
                         }
