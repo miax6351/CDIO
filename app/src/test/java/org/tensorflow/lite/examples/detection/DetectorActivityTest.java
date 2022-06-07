@@ -14,12 +14,12 @@ import java.util.stream.Stream;
 class Board{
     public List<List<Card>> coloumnCards = new LinkedList<>();
     public List<Card> deck = new LinkedList<>();
-    public List<Card> finishDeck = new LinkedList<>();
-    private Integer nextDeckInt = 0;
+    public List<List<Card>> finishDeck = new LinkedList<>();
+    private Integer nextDeckInt = 2;
 
     public Board(List<Card> row1, List<Card> row2, List<Card> row3, List<Card> row4, List<Card> row5, List<Card> row6, List<Card> row7,
                  List<Card> deck,
-                 Card finish1, Card finish2, Card finish3, Card finish4) {
+                 List<Card> finish1, List<Card> finish2, List<Card> finish3, List<Card> finish4) {
         this.coloumnCards.add(row1);
         this.coloumnCards.add(row2);
         this.coloumnCards.add(row3);
@@ -37,20 +37,40 @@ class Board{
         return coloumnCards.get(x-1);
     }
     public Card getFrontOfRow( int x){
-        return coloumnCards.get(x-1).get(coloumnCards.get(x-1).size()-1);
+        if(!coloumnCards.get(x-1).isEmpty()){
+            return coloumnCards.get(x-1).get(coloumnCards.get(x-1).size()-1);
+        }
+        return new Card("NA");
     }
     public Card nextDeckCard(){
         nextDeckInt += 3;
-        if (nextDeckInt > deck.size()){
+        if (nextDeckInt >= deck.size()){
             nextDeckInt = nextDeckInt - deck.size();
         }
         return deck.get(nextDeckInt);
     }
 
+    public Card getCurrentDeckCard(){
+        return deck.get(nextDeckInt);
+    }
+
+    public  void moveToFoundation(Card card){
+
+    }
+
     public void PrintBoard(Board board){
+        for (int i = 0; i < 4; i++){
+            if (!board.finishDeck.get(i).isEmpty()){
+                System.out.print("f" + i + ": " + board.finishDeck.get(i).get(board.finishDeck.get(i).size()-1).getTitle() + "   ");
+            }else{
+                System.out.print("f" + i + ": ");
+            }
+        }
+        System.out.println();
         System.out.print("Row1     row2     row3     row4     row5     row6     row7     " + "Deck: " + board.deck.get(nextDeckInt).getTitle());
         System.out.println();
         int biggestRow = 0;
+
         for (int k = 6; k >= 0; k--){
             if(biggestRow < board.coloumnCards.get(k).size()){
                 biggestRow = board.coloumnCards.get(k).size();
@@ -146,35 +166,88 @@ public class DetectorActivityTest {
         List<Card> row6 = Stream.of(t.sq, t.h6, t.s10, t.hq, t.d6, t.s3).collect(Collectors.toList());
         List<Card> row7 = Stream.of(t.d5, t.dq, t.c4, t.c8, t.ha, t.c2, t.c7).collect(Collectors.toList());
         List<Card> deck = Stream.of(t.cj, t.hk, t.h5, t.d2, t.c6, t.s4, t.hj, t.s8, t.d10, t.s5, t.h8, t.h10, t.dk, t.h4, t.h9, t.d9, t.dq, t.sk, t.c3, t.c5, t.dj, t.sj, t.ck, t.sa).collect(Collectors.toList());
-        Card finish1 = null;
-        Card finish2 = null;
-        Card finish3 = null;
-        Card finish4 = null;
+        List<Card> finishh = new LinkedList<Card>();
+        List<Card> finishd = new LinkedList<Card>();
+        List<Card> finishs = new LinkedList<Card>();
+        List<Card> finishc = new LinkedList<Card>();
 
-        Board board = new Board(row1, row2, row3, row4, row5, row6, row7, deck, finish1, finish2, finish3, finish4);
+        Board board = new Board(row1, row2, row3, row4, row5, row6, row7, deck, finishh, finishd, finishs, finishc);
         board.PrintBoard(board);
         DetectorActivity activity = new DetectorActivity();
         activity.TESTMODE = true;
         activity.initializeCardColumns();
         for (int i = 0; i < 7; i++){
-            activity.playGame(board.getFrontOfRow(i+1));
+            Card frontOfRowCard = board.getFrontOfRow(i+1);
+            if (!frontOfRowCard.getTitle().equals("NA")){
+                activity.playGame(frontOfRowCard);
+            }
+
         }
-        activity.playGame(board.nextDeckCard());
+        activity.playGame(board.getCurrentDeckCard());
         int dowhile = 1;
         do {
-            for (int i = 0; i < board.coloumnCards.size(); i++) {
-                if (board.getFrontOfRow(i + 1) == DetectorActivity.from) {
-                    board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
-                    revealedCard = board.getFrontOfRow(i + 1);
+            if (DetectorActivity.testDraw == true){
+                board.nextDeckCard();
+            }
+            if (DetectorActivity.moveToFoundationTest == true){
+                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'h'){
+                    board.finishDeck.get(0).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'c'){
+                    board.finishDeck.get(1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 'd'){
+                    board.finishDeck.get(2).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.from).getLast()) == 's'){
+                    board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.from).getLast());
                 }
-                if (board.getFrontOfRow(i + 1) == DetectorActivity.to) {
-                    board.getRow(i + 1).add(DetectorActivity.from);
+                for (int i = 0; i < board.coloumnCards.size(); i++){
+                    if (board.getFrontOfRow(i+1) == DetectorActivity.from){
+                        board.getRow(i+1).remove(board.coloumnCards.get(i).size()-1);
+                        revealedCard = board.getFrontOfRow(i+1);
+                    }
+                }
+            }
+            if (DetectorActivity.moveCardColoumn == true){
+                for (int i = 0; i < board.coloumnCards.size(); i++) {
+                    if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.from).getLast()) {
+                        for (int j = 0; j <= DetectorActivity.from.size()-1; j++){
+                            board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                        }
+                        revealedCard = board.getFrontOfRow(i + 1);
+                    }
+                    if (board.getFrontOfRow(i + 1) == DetectorActivity.to) {
+                        for (int j = 0; j <= DetectorActivity.from.size()-1; j++){
+                            //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                            board.getRow(i + 1).add(DetectorActivity.from.get(j));
+                        }
+
+                    }
                 }
             }
             board.PrintBoard(board);
-            activity.playGame(revealedCard);
+            if (DetectorActivity.pickupDeckCard == true){
+                activity.playGame(board.getCurrentDeckCard());
+
+            }else{
+                if (!revealedCard.getTitle().equals("NA")){
+                activity.playGame(revealedCard);
+                }
+            }
+            if(DetectorActivity.moveCard == true){
+                if(board.getCurrentDeckCard() == DetectorActivity.fromDeck){
+                    for(int i = 0; i < board.coloumnCards.size(); i++){
+
+                        if ((!board.getRow(i+1).isEmpty()) &&(board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.to)){
+                            board.getRow(i+1).add(DetectorActivity.fromDeck);
+                            board.deck.remove(board.getCurrentDeckCard());
+                            board.nextDeckCard();
+                        }
+
+                    }
+                }
+            }
+
             dowhile++;
-        }while(dowhile <= 6);
+        }while(dowhile <= 200);
         //test
         board.PrintBoard(board);
 
