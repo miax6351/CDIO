@@ -48,8 +48,12 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        viewHolder.getCardSuit().setText(dataset.get(position).getTitle());
-        viewHolder.getCardRank().setText(dataset.get(position).getTitle());
+        Card card = dataset.get(position);
+        viewHolder.cardRank.setText(card.getTitle());
+        viewHolder.cardSuit.setText(card.getTitle());
+
+        //viewHolder.getCardSuit().setText(dataset.get(position).getTitle());
+        //viewHolder.getCardRank().setText(dataset.get(position).getTitle());
     }
 
     @Override

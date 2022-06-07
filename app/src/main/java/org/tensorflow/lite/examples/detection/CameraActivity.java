@@ -130,49 +130,49 @@ public abstract class CameraActivity extends AppCompatActivity
       requestPermission();
     }
 
-    recognizedCards.add(new Card("3H"));
+   recognizedCards.add(new Card("3H"));
     recognizedCards.add(new Card("3H"));
     recognizedCards.add(new Card("3H"));
     recognizedCards.add(new Card("3H"));
     recognizedCards.add(new Card("3H"));
 
-     //cardSuit in recyclerview (bottom sheet)
-    RecyclerView cardSuit = findViewById(R.id.textView_card_suit);
+    // cardSuit in recyclerview (bottom sheet)
+    RecyclerView cardSuit = findViewById(R.id.recycler_view_card_list);
     cardSuit.setLayoutManager(new LinearLayoutManager(this));
     CardListAdapter adapter = new CardListAdapter(recognizedCards);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
 
-    // cardRank in recyclerview (bottom sheet)
+  /*  // cardRank in recyclerview (bottom sheet)
     RecyclerView cardRank = findViewById(R.id.textView_card_rank);
     cardRank.setLayoutManager(new LinearLayoutManager(this));
     CardListAdapter adapter2 = new CardListAdapter(recognizedCards);
     adapter2.getItemCount();
     cardRank.setAdapter(adapter2);
+    */
 
-
-   // threadsTextView = findViewById(R.id.threads);
-    //currentNumThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
-    //plusImageView = findViewById(R.id.plus);
-    //minusImageView = findViewById(R.id.minus);
-    //deviceView = findViewById(R.id.device_list);
-    //deviceStrings.add("CPU");
-    //deviceStrings.add("GPU");
-    //deviceStrings.add("NNAPI");
-    //deviceView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+    threadsTextView = findViewById(R.id.threads);
+    currentNumThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
+    plusImageView = findViewById(R.id.plus);
+    minusImageView = findViewById(R.id.minus);
+    deviceView = findViewById(R.id.device_list);
+    deviceStrings.add("CPU");
+    deviceStrings.add("GPU");
+    deviceStrings.add("NNAPI");
+    deviceView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     ArrayAdapter<String> deviceAdapter =
             new ArrayAdapter<>(
                     CameraActivity.this , R.layout.deviceview_row, R.id.deviceview_row_text, deviceStrings);
-//    deviceView.setAdapter(deviceAdapter);
-//    deviceView.setItemChecked(defaultDeviceIndex, true);
+    deviceView.setAdapter(deviceAdapter);
+    deviceView.setItemChecked(defaultDeviceIndex, true);
     currentDevice = defaultDeviceIndex;
-  /*  deviceView.setOnItemClickListener(
+    deviceView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
               @Override
               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 updateActiveModel();
               }
-            });*/
+            });
 
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     gestureLayout = findViewById(R.id.gesture_layout);
@@ -181,20 +181,20 @@ public abstract class CameraActivity extends AppCompatActivity
     modelView = findViewById((R.id.model_list));
 
     modelStrings = getModelStrings(getAssets(), ASSET_PATH);
-//    modelView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+    modelView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     ArrayAdapter<String> modelAdapter =
             new ArrayAdapter<>(
                     CameraActivity.this , R.layout.listview_row, R.id.listview_row_text, modelStrings);
-//    modelView.setAdapter(modelAdapter);
-  //  modelView.setItemChecked(defaultModelIndex, true);
+    modelView.setAdapter(modelAdapter);
+    modelView.setItemChecked(defaultModelIndex, true);
     currentModel = defaultModelIndex;
-   /* modelView.setOnItemClickListener(
+    modelView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
               @Override
               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 updateActiveModel();
               }
-            });*/
+            });
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -247,8 +247,8 @@ public abstract class CameraActivity extends AppCompatActivity
     cropValueTextView = findViewById(R.id.crop_info);
     inferenceTimeTextView = findViewById(R.id.inference_info);
 
-//    plusImageView.setOnClickListener(this);
-  //  minusImageView.setOnClickListener(this);
+    plusImageView.setOnClickListener(this);
+    minusImageView.setOnClickListener(this);
   }
 
 
