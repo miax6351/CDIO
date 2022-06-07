@@ -35,6 +35,10 @@ public class Card {
         return Integer.parseInt(toArray[0] + "");
     }
 
+    public void fixCard(String title){
+        this.title = title;
+    }
+
 
 
 
