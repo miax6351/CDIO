@@ -59,6 +59,7 @@ class Board{
     }
 
     public void PrintBoard(Board board){
+        System.out.println("Round: " + DetectorActivity.roundCounterTest);
         for (int i = 0; i < 4; i++){
             if (!board.finishDeck.get(i).isEmpty()){
                 System.out.print("f" + i + ": " + board.finishDeck.get(i).get(board.finishDeck.get(i).size()-1).getTitle() + "   ");
