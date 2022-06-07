@@ -99,6 +99,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static boolean TESTMODE = false;
     private static LinkedList[] cardColumns = null;
     public static LinkedList recognizedCards = new LinkedList<Card>();
+    public static LinkedList deckCards = new LinkedList<Card>();
 
     //Test//
     public static List<Card> from = new LinkedList<Card>();
