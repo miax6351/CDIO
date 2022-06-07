@@ -103,6 +103,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     //Test//
     public static List<Card> fromTest = new LinkedList<Card>();
+    public static int toEmptyTest = -1;
     public static Card toTest;
     public static Boolean pickupDeckCardTest = false;
     public static Boolean moveCardTest = false;
@@ -118,6 +119,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
     private static Card movingCard;
     private static int waitTimeCount = 0;
+    private static int emptyColoumn = -1;
+
 
     /*
     Foundation piles
@@ -425,7 +428,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         String temp = "";
         number = getCardNumber(resultCard);
         color = getCardColor(resultCard);
-
+        if (isKingMovable(resultCard)){
+            return false;
+        }
         number1 = number + 1;
         if (color == 'h' || color == 'd') {
             cardMatch1 = getCardMatch(number1, 'c').trim();
@@ -439,10 +444,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         return false;
     }
 
-    public Boolean isKingMovable(Card card){
-        if (card.getTitle().equals("Kh") && card.getTitle().equals("Kd") && card.getTitle().equals("Kc") && card.getTitle().equals("Ks")) {
+    public static Boolean isKingMovable(Card card){
+        if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
             for (int i = 0; i < 7; i++){
                 if (cardColumns[i].isEmpty()){
+                    emptyColoumn = i;
                     return true;
                 }
             }
@@ -479,7 +485,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 return SOLITARE_STATES.ANALYZE_CARD_MOVE;
             }
 
-            //Card can be moved to another card idk lol
+            //Card can be moved to another column
             else{
             for (int j = 0; j<7; j++){
                 if (cardColumns[j].isEmpty() || (i == j))
@@ -642,6 +648,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         drawTest = false;
         moveToFoundationTest = false;
         moveCardColoumnTest = false;
+        emptyColoumn = -1;
         //TEST//
         roundCounterTest++;
         switch (gameState) {
@@ -714,16 +721,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         for (int i = 0; i < 7; i++) {
                             if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
                                 // add the new card to the list
-                                String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
+                                Card oldListLastCard = ((Card) cardColumns[i].getLast());
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(new Card(resultCard.getTitle()));
                                 //for (int k = 0; k < 10; k++) {
-                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
-                                    System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLast + "----------------------");
-
+                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard );
+                                    System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLastCard + "----------------------");
 
                                         fromDeckTest = resultCard;
-                                        toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
+                                        toTest = oldListLastCard;
                                         moveCardTest = true;
 
 
@@ -733,9 +739,23 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 cardCanBeUsed = true;
                                 break;
                             }
+                            else if(emptyColoumn != -1){
+                                // add the new card to the list
+                                cardColumns[emptyColoumn].addLast(resultCard);
+                                recognizedCards.add(new Card(resultCard.getTitle()));
+                                //for (int k = 0; k < 10; k++) {
+                                waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + "empty columnn" );
+                                System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
+
+                                fromDeckTest = resultCard;
+                                toEmptyTest = emptyColoumn;
+                                moveCardTest = true;
+                                emptyColoumn = -1;
+                            }
                         }
                     }
                     if (!cardCanBeUsed) {
+
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         //for (int k = 0; k < 10; k++) {
                             //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");

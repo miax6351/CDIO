@@ -202,11 +202,12 @@ public class DetectorActivityTest {
                     board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
                 }
                 for (int i = 0; i < board.coloumnCards.size(); i++){
-                    if (board.getFrontOfRow(i+1) == DetectorActivity.fromTest){
+                    if (board.getFrontOfRow(i+1).getTitle().equals(DetectorActivity.fromTest)){
                         board.getRow(i+1).remove(board.coloumnCards.get(i).size()-1);
                         revealedCard = board.getFrontOfRow(i+1);
                     }
                 }
+                DetectorActivity.moveToFoundationTest = false;
             }
             if (DetectorActivity.moveCardColoumnTest == true){
                 for (int i = 0; i < board.coloumnCards.size(); i++) {
@@ -243,8 +244,14 @@ public class DetectorActivityTest {
                             board.deck.remove(board.getCurrentDeckCard());
                             board.nextDeckCard();
                         }
+                        else if(DetectorActivity.toEmptyTest != -1){
+                            board.getRow(i+1).add(DetectorActivity.fromDeckTest);
+                            board.deck.remove(board.getCurrentDeckCard());
+                            DetectorActivity.toEmptyTest = -1;
+                        }
 
-                    }
+                        }
+
                 }
             }
 
