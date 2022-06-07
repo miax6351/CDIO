@@ -54,8 +54,8 @@ class Board{
         return deck.get(nextDeckInt);
     }
 
-    public  void moveToFoundation(Card card){
-
+    public void setCurrentCardDeckAferRemove(){
+        nextDeckInt--;
     }
 
     public void PrintBoard(Board board){
@@ -166,7 +166,7 @@ public class DetectorActivityTest {
         List<Card> row5 = Stream.of(t.s9, t.da, t.s6, t.ca, t.h3).collect(Collectors.toList());
         List<Card> row6 = Stream.of(t.sq, t.h6, t.s10, t.hq, t.d6, t.s3).collect(Collectors.toList());
         List<Card> row7 = Stream.of(t.d5, t.dq, t.c4, t.c8, t.ha, t.c2, t.c7).collect(Collectors.toList());
-        List<Card> deck = Stream.of(t.cj, t.hk, t.h5, t.d2, t.c6, t.s4, t.hj, t.s8, t.d10, t.s5, t.h8, t.h10, t.dk, t.h4, t.h9, t.d9, t.dq, t.sk, t.c3, t.c5, t.dj, t.sj, t.ck, t.sa).collect(Collectors.toList());
+        List<Card> deck = Stream.of(t.cj, t.hk, t.h5, t.d2, t.c6, t.s4, t.hj, t.s8, t.d10, t.s5, t.h8, t.h10, t.dk, t.h4, t.h9, t.d9, t.cq, t.sk, t.c3, t.c5, t.dj, t.sj, t.ck, t.sa).collect(Collectors.toList());
         List<Card> finishh = new LinkedList<Card>();
         List<Card> finishd = new LinkedList<Card>();
         List<Card> finishs = new LinkedList<Card>();
@@ -207,6 +207,10 @@ public class DetectorActivityTest {
                         revealedCard = board.getFrontOfRow(i+1);
                     }
                 }
+                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
+                    board.deck.remove(board.getCurrentDeckCard());
+                    board.setCurrentCardDeckAferRemove();
+                }
                 DetectorActivity.moveToFoundationTest = false;
             }
             if (DetectorActivity.moveCardColoumnTest == true){
@@ -242,7 +246,7 @@ public class DetectorActivityTest {
                         if ((!board.getRow(i+1).isEmpty()) &&(board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.toTest)){
                             board.getRow(i+1).add(DetectorActivity.fromDeckTest);
                             board.deck.remove(board.getCurrentDeckCard());
-                            board.nextDeckCard();
+                            board.setCurrentCardDeckAferRemove();
                         }
                         else if(DetectorActivity.toEmptyTest != -1){
                             board.getRow(i+1).add(DetectorActivity.fromDeckTest);
