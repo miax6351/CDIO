@@ -447,6 +447,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static Boolean isKingMovable(Card card){
         if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
             for (int i = 0; i < 7; i++){
+                //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
+                //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
+                //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
                 if (cardColumns[i].isEmpty()){
                     emptyColoumn = i;
                     return true;
@@ -687,9 +690,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(new Card(resultCard.getTitle()));
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
+
                     for (int i = 0; i < 7; i++) {
-                        if (cardColumns[i].isEmpty())
+                        if (cardColumns[i].isEmpty()){
                             cardColumns[i].add(resultCard);
+                            //Den skal break fordi hvis der er to tomme felter tilføjer den det nye fundne kort til begge lol
+                            break;
+                        }
+
+
                     }
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                 } else {
@@ -754,6 +763,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 toEmptyTest = emptyColoumn;
                                 moveCardTest = true;
                                 emptyColoumn = -1;
+                                cardCanBeUsed = true;
+                                break;
                             }
                         }
                     }else{

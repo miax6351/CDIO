@@ -16,6 +16,7 @@ class Board{
     public List<Card> deck = new LinkedList<>();
     public List<List<Card>> finishDeck = new LinkedList<>();
     private Integer nextDeckInt = 2;
+    public int forceMove = 0;
 
     public Board(List<Card> row1, List<Card> row2, List<Card> row3, List<Card> row4, List<Card> row5, List<Card> row6, List<Card> row7,
                  List<Card> deck,
@@ -237,6 +238,17 @@ public class DetectorActivityTest {
             }else{
                 if (!revealedCard.getTitle().equals("NA")){
                 activity.playGame(revealedCard);
+                }else{
+                    //Dette bliver brugt når ingen ting ændrer sig i et stykke tid derfor kaldes playGame med et tilfældigt kort så
+                    //main logikken selv skubber spillet videre ved at trække et nyt deck kort.
+                    board.forceMove++;
+                            if (board.forceMove == 3){
+                                for (int i = 0; i < board.coloumnCards.size(); i++){
+                                    if (!board.coloumnCards.get(i).isEmpty()){
+                                        activity.playGame(board.coloumnCards.get(i).get(0));
+                                    }
+                                }
+                            }
                 }
             }
             if(DetectorActivity.moveCardTest == true){
@@ -249,13 +261,14 @@ public class DetectorActivityTest {
                             board.setCurrentCardDeckAferRemove();
                         }
                         else if(DetectorActivity.toEmptyTest != -1){
-                            board.getRow(i+1).add(DetectorActivity.fromDeckTest);
-                            board.deck.remove(board.getCurrentDeckCard());
-                            DetectorActivity.toEmptyTest = -1;
+                            if (board.getRow(i+1).isEmpty()){
+                                board.getRow(i+1).add(DetectorActivity.fromDeckTest);
+                                board.deck.remove(board.getCurrentDeckCard());
+                                board.setCurrentCardDeckAferRemove();
+                                DetectorActivity.toEmptyTest = -1;
+                            }
                         }
-
                         }
-
                 }
             }
 
