@@ -16,6 +16,8 @@
 
 package org.tensorflow.lite.examples.detection;
 
+import static org.tensorflow.lite.examples.detection.DetectorActivity.recognizedCards;
+
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
@@ -38,6 +40,8 @@ import android.os.Trace;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Size;
 import android.view.Surface;
@@ -57,9 +61,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
+import org.tensorflow.lite.examples.detection.logic.Card;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
@@ -122,6 +129,26 @@ public abstract class CameraActivity extends AppCompatActivity
     } else {
       requestPermission();
     }
+
+    recognizedCards.add(new Card("3H"));
+    recognizedCards.add(new Card("3H"));
+    recognizedCards.add(new Card("3H"));
+    recognizedCards.add(new Card("3H"));
+    recognizedCards.add(new Card("3H"));
+
+    // cardSuit in recyclerview (bottom sheet)
+    RecyclerView cardSuit = findViewById(R.id.textView_card_suit);
+    cardSuit.setLayoutManager(new LinearLayoutManager(this));
+    CardListAdapter adapter = new CardListAdapter(recognizedCards);
+    adapter.getItemCount();
+    cardSuit.setAdapter(adapter);
+
+    // cardRank in recyclerview (bottom sheet)
+    RecyclerView cardRank = findViewById(R.id.textView_card_rank);
+    cardRank.setLayoutManager(new LinearLayoutManager(this));
+    CardListAdapter adapter2 = new CardListAdapter(recognizedCards);
+    adapter2.getItemCount();
+    cardRank.setAdapter(adapter2);
 
     threadsTextView = findViewById(R.id.threads);
     currentNumThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
