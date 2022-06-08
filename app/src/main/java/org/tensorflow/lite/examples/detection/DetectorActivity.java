@@ -339,10 +339,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                  */
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                         Card resultCard = new Card(result.getTitle().trim());
+                                        if (!recognizedCardsContains(resultCard)){
+                                            System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
+                                            recognizedCards.add(resultCard);
                                             playGame(resultCard);
-
-
-
+                                        }
                                 }
 
                             }
@@ -552,18 +553,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-
-    //previous called getCard and returned Card
-    public static boolean isCardDuplicate(Card card) {
-        ListIterator listIterator = recognizedCards.listIterator();
-        while (listIterator.hasNext()) {
-            Card columnCard = (Card)listIterator.next();
-            if (columnCard.getTitle().equals(card.getTitle()))
-                return true;
-        }
-        return false;
-    }
-
     public static boolean recognizedCardsContains(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
@@ -647,11 +636,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         switch (gameState) {
 
             case INITIAL:
-                if (isCardDuplicate(resultCard)==false) {
-                    System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
-                    recognizedCards.add(resultCard);
                     cardColumns[cardColumnCounter].add(resultCard);
-
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
                            Card card = (Card) cardColumns[i].getFirst();
@@ -660,10 +645,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         }
                         //waitNSeconds(5);
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                        return;
                     } else {
                         cardColumnCounter++;
                     }
-                }
+
                 break;
 
             case ANALYZE_CARD_MOVE:
@@ -673,32 +659,21 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
-                if (!recognizedCardsContains(resultCard)) {
-                    recognizedCards.add(new Card(resultCard.getTitle()));
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
-                        if (cardColumns[i].isEmpty())
+                        if (cardColumns[i].isEmpty()){
                             cardColumns[i].add(resultCard);
-                    }
-                    gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                } else {
-                    if (TESTMODE == false){
-                        System.out.println("----------- Please wait open card. wait " + waitTimeCount + " round");
+                            gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                            return;
+                        }
 
-                        waitNSeconds(2);
                     }
-                    waitTimeCount++;
-                    if (waitTimeCount == 5) {
-                        System.out.println("----------------- No card to open. The column is empty, if you have a K in one of your columns, move one pile of card to this empty column and open a card +++++++++++++++++++++++++++++++++++");
-                        gameState = SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
+                    waitPlayerOption("Pickup new card from deck!");
+                    System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
+                    gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                    // pickupDeckCard = true;
 
-                    } else if (waitTimeCount == 10){
-                        System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
-                        gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                        waitTimeCount = 0;
-                       // pickupDeckCard = true;
-                    }
-                }
+
                 break;
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
@@ -707,7 +682,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 moveCardTest = false;
                 //TEST
                 boolean cardCanBeUsed = false;
-                if (!recognizedCardsContains(resultCard)) {
                     System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
                     if (!cardsToFoundationPile(resultCard)){
 
@@ -716,12 +690,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 // add the new card to the list
                                 String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
                                 cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.getTitle()));
                                 //for (int k = 0; k < 10; k++) {
-                                recognizedCards.add(new Card(resultCard.toString()));
                                 //for (int k = 0; k < 10; k++) {
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
-                                    System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLast + "----------------------");
+                                    System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLast);
                                 //    waitNSeconds(1);
                                // }
 
@@ -739,7 +711,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             }
                         }
                     }
-                    if (!cardCanBeUsed && !recognizedCardsContains(resultCard)) {
+                    if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         //for (int k = 0; k < 10; k++) {
                             waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
@@ -748,18 +720,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     //    }
                         //for (int k = 0; k < 10; k++) {
                             //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                         //   waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                             drawTest = true;
                             //  waitNSeconds(1);
                         //}
                     }
-
-                } else {
-                    if(TESTMODE == false){
-                        waitNSeconds(2);
-                    }
-
-                }
                 break;
             default:
                 break;
