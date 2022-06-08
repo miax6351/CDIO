@@ -33,6 +33,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
@@ -668,15 +670,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
     public void waitPlayerOption (String snackbarText) {
         continueGame = false;
-        snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("Done", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        continueGame = true;
-                        return;
-                    }
-                });
+
+        snackbar = Snackbar.make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE);
+
+        // Custom snackbar
+        View customSnackbar = getLayoutInflater().inflate(R.layout.custom_snackbar, null);
+        snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
+        Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
+        snackbarLayout.setPadding(0,0,0,0);
+        snackbarLayout.addView(customSnackbar, 0);
+
+        //snackbar.setAction("Done", new View.OnClickListener()
+        (customSnackbar.findViewById(R.id.done_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                continueGame = true;
+                return;
+            }
+        });
         snackbar.show();
         int inactiveCount = 0;
         while (!continueGame){
