@@ -16,8 +16,6 @@
 
 package org.tensorflow.lite.examples.detection;
 
-import static org.tensorflow.lite.examples.detection.DetectorActivity.recognizedCards;
-
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
@@ -67,6 +65,7 @@ import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.Tableau;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
@@ -95,6 +94,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private Runnable postInferenceCallback;
   private Runnable imageConverter;
   protected ArrayList<String> modelStrings = new ArrayList<String>();
+  private Tableau tableau = Tableau.getInstance();
 
   private LinearLayout bottomSheetLayout;
   private LinearLayout gestureLayout;
@@ -140,7 +140,7 @@ public abstract class CameraActivity extends AppCompatActivity
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
     cardSuit.setLayoutManager(new LinearLayoutManager(this));
-    CardListAdapter adapter = new CardListAdapter(recognizedCards,this);
+    CardListAdapter adapter = new CardListAdapter(tableau.getCards(),this);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
 

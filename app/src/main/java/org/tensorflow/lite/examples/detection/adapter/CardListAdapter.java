@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.Tableau;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
     private LinkedList<Card> dataset;
     private Context context;
+    private Tableau tableau = Tableau.getInstance();
 
     public CardListAdapter(LinkedList dataset, Context context) {
         this.dataset = dataset;
@@ -115,6 +117,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 dataset.remove(viewHolder.getAdapterPosition());
+                tableau.removeCard(card);
                 notifyItemRemoved(viewHolder.getAdapterPosition());
             }
         });

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.Tableau;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -155,6 +156,7 @@ class allCards{
 
 
 public class DetectorActivityTest {
+    Tableau tableau = Tableau.getInstance();
 
     @Test
     public void testGetCardNumber() {
@@ -177,7 +179,7 @@ public class DetectorActivityTest {
         board.PrintBoard(board);
         DetectorActivity activity = new DetectorActivity();
         activity.TESTMODE = true;
-        activity.initializeCardColumns();
+        //TODO:activity.initializeCardColumns();
         for (int i = 0; i < 7; i++){
             Card frontOfRowCard = board.getFrontOfRow(i+1);
             if (!frontOfRowCard.getTitle().equals("NA")){
@@ -263,10 +265,10 @@ public class DetectorActivityTest {
     @Test
     public void recognizedCardsContains() {
         Card card = new Card("10h");
-        DetectorActivity.recognizedCards.add(card);
-        DetectorActivity.recognizedCards.add(new Card("11h"));
-        DetectorActivity.recognizedCards.add(new Card("9s"));
-        assertEquals(true, DetectorActivity.recognizedCardsContains(card));
+        tableau.getCards().add(card);
+        tableau.getCards().add(new Card("11h"));
+        tableau.getCards().add(new Card("9s"));
+        assertEquals(true, tableau.contains(card));
         assertEquals(10, DetectorActivity.getCardNumber(card));
     }
 
@@ -297,9 +299,9 @@ public class DetectorActivityTest {
     public void isDuplicateCard() {
         Card card = new Card("10h");
         Card card1 = new Card("5h");
-        DetectorActivity.recognizedCards.add(card);
-        DetectorActivity.recognizedCards.add(new Card("11h"));
-        DetectorActivity.recognizedCards.add(new Card("9s"));
+        tableau.addKnownCard(card);
+        tableau.addKnownCard(new Card("11h"));
+        tableau.addKnownCard(new Card("9s"));
         //assertEquals(card, DetectorActivity.isCardDuplicate(card));
         //assertEquals(null, DetectorActivity.isCardDuplicate(card1));
     }
@@ -317,7 +319,7 @@ public class DetectorActivityTest {
         Card card8 = new Card("Jc");
         DetectorActivity activity = new DetectorActivity();
         activity.TESTMODE = true;
-        activity.initializeCardColumns();
+        //TODO:activity.initializeCardColumns();
         activity.playGame(card1);
 
        activity.playGame(card2);

@@ -38,7 +38,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
@@ -48,6 +47,7 @@ import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
+import org.tensorflow.lite.examples.detection.logic.Tableau;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.DetectorFactory;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
@@ -59,7 +59,7 @@ import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
  */
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
-
+    public static Tableau tableau;
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
     private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     //confidence level where the card recognized is accepted. To avoid wrong recognition
@@ -97,8 +97,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     Rows
      */
     public static boolean TESTMODE = false;
-    private static LinkedList[] cardColumns = null;
-    public static LinkedList recognizedCards = new LinkedList<Card>();
     public static LinkedList deckCards = new LinkedList<Card>();
 
     //Test//
@@ -128,14 +126,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static LinkedList<Card> diamonds = new LinkedList<>();
     private static LinkedList<Card> finishedCard = new LinkedList<>();
 
-    public void initializeCardColumns() {
-        if (cardColumns == null) {
-            cardColumns = new LinkedList[7];
-            for (int i = 0; i < 7; i++) {
-                cardColumns[i] = new LinkedList<Card>();
-            }
-        }
-    }
+
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -272,7 +263,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     @Override
     protected void processImage() {
         //initializing card columns
-        initializeCardColumns();
+        // initializeCardColumns();
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
@@ -341,7 +332,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                         Card resultCard = new Card(result.getTitle().trim());
                                        // if (!recognizedCardsContains(resultCard)){
-
                                             playGame(resultCard);
                                        // }
                                 }
@@ -445,7 +435,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public Boolean isKingMovable(Card card){
         if (card.getTitle().equals("Kh") && card.getTitle().equals("Kd") && card.getTitle().equals("Kc") && card.getTitle().equals("Ks")) {
             for (int i = 0; i < 7; i++){
-                if (cardColumns[i].isEmpty()){
+                if (tableau.getAllCardColumns()[i].isEmpty()){
                     return true;
                 }
             }
@@ -470,9 +460,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 */
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
-            if((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
+            if((!tableau.getAllCardColumns()[i].isEmpty()) && cardsToFoundationPile((Card) tableau.getAllCardColumns()[i].getLast())) {
                 // this opened card should be moved out to finished card queue
-                if(cardColumns[i].isEmpty()) {
+                if(tableau.getAllCardColumns()[i].isEmpty()) {
                     // this is the last card in the list
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
@@ -483,44 +473,44 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             //Card can be moved to another card idk lol
             else{
             for (int j = 0; j < 7; j++){
-                if (cardColumns[i].isEmpty()){
+                if (tableau.getAllCardColumns()[i].isEmpty()){
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
-                if (cardColumns[j].isEmpty() || (i == j))
+                if (tableau.getAllCardColumns()[j].isEmpty() || (i == j))
                     continue;
-                if(isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j){
-                    movingCard = (Card) cardColumns[i].getFirst();
+                if(isCardCanBeUsed((Card) tableau.getAllCardColumns()[j].getLast(),(Card) tableau.getAllCardColumns()[i].getFirst()) && i!=j){
+                    movingCard = (Card) tableau.getAllCardColumns()[i].getFirst();
                     //for (int k = 0; k < 5; k++) {
                     //waitNSeconds(1);
-                    waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
-                    System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
-                    //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
+                    waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) tableau.getAllCardColumns()[j].getLast()).getTitle());
+                    System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) tableau.getAllCardColumns()[j].getLast()).getTitle() + " ************");
+                    //MyResult myResult = new MyResult(movingCard, ((Card) tableau.getAllCardColumns()[j].getLast()));
                     moveCardColoumnTest = true;
                     fromTest.clear();
-                    fromTest.addAll(cardColumns[i]);
-                    toTest = ((Card) cardColumns[j].getLast());
+                    fromTest.addAll(tableau.getAllCardColumns()[i]);
+                    toTest = ((Card) tableau.getAllCardColumns()[j].getLast());
                     //}
-                    cardColumns[j].addAll(cardColumns[i]);
-                    cardColumns[i].clear();
+                    tableau.getAllCardColumns()[j].addAll(tableau.getAllCardColumns()[i]);
+                    tableau.getAllCardColumns()[i].clear();
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
             }
             }
         }
         // then check if some card can be move to another list
-            /*number = getCardNumber((Card) cardColumns[i].getFirst());
-            color = getCardColor( ((Card) cardColumns[i].getFirst()));
+            /*number = getCardNumber((Card) tableau.getAllCardColumns()[i].getFirst());
+            color = getCardColor( ((Card) tableau.getAllCardColumns()[i].getFirst()));
             number1 = number + 1;*/
 
             // check if king is shown and can be moved to empty column
-           /* if (cardColumns[i].isEmpty()){
+           /* if (tableau.getAllCardColumns()[i].isEmpty()){
                 for (int j = 0; j < 7; j++) {
-                    String kings = ((Card) cardColumns[j].getFirst()).getTitle();
-                    if ((kings.equals("Kh") && kings.equals("Kd") && kings.equals("Kc") && kings.equals("Ks")) &&  !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
-                        System.out.println("------ move card " + cardColumns[j].getFirst() + "to card column " + i + "------");
-                        cardColumns[j] = cardColumns[i];
-                        ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
-                        cardColumns[i].clear();
+                    String kings = ((Card) tableau.getAllCardColumns()[j].getFirst()).getTitle();
+                    if ((kings.equals("Kh") && kings.equals("Kd") && kings.equals("Kc") && kings.equals("Ks")) &&  !((Card) tableau.getAllCardColumns()[j].getFirst()).getLockedPosition()) {
+                        System.out.println("------ move card " + tableau.getAllCardColumns()[j].getFirst() + "to card column " + i + "------");
+                        tableau.getAllCardColumns()[j] = tableau.getAllCardColumns()[i];
+                        ((Card) tableau.getAllCardColumns()[i].getFirst()).setLockedPosition(true);
+                        tableau.getAllCardColumns()[i].clear();
                     }
                 }
                 continue;
@@ -537,7 +527,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             //  + "******** CARD MATCH 2: "+ cardMatch2 );
          /*   for (int j = 0; j < 7; j++) {
 
-                temp = ((Card) cardColumns[j].getLast());
+                temp = ((Card) tableau.getAllCardColumns()[j].getLast());
                 if ((temp.getTitle().equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.getTitle().equals(cardMatch2.toLowerCase()))) {
 
                 }
@@ -556,16 +546,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-    public static boolean recognizedCardsContains(Card card) {
-        ListIterator listIterator = recognizedCards.listIterator();
-        while (listIterator.hasNext()) {
-            Card columnCard =  (Card)listIterator.next();
-            if (columnCard.getTitle().equals(card.getTitle())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private boolean cardsToFoundationPile(Card card) {
         boolean removeCard = false;
@@ -611,8 +591,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
         if(removeCard) {
             for (int i = 0; i < 7; i++) {
-                if(!cardColumns[i].isEmpty() && ((Card)cardColumns[i].getLast()).getTitle().equalsIgnoreCase(card.getTitle())) {
-                    cardColumns[i].remove(card);
+                if(!tableau.getAllCardColumns()[i].isEmpty() && ((Card)tableau.getAllCardColumns()[i].getLast()).getTitle().equalsIgnoreCase(card.getTitle())) {
+                    tableau.getAllCardColumns()[i].remove(card);
                     break;
                 }
             }
@@ -628,7 +608,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     //returns two cards for tests, should return void when no testing.
     public void playGame(Card resultCard) {
         //TEST//
-
         pickupDeckCardTest = false;
         moveCardTest = false;
         drawTest = false;
@@ -639,25 +618,25 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         switch (gameState) {
 
             case INITIAL:
-                if (!recognizedCardsContains(resultCard)){
+                if (!tableau.contains(resultCard)){
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
-                    recognizedCards.add(resultCard);
+                    tableau.addKnownCard(resultCard);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                            cardSuit.getAdapter().notifyItemInserted(tableau.getCards().size());
                         }
                     });
-                    cardColumns[cardColumnCounter].add(resultCard);
+                    tableau.getAllCardColumns()[cardColumnCounter].add(resultCard);
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
-                            Card card = (Card) cardColumns[i].getFirst();
+                            Card card = (Card) tableau.getAllCardColumns()[i].getFirst();
                             System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
                                     + card.getTitle().trim() + "**********");
                         }
                         //waitNSeconds(5);
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                        playGame((Card) (cardColumns[6].getFirst()));
+                        playGame((Card) (tableau.getAllCardColumns()[6].getFirst()));
                         return;
                     } else {
                         cardColumnCounter++;
@@ -673,17 +652,17 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
-                if (!recognizedCardsContains(resultCard)) {
-                    recognizedCards.add(new Card(resultCard.getTitle()));
+                if (!tableau.contains(resultCard)) {
+                    tableau.addKnownCard(new Card(resultCard.getTitle()));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                            cardSuit.getAdapter().notifyItemInserted(tableau.getCards().size());
                         }
                     });                    System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
-                        if (cardColumns[i].isEmpty()){
-                            cardColumns[i].add(resultCard);
+                        if (tableau.getAllCardColumns()[i].isEmpty()){
+                            tableau.getAllCardColumns()[i].add(resultCard);
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                         return;
 
@@ -707,27 +686,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 moveCardTest = false;
                 //TEST
                 boolean cardCanBeUsed = false;
-                if (!recognizedCardsContains(resultCard)){
+                if (!tableau.contains(resultCard)){
                     waitPlayerOption("Pick up new card from deck!");
                     System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
                     if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
-                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
+                            if ((!tableau.getAllCardColumns()[i].isEmpty()) && isCardCanBeUsed(((Card) tableau.getAllCardColumns()[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
                                 // add the new card to the list
-                                String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
-                                cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.getTitle()));
+                                String oldListLast = ((Card) tableau.getAllCardColumns()[i].getLast()).getTitle().trim();
+                                tableau.getAllCardColumns()[i].addLast(resultCard);
+                                tableau.addKnownCard(new Card(resultCard.getTitle()));
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                        cardSuit.getAdapter().notifyItemInserted(tableau.getCards().size());
                                     }
                                 });                                for (int k = 0; k < 10; k++) {
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
                                     System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLast);
                                 }
                                 fromDeckTest = resultCard;
-                                toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
+                                toTest = ((Card) tableau.getAllCardColumns()[i].get(tableau.getAllCardColumns()[i].size()-2));
                                 moveCardTest = true;
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 cardCanBeUsed = true;
