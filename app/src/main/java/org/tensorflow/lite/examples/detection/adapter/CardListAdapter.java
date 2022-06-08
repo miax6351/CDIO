@@ -4,11 +4,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,7 +68,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final Button cardSuit;
+        private final ImageButton cardSuit;
         private final Button cardRank;
 
         public ViewHolder(View view) {
@@ -75,13 +78,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
             cardRank = view.findViewById(R.id.textView_card_rank);
         }
 
-        public TextView getCardSuit() {
-            return cardSuit;
-        }
 
-        public TextView getCardRank() {
-            return cardRank;
-        }
     }
 
     @Override
@@ -98,17 +95,20 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
 
         if (Objects.equals(card.getSuit(), "H")) {
-            viewHolder.cardRank.setBackground();
+            viewHolder.cardSuit.setImageResource(R.drawable.heart);
         } else if (Objects.equals(card.getSuit(), "C")) {
-            viewHolder.cardRank.setBackground();
+            viewHolder.cardSuit.setImageResource(R.drawable.club);
+
         } else if (Objects.equals(card.getSuit(), "S")) {
-            viewHolder.cardRank.setBackground();
+            viewHolder.cardSuit.setImageResource(R.drawable.spade);
+
         } else if (Objects.equals(card.getSuit(), "D")) {
-            viewHolder.cardRank.setBackground();
+            viewHolder.cardSuit.setImageResource(R.drawable.diamond);
+
         }
 
-        //viewHolder.cardRank.setText(card.getRank());
-        viewHolder.cardSuit.setText(card.getSuit());
+        viewHolder.cardRank.setText(card.getRank());
+        //viewHolder.cardSuit.setText(card.getSuit());
 
 
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
