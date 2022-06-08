@@ -339,12 +339,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                  */
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                         Card resultCard = new Card(result.getTitle().trim());
-                                        if (!recognizedCardsContains(resultCard)){
-                                            System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
-                                            recognizedCards.add(resultCard);
+                                       // if (!recognizedCardsContains(resultCard)){
+
                                             playGame(resultCard);
-                                        }
+                                       // }
                                 }
+
+
 
                             }
                         }
@@ -468,11 +469,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 */
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
-            if (cardColumns[i].isEmpty())
-                continue;
-            if(cardsToFoundationPile((Card) cardColumns[i].getLast())) {
+            if((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
                 // this opened card should be moved out to finished card queue
-                if(cardColumns[i].size() == 0) {
+                if(cardColumns[i].isEmpty()) {
                     // this is the last card in the list
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
@@ -482,7 +481,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             //Card can be moved to another card idk lol
             else{
-            for (int j = 0; j<7; j++){
+            for (int j = 0; j < 7; j++){
+                if (cardColumns[i].isEmpty()){
+                    return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
+                }
                 if (cardColumns[j].isEmpty() || (i == j))
                     continue;
                 if(isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j){
@@ -636,19 +638,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         switch (gameState) {
 
             case INITIAL:
+                if (!recognizedCardsContains(resultCard)){
+                    System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
+                    recognizedCards.add(resultCard);
                     cardColumns[cardColumnCounter].add(resultCard);
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
-                           Card card = (Card) cardColumns[i].getFirst();
+                            Card card = (Card) cardColumns[i].getFirst();
                             System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
                                     + card.getTitle().trim() + "**********");
                         }
                         //waitNSeconds(5);
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                        playGame((Card) (cardColumns[6].getFirst()));
                         return;
                     } else {
                         cardColumnCounter++;
                     }
+                }
 
                 break;
 
@@ -659,6 +666,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
+                if (!recognizedCardsContains(resultCard)){
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty()){
@@ -666,12 +674,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                             return;
                         }
+                        if (i == 6){
+                            waitPlayerOption("Pickup new card from deck!");
+                            System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
+                            gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                            // pickupDeckCard = true;
 
+                        }
                     }
-                    waitPlayerOption("Pickup new card from deck!");
-                    System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
-                    gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                    // pickupDeckCard = true;
+                }
 
 
                 break;
@@ -682,6 +693,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 moveCardTest = false;
                 //TEST
                 boolean cardCanBeUsed = false;
+                if (!recognizedCardsContains(resultCard)){
                     System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
                     if (!cardsToFoundationPile(resultCard)){
 
@@ -692,18 +704,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 cardColumns[i].addLast(resultCard);
                                 //for (int k = 0; k < 10; k++) {
                                 //for (int k = 0; k < 10; k++) {
-                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
-                                    System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLast);
+                                waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
+                                System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLast);
                                 //    waitNSeconds(1);
-                               // }
+                                // }
 
 
-                                        fromDeckTest = resultCard;
-                                        toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
-                                        moveCardTest = true;
+                                fromDeckTest = resultCard;
+                                toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
+                                moveCardTest = true;
 
 
-                                    //waitNSeconds(1);
+                                //waitNSeconds(1);
                                 //}
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 cardCanBeUsed = true;
@@ -714,17 +726,19 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         //for (int k = 0; k < 10; k++) {
-                            waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            //waitNSeconds(1);
-                    //    }
+                        waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                        //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                        //waitNSeconds(1);
+                        //    }
                         //for (int k = 0; k < 10; k++) {
-                            //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                         //   waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                            drawTest = true;
-                            //  waitNSeconds(1);
+                        //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                        //   waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                        drawTest = true;
+                        //  waitNSeconds(1);
                         //}
                     }
+                }
+
                 break;
             default:
                 break;
