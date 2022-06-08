@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#BAFFEB3B"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent">
+        android:background="#ffef5e"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
+            android:layout_weight="1.1"
+            android:orientation="horizontal">
+659
             <TextView
                 android:id="@+id/LandingWelcome"
                 android:layout_width="match_parent"
@@ -26,41 +26,65 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="Welcome to"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="#333333"
                 android:textSize="25dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/LandingGameName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:fontFamily="@font/roboto_medium"
                 android:text="7 Solitaire"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="#333333"
                 android:textSize="40dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/LandingAcesImage"
-                android:layout_width="wrap_content"
-                android:layout_height="180dp"
-                android:layout_marginTop="80dp"
-                app:srcCompat="@drawable/cardaces" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/icon_single" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/LandingEnterButton"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="120dp"
-                android:layout_marginEnd="-4dp"
-                android:backgroundTint="@color/white"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="100dp"
+
+                android:layout_weight="1"
+                android:backgroundTint="#333333"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Enter"
-                android:textColor="@color/black"
-                android:layout_marginStart="75dp"
+                android:textColor="@color/white"
                 app:cornerRadius="15dp" />
-
         </LinearLayout>
+
 
     </LinearLayout>
 
