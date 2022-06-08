@@ -132,8 +132,8 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
 
-
 /*
+
     recognizedCards.add(new Card("5H"));
     recognizedCards.add(new Card("10S"));
     recognizedCards.add(new Card("3S"));
@@ -142,9 +142,9 @@ public abstract class CameraActivity extends AppCompatActivity
 
     recognizedCards.add(new Card("2D"));
 
-    recognizedCards.add(new Card("9C"));*/
+    recognizedCards.add(new Card("9C"));
 
-
+*/
 
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
