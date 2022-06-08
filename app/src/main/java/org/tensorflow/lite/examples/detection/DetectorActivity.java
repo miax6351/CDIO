@@ -116,7 +116,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
 
     private static int cardColumnCounter = 0;
-    private static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
+    public static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
     private static Card movingCard;
     private static int waitTimeCount = 0;
     private static int emptyColoumn = -1;
@@ -710,7 +710,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     waitTimeCount++;
                     if (waitTimeCount == 5) {
                         System.out.println("----------------- No card to open. The column is empty, if you have a K in one of your columns, move one pile of card to this empty column and open a card +++++++++++++++++++++++++++++++++++");
-                        gameState = SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
+                        gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
 
                     } else if (waitTimeCount == 10){
                         System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");

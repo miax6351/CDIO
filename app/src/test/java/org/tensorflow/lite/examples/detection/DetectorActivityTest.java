@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -44,19 +45,43 @@ class Board{
         return new Card("NA");
     }
     public Card nextDeckCard(){
-        nextDeckInt += 3;
-        if (nextDeckInt >= deck.size()){
-            nextDeckInt = nextDeckInt - deck.size();
+        //hvis der er mere end 3 kort i decket:
+        if (!(deck.size() < 2)){
+            nextDeckInt += 3;
+            if (nextDeckInt >= deck.size()){
+                nextDeckInt = nextDeckInt - deck.size();
+            }
+            return deck.get(nextDeckInt);
+            //Hvis der er mindre end 3 kort i decket skal den ikke kunne draw et nyt ved mindre den ligger et kort
+        }else{
+            nextDeckInt = deck.size()-1;
+            return deck.get(nextDeckInt);
         }
-        return deck.get(nextDeckInt);
+
     }
 
     public Card getCurrentDeckCard(){
-        return deck.get(nextDeckInt);
+        if (!deck.isEmpty()){
+            return deck.get(nextDeckInt);
+        }
+        Card card = new Card("WA");
+        return card;
     }
 
     public void setCurrentCardDeckAferRemove(){
-        nextDeckInt--;
+        //Hvis decket er tomt
+        if (deck.isEmpty()){
+            DetectorActivity.pickupDeckCardTest = false;
+            return;
+        }
+
+        //hvis det øverste kort fjernes skal man bare trække en ny fra bunken
+        if (nextDeckInt == 0){
+            nextDeckCard();
+        }else{
+            nextDeckInt--;
+        }
+
     }
 
     public void PrintBoard(Board board){
@@ -69,7 +94,11 @@ class Board{
             }
         }
         System.out.println();
-        System.out.print("Row1     row2     row3     row4     row5     row6     row7     " + "Deck: " + board.deck.get(nextDeckInt).getTitle());
+        if (board.deck.isEmpty()){
+            System.out.print("Row1     row2     row3     row4     row5     row6     row7     " + "Deck: " + "empty");
+        }else{
+            System.out.print("Row1     row2     row3     row4     row5     row6     row7     " + "Deck: " + board.deck.get(nextDeckInt).getTitle());
+        }
         System.out.println();
         int biggestRow = 0;
 
@@ -160,14 +189,23 @@ public class DetectorActivityTest {
     public void testGetCardNumber() {
         allCards t = new allCards();
         Card revealedCard = new Card("");
-        List<Card> row1 = Stream.of(t.d4).collect(Collectors.toList());
+        /*List<Card> row1 = Stream.of(t.d4).collect(Collectors.toList());
         List<Card> row2 = Stream.of(t.d7, t.c9).collect(Collectors.toList());
         List<Card> row3 = Stream.of(t.d8, t.s7, t.c10).collect(Collectors.toList());
         List<Card> row4 = Stream.of(t.h2, t.d3, t.s2, t.h7).collect(Collectors.toList());
         List<Card> row5 = Stream.of(t.s9, t.da, t.s6, t.ca, t.h3).collect(Collectors.toList());
         List<Card> row6 = Stream.of(t.sq, t.h6, t.s10, t.hq, t.d6, t.s3).collect(Collectors.toList());
-        List<Card> row7 = Stream.of(t.d5, t.dq, t.c4, t.c8, t.ha, t.c2, t.c7).collect(Collectors.toList());
-        List<Card> deck = Stream.of(t.cj, t.hk, t.h5, t.d2, t.c6, t.s4, t.hj, t.s8, t.d10, t.s5, t.h8, t.h10, t.dk, t.h4, t.h9, t.d9, t.cq, t.sk, t.c3, t.c5, t.dj, t.sj, t.ck, t.sa).collect(Collectors.toList());
+        List<Card> row7 = Stream.of(t.d5, t.cq, t.c4, t.c8, t.ha, t.c2, t.c7).collect(Collectors.toList());
+        List<Card> deck = Stream.of(t.cj, t.hk, t.h5, t.d2, t.c6, t.s4, t.hj, t.s8, t.d10, t.s5, t.h8, t.h10, t.dk, t.h4, t.h9, t.d9, t.dq, t.sk, t.c3, t.c5, t.dj, t.sj, t.ck, t.sa).collect(Collectors.toList());
+        */
+        List<Card> row1 = Stream.of(t.cq).collect(Collectors.toList());
+        List<Card> row2 = Stream.of(t.s4, t.ca).collect(Collectors.toList());
+        List<Card> row3 = Stream.of(t.s10, t.ha, t.sa).collect(Collectors.toList());
+        List<Card> row4 = Stream.of(t.c9, t.h7, t.d9, t.c6).collect(Collectors.toList());
+        List<Card> row5 = Stream.of(t.s3, t.d10, t.h10, t.c7, t.h5).collect(Collectors.toList());
+        List<Card> row6 = Stream.of(t.h8, t.dj, t.c10, t.h3, t.c8, t.s9).collect(Collectors.toList());
+        List<Card> row7 = Stream.of(t.dq, t.cj, t.d4, t.d3, t.d2, t.s2, t.c2).collect(Collectors.toList());
+        List<Card> deck = Stream.of(t.h4, t.c3, t.h2, t.dk, t.sj, t.sq, t.hq, t.c4, t.d6, t.c5, t.s8, t.sk, t.hk, t.d5, t.h9, t.s5, t.d7, t.hj, t.s7, t.d8, t.da, t.h6, t.s6, t.ck).collect(Collectors.toList());
         List<Card> finishh = new LinkedList<Card>();
         List<Card> finishd = new LinkedList<Card>();
         List<Card> finishs = new LinkedList<Card>();
@@ -209,8 +247,11 @@ public class DetectorActivityTest {
                     }
                 }
                 if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
-                    board.deck.remove(board.getCurrentDeckCard());
-                    board.setCurrentCardDeckAferRemove();
+                        board.deck.remove(board.getCurrentDeckCard());
+                        //if (!board.deck.isEmpty()){
+                            board.setCurrentCardDeckAferRemove();
+                        //}
+
                 }
                 DetectorActivity.moveToFoundationTest = false;
             }
@@ -233,7 +274,13 @@ public class DetectorActivityTest {
             }
             board.PrintBoard(board);
             if (DetectorActivity.pickupDeckCardTest == true){
-                activity.playGame(board.getCurrentDeckCard());
+                if (deck.isEmpty()){
+                    DetectorActivity.pickupDeckCardTest = false;
+                    DetectorActivity.gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                }else{
+                    activity.playGame(board.getCurrentDeckCard());
+                }
+
 
             }else{
                 if (!revealedCard.getTitle().equals("NA")){
@@ -241,14 +288,7 @@ public class DetectorActivityTest {
                 }else{
                     //Dette bliver brugt når ingen ting ændrer sig i et stykke tid derfor kaldes playGame med et tilfældigt kort så
                     //main logikken selv skubber spillet videre ved at trække et nyt deck kort.
-                    board.forceMove++;
-                            if (board.forceMove == 3){
-                                for (int i = 0; i < board.coloumnCards.size(); i++){
-                                    if (!board.coloumnCards.get(i).isEmpty()){
-                                        activity.playGame(board.coloumnCards.get(i).get(0));
-                                    }
-                                }
-                            }
+                   activity.playGame(((Card) DetectorActivity.recognizedCards.getLast()));
                 }
             }
             if(DetectorActivity.moveCardTest == true){
