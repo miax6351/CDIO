@@ -9,7 +9,19 @@ public class Card {
     }
 
     public String getTitle() {
-        return this.title;
+        return this.title.toUpperCase();
+    }
+
+    public String getRank() {
+        if (title.length() > 2) {
+            return title.substring(0, 2);
+        } else {
+            return title.substring(0, 1);
+        }
+    }
+
+    public String getSuit() {
+        return title.substring(title.length() - 1);
     }
 
     public String getCardMatch(int i, char c) {
@@ -43,6 +55,16 @@ public class Card {
         return Integer.parseInt(toArray[0] + "");
     }
 
+    public void fixCard(String title) {
+        this.title = title;
+    }
+    public void fixSuit(String suit){
+        title = getRank() + suit;
+    }
+
+    public void fixRank(String rank){
+        title = rank + getSuit();
+    }
     public void setLockedPosition(boolean lockedPosition) {
         this.lockedPosition = lockedPosition;
     }
