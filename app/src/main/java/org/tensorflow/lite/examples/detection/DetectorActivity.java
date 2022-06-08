@@ -674,13 +674,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                             return;
                         }
-                        if (i == 6){
-                            waitPlayerOption("Pickup new card from deck!");
+                        /*if (i == 6){
                             System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
                             gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                            break;
                             // pickupDeckCard = true;
 
-                        }
+                        }*/
                     }
                 }
 
@@ -694,9 +694,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 //TEST
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
+                    waitPlayerOption("Pick up new card from deck!");
                     System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
                     if (!cardsToFoundationPile(resultCard)){
-
                         for (int i = 0; i < 7; i++) {
                             if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
                                 // add the new card to the list
