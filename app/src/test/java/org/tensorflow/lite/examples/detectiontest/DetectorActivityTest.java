@@ -1,9 +1,10 @@
-package org.tensorflow.lite.examples.detection;
+package org.tensorflow.lite.examples.detectiontest;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
 
 import java.util.LinkedList;

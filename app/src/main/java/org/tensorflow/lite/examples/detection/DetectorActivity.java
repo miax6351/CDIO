@@ -688,13 +688,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         return;
 
                         }
-                        /*if (i == 6){
+                        if (i == 6){
                             System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
                             gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                             break;
                             // pickupDeckCard = true;
 
-                        }*/
+                        }
                     }
                 }
 
