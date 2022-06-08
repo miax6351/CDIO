@@ -2,13 +2,14 @@ package org.tensorflow.lite.examples.detection.logic;
 
 public class Card {
     private String title;
+    private boolean lockedPosition = false;
 
     public Card(String title) {
         this.title = title;
     }
 
     public String getTitle() {
-        return title.toUpperCase();
+        return this.title;
     }
 
     public String getRank() {
@@ -31,6 +32,13 @@ public class Card {
         else if (i == 13) return "K" + c + "";
         return (String) (returnText + i) + c + "";
     }
+    public static char getCardColor(Card card) {
+
+        if (card.getTitle().charAt(1) != '0') {
+            return card.getTitle().charAt(1);
+        }
+        return card.getTitle().charAt(2);
+    }
 
     public int getCardNumber(String title) {
         char[] toArray = title.toCharArray();
@@ -50,6 +58,18 @@ public class Card {
     public void fixCard(String title) {
         this.title = title;
     }
+    public void fixSuit(String suit){
+        title = getRank() + suit;
+    }
 
+    public void fixRank(String rank){
+        title = rank + getSuit();
+    }
+    public void setLockedPosition(boolean lockedPosition) {
+        this.lockedPosition = lockedPosition;
+    }
 
+    public boolean getLockedPosition(){
+        return lockedPosition;
+    }
 }
