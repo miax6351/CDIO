@@ -11,3 +11,5 @@ public enum SOLITARE_STATES {
      */
 
 }
+
+

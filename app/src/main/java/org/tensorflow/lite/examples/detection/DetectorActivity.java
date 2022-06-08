@@ -131,6 +131,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static LinkedList<Card> diamonds = new LinkedList<>();
     private static LinkedList<Card> finishedCard = new LinkedList<>();
 
+    //Deck
+    //den samlede mængde af kort i deck og talon skal være 3 eller over ellers kan kabalen ikke løses.
+    private static int numberOfCardsDeck = 24;
+    private static int numberOfCardsTalon = 0;
+
     public void initializeCardColumns() {
         if (cardColumns == null) {
             cardColumns = new LinkedList[7];
@@ -583,6 +588,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
         return false;
     }
+
+    private boolean canMoveCardFromDeck(){
+        if(numberOfCardsDeck + numberOfCardsTalon == 3 && numberOfCardsTalon != 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+        private void moveCardFromDeck(){
+            if(numberOfCardsTalon == 0){
+                numberOfCardsDeck -= 3;
+                numberOfCardsTalon = 3;
+            }
+            numberOfCardsTalon --;
+        }
+
+
 
     private boolean cardsToFoundationPile(Card card) {
         boolean removeCard = false;
