@@ -28,6 +28,10 @@ public class CardTest {
         card.fixCard("3S");
         assertEquals("3S",card.getTitle());
         assertEquals("3S",recognizedCards.get(0).getTitle());
+
+        recognizedCards.get(0).fixCard("JD");
+
+        assertEquals("JD",card.getTitle());
     }
 
     @Test
