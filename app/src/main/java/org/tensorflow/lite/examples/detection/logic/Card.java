@@ -50,6 +50,13 @@ public class Card {
     public void fixCard(String title) {
         this.title = title;
     }
+    public void fixSuit(String suit){
+        title = getRank() + suit;
+    }
+
+    public void fixRank(String rank){
+        title = rank + getSuit();
+    }
 
 
 }
