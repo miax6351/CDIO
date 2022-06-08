@@ -82,6 +82,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected int previewWidth = 0;
   protected int previewHeight = 0;
   private boolean debug = false;
+  public RecyclerView cardSuit;
   protected Handler handler;
   private HandlerThread handlerThread;
   private boolean useCamera2API;
@@ -130,14 +131,12 @@ public abstract class CameraActivity extends AppCompatActivity
       requestPermission();
     }
 
-   recognizedCards.add(new Card("3H"));
-    recognizedCards.add(new Card("3H"));
-    recognizedCards.add(new Card("3H"));
-    recognizedCards.add(new Card("3H"));
-    recognizedCards.add(new Card("3H"));
+
+    recognizedCards.add(new Card("5H"));
+    recognizedCards.add(new Card("10S"));
 
     // cardSuit in recyclerview (bottom sheet)
-    RecyclerView cardSuit = findViewById(R.id.recycler_view_card_list);
+    cardSuit = findViewById(R.id.recycler_view_card_list);
     cardSuit.setLayoutManager(new LinearLayoutManager(this));
     CardListAdapter adapter = new CardListAdapter(recognizedCards);
     adapter.getItemCount();

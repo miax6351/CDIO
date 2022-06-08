@@ -195,6 +195,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         String threads = threadsTextView.getText().toString().trim();
         final int numThreads = 8;
 
+
         handler.post(() -> {
             if (modelIndex == currentModel && deviceIndex == currentDevice
                     && numThreads == currentNumThreads) {
@@ -594,6 +595,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 if (isCardDuplicate(resultCard)==false) {
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
                     recognizedCards.add(resultCard);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                        }
+                    });
                     cardColumns[cardColumnCounter].add(resultCard);
 
                     if (cardColumnCounter == 6) {
@@ -620,7 +627,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(new Card(resultCard.toString()));
-                    System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                        }
+                    });                    System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty())
                             cardColumns[i].add(resultCard);
@@ -653,7 +665,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(new Card(resultCard.toString()));
-                                for (int k = 0; k < 10; k++) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                    }
+                                });                                for (int k = 0; k < 10; k++) {
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
                                     System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + oldListLast + "----------------------");
                                     waitNSeconds(1);

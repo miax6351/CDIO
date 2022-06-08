@@ -11,6 +11,18 @@ public class Card {
         return this.title;
     }
 
+    public String getRank() {
+        if (title.length() > 2) {
+            return title.substring(0, 2);
+        } else {
+            return title.substring(0, 1);
+        }
+    }
+
+    public String getSuit() {
+        return title.substring(title.length() - 1);
+    }
+
     public String getCardMatch(int i, char c) {
         String returnText = "";
         if (i == 1) return "A" + c + "";
@@ -35,11 +47,9 @@ public class Card {
         return Integer.parseInt(toArray[0] + "");
     }
 
-    public void fixCard(String title){
+    public void fixCard(String title) {
         this.title = title;
     }
-
-
 
 
 }
