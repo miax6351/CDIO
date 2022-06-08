@@ -134,15 +134,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
 
-    recognizedCards.add(new Card("5H"));
-    recognizedCards.add(new Card("10S"));
-    recognizedCards.add(new Card("3S"));
-
-    recognizedCards.add(new Card("8H"));
-
-    recognizedCards.add(new Card("2D"));
-
-    recognizedCards.add(new Card("9C"));
 
 
 

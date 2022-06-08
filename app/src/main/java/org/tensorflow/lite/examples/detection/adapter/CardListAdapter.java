@@ -94,15 +94,15 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         Card card = dataset.get(position);
 
 
-        if (Objects.equals(card.getSuit(), "H")) {
+        if (Objects.equals(card.getSuit(), "h")) {
             viewHolder.cardSuit.setImageResource(R.drawable.heart);
-        } else if (Objects.equals(card.getSuit(), "C")) {
+        } else if (Objects.equals(card.getSuit(), "c")) {
             viewHolder.cardSuit.setImageResource(R.drawable.club);
 
-        } else if (Objects.equals(card.getSuit(), "S")) {
+        } else if (Objects.equals(card.getSuit(), "s")) {
             viewHolder.cardSuit.setImageResource(R.drawable.spade);
 
-        } else if (Objects.equals(card.getSuit(), "D")) {
+        } else if (Objects.equals(card.getSuit(), "d")) {
             viewHolder.cardSuit.setImageResource(R.drawable.diamond);
 
         }

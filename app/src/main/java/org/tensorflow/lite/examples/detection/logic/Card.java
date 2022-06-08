@@ -9,7 +9,7 @@ public class Card {
     }
 
     public String getTitle() {
-        return this.title.toUpperCase();
+        return this.title;
     }
 
     public String getRank() {

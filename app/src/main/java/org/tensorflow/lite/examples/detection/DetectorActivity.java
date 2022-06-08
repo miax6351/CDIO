@@ -674,7 +674,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 if (!recognizedCardsContains(resultCard)) {
-                    recognizedCards.add(new Card(resultCard.toString()));
+                    recognizedCards.add(new Card(resultCard.getTitle()));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -716,7 +716,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 // add the new card to the list
                                 String oldListLast = ((Card) cardColumns[i].getLast()).getTitle().trim();
                                 cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.toString()));
+                                recognizedCards.add(new Card(resultCard.getTitle()));
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -739,12 +739,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         //for (int k = 0; k < 10; k++) {
                         waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                        //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                        //waitNSeconds(1);
-                        //    }
-                        //for (int k = 0; k < 10; k++) {
-                        //System.out.println("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                        //   waitPlayerOption("------- " + resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                         drawTest = true;
                         //  waitNSeconds(1);
                         //}
