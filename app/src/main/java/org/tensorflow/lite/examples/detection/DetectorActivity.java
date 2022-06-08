@@ -764,6 +764,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 moveCardTest = true;
                                 emptyColoumn = -1;
                                 cardCanBeUsed = true;
+                                gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 break;
                             }
                         }
