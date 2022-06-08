@@ -50,12 +50,19 @@ public class Tableau {
     }
 
     public void removeCard(Card card){
+        boolean breakLoop = false;
         recognizedCards.remove(card);
         for (int i = 0; i < cardColumns.length; i++){
             for (int j = 0; j < cardColumns[i].size(); j++){
-                if (card.getTitle().equals(cardColumns[i].get(j)))
+                if (card.getTitle().equals(cardColumns[i].get(j))){
                     cardColumns[i].remove(cardColumns[i].get(j));
+                    breakLoop = true;
+                    break;
+                }
+
             }
+            if (breakLoop)
+                break;
         }
     }
 }
