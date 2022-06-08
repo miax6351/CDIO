@@ -52,6 +52,15 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.cardRank.setText(card.getRank());
         viewHolder.cardSuit.setText(card.getSuit());
 
+
+        viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataset.remove(viewHolder.getAdapterPosition());
+                notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        });
+
         //viewHolder.getCardSuit().setText(dataset.get(position).getTitle());
         //viewHolder.getCardRank().setText(dataset.get(position).getTitle());
     }
