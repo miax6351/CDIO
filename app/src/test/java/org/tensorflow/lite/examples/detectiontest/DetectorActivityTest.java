@@ -217,6 +217,7 @@ public class DetectorActivityTest {
         DetectorActivity activity = new DetectorActivity();
         activity.TESTMODE = true;
         activity.initializeCardColumns();
+
         for (int i = 0; i < 7; i++){
             Card frontOfRowCard = board.getFrontOfRow(i+1);
             if (!frontOfRowCard.getTitle().equals("NA")){
@@ -224,7 +225,7 @@ public class DetectorActivityTest {
             }
 
         }
-        activity.playGame(board.getCurrentDeckCard());
+        //activity.playGame(board.getCurrentDeckCard());
         int dowhile = 1;
         do {
 
@@ -253,7 +254,6 @@ public class DetectorActivityTest {
                             board.setCurrentCardDeckAferRemove();
                             revealedCard = board.getCurrentDeckCard();
                         //}
-
                 }
                 DetectorActivity.moveToFoundationTest = false;
             }
@@ -270,8 +270,14 @@ public class DetectorActivityTest {
                             //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
                             board.getRow(i + 1).add(DetectorActivity.fromTest.get(j));
                         }
-
                     }
+                }
+                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
+                    board.deck.remove(board.getCurrentDeckCard());
+                    //if (!board.deck.isEmpty()){
+                    board.setCurrentCardDeckAferRemove();
+                    revealedCard = board.getCurrentDeckCard();
+                    //}
                 }
             }
             board.PrintBoard(board);

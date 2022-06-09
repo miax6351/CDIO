@@ -114,6 +114,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static int roundCounterTest = 0;
     //Test//
 
+    private static int PHASE_CHANGE_COUNTER = 0;
 
     private static int cardColumnCounter = 0;
     public static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
@@ -707,11 +708,19 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             case ANALYZE_CARD_MOVE:
                 System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
+                PHASE_CHANGE_COUNTER = 0;
                 gameState = handleCheckShownCards();
                 break;
 
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
+                //Counter to change phase
+                PHASE_CHANGE_COUNTER++;
+                if (PHASE_CHANGE_COUNTER == 3){
+                    gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                            break;
+                }
+
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(new Card(resultCard.getTitle()));
                     if (!TESTMODE){
@@ -748,6 +757,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 pickupDeckCardTest = true;
                 moveCardTest = false;
                 //TEST
+                PHASE_CHANGE_COUNTER = 0;
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
                     waitPlayerOption("Pick up new card from deck!");
@@ -804,6 +814,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         drawTest = true;
                         //  waitNSeconds(1);
                         //}
+                    }else{
+                        gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     }
                 }
 
