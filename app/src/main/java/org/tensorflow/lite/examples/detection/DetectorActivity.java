@@ -350,8 +350,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                         Card resultCard = new Card(result.getTitle().trim());
                                        // if (!recognizedCardsContains(resultCard)){
-
+                                    PHASE_CHANGE_COUNTER++;
                                             playGame(resultCard);
+
                                        // }
                                 }
 
@@ -499,7 +500,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             else{
             for (int j = 0; j < 7; j++){
                 if (cardColumns[i].isEmpty()){
-                    return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
+                    continue;
                 }
                 if (cardColumns[j].isEmpty() || (i == j))
                     continue;
@@ -715,8 +716,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 //Counter to change phase
-                PHASE_CHANGE_COUNTER++;
-                if (PHASE_CHANGE_COUNTER == 3){
+                if (PHASE_CHANGE_COUNTER == 5){
                     gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                             break;
                 }
