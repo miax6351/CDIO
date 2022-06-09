@@ -774,8 +774,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                         cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
                                     }
                                 });                                for (int k = 0; k < 10; k++) {
-                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
-                                    System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLast);
+                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard );
+                                    System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard);
                                 }
                                 fromDeckTest = resultCard;
                                 toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
