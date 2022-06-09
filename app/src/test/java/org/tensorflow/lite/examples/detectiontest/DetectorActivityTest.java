@@ -251,6 +251,7 @@ public class DetectorActivityTest {
                         board.deck.remove(board.getCurrentDeckCard());
                         //if (!board.deck.isEmpty()){
                             board.setCurrentCardDeckAferRemove();
+                            revealedCard = board.getCurrentDeckCard();
                         //}
 
                 }

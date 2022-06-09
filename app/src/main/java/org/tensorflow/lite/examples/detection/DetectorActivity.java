@@ -679,12 +679,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 if (!recognizedCardsContains(resultCard)){
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
                     recognizedCards.add(resultCard);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                        }
-                    });
+                    if (!TESTMODE){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                            }
+                        });
+                    }
                     cardColumns[cardColumnCounter].add(resultCard);
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
@@ -712,12 +714,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(new Card(resultCard.getTitle()));
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                        }
-                    });                    System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
+                    if (!TESTMODE){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                            }
+                        });
+                    }
+                    System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty()){
                             cardColumns[i].add(resultCard);
@@ -754,15 +759,17 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 Card oldListLastCard = ((Card) cardColumns[i].getLast());
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(new Card(resultCard.getTitle()));
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                                    }
-                                });                                for (int k = 0; k < 10; k++) {
-                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLast );
-                                    System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLast);
+                                if (!TESTMODE){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                        }
+                                    });
                                 }
+                                    waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle() );
+                                    System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
+
                                 fromDeckTest = resultCard;
                                 toTest = ((Card) cardColumns[i].get(cardColumns[i].size()-2));
                                 moveCardTest = true;
