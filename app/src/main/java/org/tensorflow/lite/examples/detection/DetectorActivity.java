@@ -716,6 +716,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 //Counter to change phase
+                PHASE_CHANGE_COUNTER++;
                 if (PHASE_CHANGE_COUNTER == 5){
                     gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                             break;

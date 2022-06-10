@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import org.tensorflow.lite.examples.detection.DetectorActivity;
+import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
+import java.util.Random;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +21,7 @@ class Board{
     public List<List<Card>> finishDeck = new LinkedList<>();
     private Integer nextDeckInt = 2;
     public int forceMove = 0;
+
 
     public Board(List<Card> row1, List<Card> row2, List<Card> row3, List<Card> row4, List<Card> row5, List<Card> row6, List<Card> row7,
                  List<Card> deck,
@@ -121,6 +124,25 @@ class Board{
 
     }
 }
+class MultipleSets{
+    public List<Card> allCards = new LinkedList<>();
+
+    public MultipleSets(){
+        allCards t = new allCards();
+        this.allCards = Stream.of(t.ca, t.c2, t.c3, t.c4, t.c5, t.c6, t.c7, t.c8, t.c9, t.c10, t.cj, t.cq, t.ck,
+                t.da, t.d2, t.d3, t.d4, t.d5, t.d6, t.d7, t.d8, t.d9, t.d10, t.dj, t.dq, t.dk,
+                t.ha, t.h2, t.h3, t.h4, t.h5, t.h6, t.h7, t.h8, t.h9, t.h10, t.hj, t.hq, t.hk,
+                t.sa, t.s2, t.s3, t.s4, t.s5, t.s6, t.s7, t.s8, t.s9, t.s10, t.sj, t.sq, t.sk).collect(Collectors.toList());
+
+    }
+    public Card chooseCardAndRemove(){
+        Random ran = new Random();
+        int random = ran.nextInt(allCards.size());
+        Card cardToReturn = allCards.get(random);
+        allCards.remove(random);
+        return cardToReturn;
+    }
+}
 
 class allCards{
     public Card sa = new Card("As");
@@ -178,7 +200,6 @@ class allCards{
     public Card cj = new Card("Jc");
     public Card cq = new Card("Qc");
     public Card ck = new Card("Kc");
-
 
 }
 
@@ -328,7 +349,29 @@ public class DetectorActivityTest {
 
     }
 
+    @Test
+    public void testMultipleSets(){
+        MultipleSets multipleSets = new MultipleSets();
 
+
+
+        List<Card> row1 = Stream.of(multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> row2 = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> row3 = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> row4 = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> row5 = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> row6 = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> row7 = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> deck = Stream.of(multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove(), multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
+        List<Card> finishh = new LinkedList<Card>();
+        List<Card> finishd = new LinkedList<Card>();
+        List<Card> finishs = new LinkedList<Card>();
+        List<Card> finishc = new LinkedList<Card>();
+
+        Board board = new Board(row1, row2, row3, row4, row5, row6, row7, deck, finishh, finishd, finishs, finishc);
+        System.out.println(board);
+
+    }
 
 
     @Test
