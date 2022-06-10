@@ -31,6 +31,8 @@ import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -677,6 +679,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         View customSnackbar = getLayoutInflater().inflate(R.layout.custom_snackbar, null);
         snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
         Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
+        //TextView customSnackbarText = findViewById(R.id.snackbarText);
+        //customSnackbarText.setText(snackbarText);
         snackbarLayout.setPadding(0,0,0,0);
         snackbarLayout.addView(customSnackbar, 0);
 

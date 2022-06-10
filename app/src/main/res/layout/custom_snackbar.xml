@@ -29,9 +29,9 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/snackbarText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -43,6 +43,7 @@
                 android:layout_marginLeft="20dp">
 
                 <View
+                    android:id="@+id/line"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="@color/white" />
@@ -60,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:backgroundTint="@android:color/darker_gray"
-                    android:text="@string/done"
+                    android:text="Done"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     app:layout_constraintVertical_bias="0.333"
