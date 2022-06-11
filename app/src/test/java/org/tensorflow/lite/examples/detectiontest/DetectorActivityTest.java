@@ -50,7 +50,7 @@ class Board{
     }
     public Card nextDeckCard(){
         //hvis der er mere end 3 kort i decket:
-        if (!(deck.size() < 2)){
+        if (!(deck.size() <= 2)){
             nextDeckInt += 3;
             if (nextDeckInt >= deck.size()){
                 nextDeckInt = nextDeckInt - deck.size();
@@ -239,9 +239,9 @@ public class DetectorActivityTest {
         activity.TESTMODE = true;
         activity.initializeCardColumns();
 
-        for (int i = 0; i < 7; i++){
-            Card frontOfRowCard = board.getFrontOfRow(i+1);
-            if (!frontOfRowCard.getTitle().equals("NA")){
+        for (int i = 0; i < 7; i++) {
+            Card frontOfRowCard = board.getFrontOfRow(i + 1);
+            if (!frontOfRowCard.getTitle().equals("NA")) {
                 activity.playGame(frontOfRowCard);
             }
 
@@ -250,50 +250,50 @@ public class DetectorActivityTest {
         int dowhile = 1;
         do {
 
-            if (DetectorActivity.drawTest == true){
+            if (DetectorActivity.drawTest == true) {
                 board.nextDeckCard();
             }
-            if (DetectorActivity.moveToFoundationTest == true){
-                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'h'){
+            if (DetectorActivity.moveToFoundationTest == true) {
+                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'h') {
                     board.finishDeck.get(0).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
-                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'c'){
+                } else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'c') {
                     board.finishDeck.get(1).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
-                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'd'){
+                } else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'd') {
                     board.finishDeck.get(2).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
-                }else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 's'){
+                } else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 's') {
                     board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
                 }
-                for (int i = 0; i < board.coloumnCards.size(); i++){
-                    if (board.getFrontOfRow(i+1).equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
-                        board.getRow(i+1).remove(board.coloumnCards.get(i).size()-1);
-                        revealedCard = board.getFrontOfRow(i+1);
+                for (int i = 0; i < board.coloumnCards.size(); i++) {
+                    if (board.getFrontOfRow(i + 1).equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())) {
+                        board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                        revealedCard = board.getFrontOfRow(i + 1);
                     }
                 }
-                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
-                        board.deck.remove(board.getCurrentDeckCard());
-                        //if (!board.deck.isEmpty()){
-                            board.setCurrentCardDeckAferRemove();
-                            revealedCard = board.getCurrentDeckCard();
-                        //}
+                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())) {
+                    board.deck.remove(board.getCurrentDeckCard());
+                    //if (!board.deck.isEmpty()){
+                    board.setCurrentCardDeckAferRemove();
+                    revealedCard = board.getCurrentDeckCard();
+                    //}
                 }
                 DetectorActivity.moveToFoundationTest = false;
             }
-            if (DetectorActivity.moveCardColoumnTest == true){
+            if (DetectorActivity.moveCardColoumnTest == true) {
                 for (int i = 0; i < board.coloumnCards.size(); i++) {
                     if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.fromTest).getLast()) {
-                        for (int j = 0; j <= DetectorActivity.fromTest.size()-1; j++){
+                        for (int j = 0; j <= DetectorActivity.fromTest.size() - 1; j++) {
                             board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
                         }
                         revealedCard = board.getFrontOfRow(i + 1);
                     }
                     if (board.getFrontOfRow(i + 1) == DetectorActivity.toTest) {
-                        for (int j = 0; j <= DetectorActivity.fromTest.size()-1; j++){
+                        for (int j = 0; j <= DetectorActivity.fromTest.size() - 1; j++) {
                             //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
                             board.getRow(i + 1).add(DetectorActivity.fromTest.get(j));
                         }
                     }
                 }
-                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())){
+                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())) {
                     board.deck.remove(board.getCurrentDeckCard());
                     //if (!board.deck.isEmpty()){
                     board.setCurrentCardDeckAferRemove();
@@ -302,57 +302,55 @@ public class DetectorActivityTest {
                 }
             }
             board.PrintBoard(board);
-            if (DetectorActivity.pickupDeckCardTest == true){
-                if (deck.isEmpty()){
+            if (DetectorActivity.pickupDeckCardTest == true) {
+                if (deck.isEmpty()) {
                     DetectorActivity.pickupDeckCardTest = false;
                     DetectorActivity.gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                }else{
+                } else {
                     activity.playGame(board.getCurrentDeckCard());
                 }
 
 
-            }else{
-                if (!revealedCard.getTitle().equals("NA")){
-                activity.playGame(revealedCard);
-                }else{
+            } else {
+                if (!revealedCard.getTitle().equals("NA")) {
+                    activity.playGame(revealedCard);
+                } else {
                     //Dette bliver brugt når ingen ting ændrer sig i et stykke tid derfor kaldes playGame med et tilfældigt kort så
                     //main logikken selv skubber spillet videre ved at trække et nyt deck kort.
-                   activity.playGame(((Card) DetectorActivity.recognizedCards.getLast()));
+                    activity.playGame(((Card) DetectorActivity.recognizedCards.getLast()));
                 }
             }
-            if(DetectorActivity.moveCardTest == true){
-                if(board.getCurrentDeckCard() == DetectorActivity.fromDeckTest){
-                    for(int i = 0; i < board.coloumnCards.size(); i++){
+            if (DetectorActivity.moveCardTest == true) {
+                if (board.getCurrentDeckCard() == DetectorActivity.fromDeckTest) {
+                    for (int i = 0; i < board.coloumnCards.size(); i++) {
 
-                        if ((!board.getRow(i+1).isEmpty()) &&(board.getRow(i+1).get(board.getRow(i+1).size()-1) == DetectorActivity.toTest)){
-                            board.getRow(i+1).add(DetectorActivity.fromDeckTest);
+                        if ((!board.getRow(i + 1).isEmpty()) && (board.getRow(i + 1).get(board.getRow(i + 1).size() - 1) == DetectorActivity.toTest)) {
+                            board.getRow(i + 1).add(DetectorActivity.fromDeckTest);
                             board.deck.remove(board.getCurrentDeckCard());
                             board.setCurrentCardDeckAferRemove();
-                        }
-                        else if(DetectorActivity.toEmptyTest != -1){
-                            if (board.getRow(i+1).isEmpty()){
-                                board.getRow(i+1).add(DetectorActivity.fromDeckTest);
+                        } else if (DetectorActivity.toEmptyTest != -1) {
+                            if (board.getRow(i + 1).isEmpty()) {
+                                board.getRow(i + 1).add(DetectorActivity.fromDeckTest);
                                 board.deck.remove(board.getCurrentDeckCard());
                                 board.setCurrentCardDeckAferRemove();
                                 DetectorActivity.toEmptyTest = -1;
                             }
                         }
-                        }
+                    }
                 }
             }
 
             dowhile++;
-        }while(dowhile <= 200);
+        } while (dowhile <= 200);
         //test
         board.PrintBoard(board);
-
-
     }
 
     @Test
-    public void testMultipleSets(){
-        MultipleSets multipleSets = new MultipleSets();
+    public void testMultipleSets() {
 
+            MultipleSets multipleSets = new MultipleSets();
+            Boolean gameDone = false;
 
 
         List<Card> row1 = Stream.of(multipleSets.chooseCardAndRemove()).collect(Collectors.toList());
@@ -371,7 +369,118 @@ public class DetectorActivityTest {
         Board board = new Board(row1, row2, row3, row4, row5, row6, row7, deck, finishh, finishd, finishs, finishc);
         System.out.println(board);
 
+        Card revealedCard = new Card(row1.get(0).getTitle());
+        DetectorActivity activity = new DetectorActivity();
+        activity.TESTMODE = true;
+        activity.initializeCardColumns();
+
+        for (int i = 0; i < 7; i++) {
+            Card frontOfRowCard = board.getFrontOfRow(i + 1);
+            if (!frontOfRowCard.getTitle().equals("NA")) {
+                activity.playGame(frontOfRowCard);
+            }
+
+        }
+        //activity.playGame(board.getCurrentDeckCard());
+        int dowhile = 1;
+        do {
+
+            if (DetectorActivity.drawTest == true) {
+                board.nextDeckCard();
+            }
+            if (DetectorActivity.moveToFoundationTest == true) {
+                if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'h') {
+                    board.finishDeck.get(0).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                } else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'c') {
+                    board.finishDeck.get(1).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                } else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 'd') {
+                    board.finishDeck.get(2).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                } else if (DetectorActivity.getCardColor(((LinkedList<Card>) DetectorActivity.fromTest).getLast()) == 's') {
+                    board.finishDeck.get(3).add(((LinkedList<Card>) DetectorActivity.fromTest).getLast());
+                }
+                for (int i = 0; i < board.coloumnCards.size(); i++) {
+                    if (board.getFrontOfRow(i + 1).equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())) {
+                        board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                        revealedCard = board.getFrontOfRow(i + 1);
+                    }
+                }
+                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())) {
+                    board.deck.remove(board.getCurrentDeckCard());
+                    //if (!board.deck.isEmpty()){
+                    board.setCurrentCardDeckAferRemove();
+                    revealedCard = board.getCurrentDeckCard();
+                    //}
+                }
+                DetectorActivity.moveToFoundationTest = false;
+            }
+            if (DetectorActivity.moveCardColoumnTest == true) {
+                for (int i = 0; i < board.coloumnCards.size(); i++) {
+                    if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) DetectorActivity.fromTest).getLast()) {
+                        for (int j = 0; j <= DetectorActivity.fromTest.size() - 1; j++) {
+                            board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                        }
+                        revealedCard = board.getFrontOfRow(i + 1);
+                    }
+                    if (board.getFrontOfRow(i + 1) == DetectorActivity.toTest) {
+                        for (int j = 0; j <= DetectorActivity.fromTest.size() - 1; j++) {
+                            //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                            board.getRow(i + 1).add(DetectorActivity.fromTest.get(j));
+                        }
+                    }
+                }
+                if (board.getCurrentDeckCard().equals(((LinkedList<Card>) DetectorActivity.fromTest).getLast())) {
+                    board.deck.remove(board.getCurrentDeckCard());
+                    //if (!board.deck.isEmpty()){
+                    board.setCurrentCardDeckAferRemove();
+                    revealedCard = board.getCurrentDeckCard();
+                    //}
+                }
+            }
+            board.PrintBoard(board);
+            if (DetectorActivity.pickupDeckCardTest == true) {
+                if (deck.isEmpty()) {
+                    DetectorActivity.pickupDeckCardTest = false;
+                    DetectorActivity.gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                } else {
+                    activity.playGame(board.getCurrentDeckCard());
+                }
+
+
+            } else {
+                if (!revealedCard.getTitle().equals("NA")) {
+                    activity.playGame(revealedCard);
+                } else {
+                    //Dette bliver brugt når ingen ting ændrer sig i et stykke tid derfor kaldes playGame med et tilfældigt kort så
+                    //main logikken selv skubber spillet videre ved at trække et nyt deck kort.
+                    activity.playGame(((Card) DetectorActivity.recognizedCards.getLast()));
+                }
+            }
+            if (DetectorActivity.moveCardTest == true) {
+                if (board.getCurrentDeckCard() == DetectorActivity.fromDeckTest) {
+                    for (int i = 0; i < board.coloumnCards.size(); i++) {
+
+                        if ((!board.getRow(i + 1).isEmpty()) && (board.getRow(i + 1).get(board.getRow(i + 1).size() - 1) == DetectorActivity.toTest)) {
+                            board.getRow(i + 1).add(DetectorActivity.fromDeckTest);
+                            board.deck.remove(board.getCurrentDeckCard());
+                            board.setCurrentCardDeckAferRemove();
+                        } else if (DetectorActivity.toEmptyTest != -1) {
+                            if (board.getRow(i + 1).isEmpty()) {
+                                board.getRow(i + 1).add(DetectorActivity.fromDeckTest);
+                                board.deck.remove(board.getCurrentDeckCard());
+                                board.setCurrentCardDeckAferRemove();
+                                DetectorActivity.toEmptyTest = -1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            dowhile++;
+        } while (dowhile <= 200);
     }
+
+
+
 
 
     @Test

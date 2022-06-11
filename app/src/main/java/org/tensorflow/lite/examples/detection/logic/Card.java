@@ -2,7 +2,7 @@ package org.tensorflow.lite.examples.detection.logic;
 
 public class Card {
     private String title;
-    private boolean lockedPosition = false;
+    private Boolean faceUp = false;
 
     public Card(String title) {
         this.title = title;
@@ -32,16 +32,40 @@ public class Card {
         else if (i == 13) return "K" + c + "";
         return (String) (returnText + i) + c + "";
     }
-    public static char getCardColor(Card card) {
 
-        if (card.getTitle().charAt(1) != '0') {
-            return card.getTitle().charAt(1);
-        }
-        return card.getTitle().charAt(2);
+
+
+
+    public void fixCard(String title) {
+        this.title = title;
+    }
+    public void fixSuit(String suit){
+        title = getRank() + suit;
     }
 
-    public int getCardNumber(String title) {
-        char[] toArray = title.toCharArray();
+    public void fixRank(String rank){
+        title = rank + getSuit();
+    }
+
+
+
+
+    // FUNKTIONER HAR LAVET ALT OM TIL "THIS" FOR BEDRE REFERENCER I STEDET FOR CARD
+
+    public void setFaceUp(Boolean bol){
+        this.faceUp = bol;
+    }
+
+    public char getCardColor() {
+
+        if (this.getTitle().charAt(1) != '0') {
+            return this.getTitle().charAt(1);
+        }
+        return this.getTitle().charAt(2);
+    }
+
+    public int getCardNumber() {
+        char[] toArray = this.getTitle().toCharArray();
         if ((char) (toArray[0]) == 'A')
             return 1;
         if ((char) (toArray[0]) == 'J')
@@ -55,21 +79,17 @@ public class Card {
         return Integer.parseInt(toArray[0] + "");
     }
 
-    public void fixCard(String title) {
-        this.title = title;
-    }
-    public void fixSuit(String suit){
-        title = getRank() + suit;
+    public boolean isRed(){
+        return (this.getCardColor() == 's' || this.getCardColor() == 'd');
     }
 
-    public void fixRank(String rank){
-        title = rank + getSuit();
-    }
-    public void setLockedPosition(boolean lockedPosition) {
-        this.lockedPosition = lockedPosition;
-    }
+    public boolean isCardAbleToGoOnCard(Card cardToMoveTo){
+        if (cardToMoveTo == null){
+            return false;
+        }
+        boolean suitTheSame = cardToMoveTo.isRed() != this.isRed();
+        boolean valueOneHigher = this.getCardNumber() == cardToMoveTo.getCardNumber()-1;
+        return valueOneHigher && suitTheSame;
 
-    public boolean getLockedPosition(){
-        return lockedPosition;
     }
 }
