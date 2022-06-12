@@ -342,7 +342,7 @@ public class DetectorActivityTest {
             }
 
             dowhile++;
-        }while(dowhile <= 200);
+        }while(dowhile <= 500);
         //test
         board.PrintBoard(board);
 

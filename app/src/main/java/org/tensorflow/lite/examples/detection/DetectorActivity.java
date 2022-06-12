@@ -41,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Stack;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
@@ -100,7 +101,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     public static boolean TESTMODE = false;
     private static LinkedList[] cardColumns = null;
     public static LinkedList recognizedCards = new LinkedList<Card>();
-    public static LinkedList deckCards = new LinkedList<Card>();
+    public static Stack deckCards = new Stack<Card>();
     public static ArrayList<String> cardMoves = new ArrayList<String>();
 
     //Test//
@@ -352,7 +353,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                         Card resultCard = new Card(result.getTitle().trim());
                                        // if (!recognizedCardsContains(resultCard)){
-                                    PHASE_CHANGE_COUNTER++;
+                                    if (gameState == SOLITARE_STATES.DISPLAY_HIDDEN_CARD)
+                                        PHASE_CHANGE_COUNTER++;
+
                                             playGame(resultCard);
                                             printBoard();
                                             printMoves();
@@ -740,6 +743,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         });
                     }
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
+                    cardMoves.add("T");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty()){
                             cardColumns[i].add(resultCard);
@@ -770,6 +774,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
                     System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
+                    cardMoves.add("T");
                     if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
                             if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
@@ -820,7 +825,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         //for (int k = 0; k < 10; k++) {
                         waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                        cardMoves.add("T");
                         drawTest = true;
                         //  waitNSeconds(1);
                         //}
