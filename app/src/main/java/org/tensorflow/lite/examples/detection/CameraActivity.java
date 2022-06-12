@@ -133,7 +133,25 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
 
+    recognizedCards.add(new Card("5h"));
+    recognizedCards.add(new Card("10s"));
+    recognizedCards.add(new Card("3s"));
 
+    recognizedCards.add(new Card("8h"));
+
+    recognizedCards.add(new Card("2d"));
+
+    recognizedCards.add(new Card("9c"));
+    recognizedCards.add(new Card("8h"));
+
+    recognizedCards.add(new Card("2d"));
+
+    recognizedCards.add(new Card("9c"));
+    recognizedCards.add(new Card("8h"));
+
+    recognizedCards.add(new Card("2d"));
+
+    recognizedCards.add(new Card("9c"));
 
 
 
@@ -210,7 +228,8 @@ public abstract class CameraActivity extends AppCompatActivity
             //                int width = bottomSheetLayout.getMeasuredWidth();
             int height = gestureLayout.getMeasuredHeight();
 
-            sheetBehavior.setPeekHeight(height);
+            //TODO change this?
+            sheetBehavior.setPeekHeight(200);
           }
         });
     sheetBehavior.setHideable(false);
