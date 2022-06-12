@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class is more for testing purpose. It act as a deck consisting of all the cards.
+ */
 public class Deck {
      private List<Card> cardList;
 
@@ -18,8 +21,16 @@ public class Deck {
     }
 
 
+    public List<Card> cardsKnownStartGame(List<Card> firstCards){
+         List<Card> deck = new ArrayList<>();
+         for (Card card : firstCards){
+              deck.add(card);
+         }
+         return deck;
+    }
 
-    public void buildDeck(){
+ // for testing
+    public void buildDeckWithAllCards(){
          List<Card> listCards = new ArrayList<>();
          Card sa = new Card("As");
          Card s2 = new Card("2s");

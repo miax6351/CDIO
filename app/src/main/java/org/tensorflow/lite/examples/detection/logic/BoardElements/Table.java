@@ -5,6 +5,10 @@ import org.tensorflow.lite.examples.detection.logic.Card;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Seven piles that make up the main table
+ */
+
 public class Table {
     private Stack[] rows = new Stack[7];
 

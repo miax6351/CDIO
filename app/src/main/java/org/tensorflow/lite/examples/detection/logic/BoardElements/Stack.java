@@ -5,6 +5,9 @@ import org.tensorflow.lite.examples.detection.logic.Card;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Stack is a pile of cards so as long as it's more than one card it is a stack.
+ */
 public class Stack {
 
     private List<Card> cards;
