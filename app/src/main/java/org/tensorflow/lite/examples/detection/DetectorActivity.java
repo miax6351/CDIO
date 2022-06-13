@@ -773,7 +773,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 PHASE_CHANGE_COUNTER = 0;
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
-                    System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
+                    System.out.println("-------- found a new card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
@@ -781,7 +781,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 // add the new card to the list
                                 Card oldListLastCard = ((Card) cardColumns[i].getLast());
                                 cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.getTitle()));
+                                recognizedCards.add(resultCard);
                                 if (!TESTMODE){
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -820,6 +820,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         }
                     }else{
                         cardCanBeUsed = true;
+                        recognizedCards.add(resultCard);
                     }
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
