@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/icn_chevron_up" />
+            android:src="@drawable/icn_chevron_up_black" />
 
     </LinearLayout>
 
@@ -34,6 +34,8 @@
         android:id="@+id/recycler_view_card_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
         android:clickable="true"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"

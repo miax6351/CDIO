@@ -135,7 +135,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
-    cardSuit.setLayoutManager(new LinearLayoutManager(this));
+    // cardSuit.setLayoutManager(new LinearLayoutManager(this));
     CardListAdapter adapter = new CardListAdapter(recognizedCards,this);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
@@ -221,18 +221,18 @@ public abstract class CameraActivity extends AppCompatActivity
                 break;
               case BottomSheetBehavior.STATE_EXPANDED:
                 {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down);
+                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down_black);
                 }
                 break;
               case BottomSheetBehavior.STATE_COLLAPSED:
                 {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up);
+                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up_black);
                 }
                 break;
               case BottomSheetBehavior.STATE_DRAGGING:
                 break;
               case BottomSheetBehavior.STATE_SETTLING:
-                bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up);
+                bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up_black);
                 break;
             }
           }
