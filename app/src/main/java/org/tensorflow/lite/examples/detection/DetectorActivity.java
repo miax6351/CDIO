@@ -834,15 +834,23 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         continueGame = false;
         snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("Done" +
-                        "\n\n\n\n", new View.OnClickListener() {
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Complete move" + "\n", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
+
+                        Toast.makeText(getApplicationContext(),"Move completed",Toast.LENGTH_LONG).show();
+
                         return;
                     }
                 });
+
+        // snackbar UI
+        snackbar.setActionTextColor(Color.GRAY);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.setBackgroundTint(Color.WHITE);
+
         snackbar.show();
         int inactiveCount = 0;
         while (!continueGame){
