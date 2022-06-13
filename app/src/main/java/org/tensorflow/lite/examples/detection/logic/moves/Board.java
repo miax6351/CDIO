@@ -15,7 +15,7 @@ import java.util.List;
  * This class keeps track of all board elements within a game of solitaire.
  */
 
-public class CurrentState {
+public class Board {
 
     private Table table;
     private Stock stock;
@@ -23,20 +23,20 @@ public class CurrentState {
     private Talon talon;
     private List<Card> knownStockTalon = new ArrayList<>();
 
-    public static CurrentState startGameSetup(List<Card> firstCards){
+    public static Board startGameSetup(List<Card> firstCards){
         Deck deck = new Deck();
         List<Card> cards = deck.cardsKnownStartGame(firstCards);
 
-        CurrentState currentState = new CurrentState();
+        Board currentBoard = new Board();
 
-        currentState.setTable(new Table());
+        currentBoard.setTable(new Table());
 
-        currentState.setFoundation(new Foundation());
+        currentBoard.setFoundation(new Foundation());
 
-        currentState.setTalon(new Talon());
+        currentBoard.setTalon(new Talon());
 
         for (int i = 0; i < 7; i++){
-            Stack stack = currentState.getTable().getRows()[i];
+            Stack stack = currentBoard.getTable().getRows()[i];
             for (int j = 0; j< i+ 1; j++){
                 if (j ==i){
                     stack.addCard(cards.get(i));
@@ -46,16 +46,12 @@ public class CurrentState {
                 }
             }
         }
-        currentState.knownStockTalon = new ArrayList<>();
-        currentState.setStock(new Stock());
+        currentBoard.knownStockTalon = new ArrayList<>();
+        currentBoard.setStock(new Stock());
         for (int i = 0; i < 24; i++){
-            currentState.getStock().addCard(new Card(null));
+            currentBoard.getStock().addCard(new Card(null));
         }
-
-
-
-        return  currentState;
-
+        return  currentBoard;
     }
 
     public void setTable(Table table){

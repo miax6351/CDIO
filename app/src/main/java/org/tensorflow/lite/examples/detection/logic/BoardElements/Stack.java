@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Stack {
 
-    private List<Card> cards;
+    protected List<Card> cards;
 
     public Stack(){
         this.cards = new ArrayList<>();
