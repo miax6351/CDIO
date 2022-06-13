@@ -568,6 +568,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 }
             }*/
         // no card can be moved, then pickup new card
+        waitPlayerOption("Pickup deck card");
+        cardMoves.add("T");
         return SOLITARE_STATES.PICKUP_DECK_CARD;
     }
 
@@ -730,6 +732,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 PHASE_CHANGE_COUNTER++;
                 if (PHASE_CHANGE_COUNTER >= 10){
                     gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                    waitPlayerOption("Pickup deck card");
+                    cardMoves.add("T");
                     break;
                 }
 
@@ -756,6 +760,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
                             cardMoves.add("T");
                             gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                            waitPlayerOption("Pickup deck card");
+                            cardMoves.add("T");
                             break;
                             // pickupDeckCard = true;
 
@@ -782,9 +788,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         //TEST
         boolean cardCanBeUsed = false;
         if (!recognizedCardsContains(resultCard)){
-            waitPlayerOption("Pickup deck card");
-            System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
-            cardMoves.add("T");
+            System.out.println("-------- found a new card " + resultCard.getTitle() + "-------");
+            //cardMoves.add("T");
             if (!cardsToFoundationPile(resultCard)){
                 for (int i = 0; i < 7; i++) {
                     if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
