@@ -694,6 +694,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             @Override
                             public void run() {
                                 cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                cardSuit.scrollToPosition(recognizedCards.size()-1);
                             }
                         });
                     }
@@ -739,6 +740,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             @Override
                             public void run() {
                                 cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                cardSuit.scrollToPosition(recognizedCards.size()-1);
+
                             }
                         });
                     }
@@ -787,6 +790,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                         @Override
                                         public void run() {
                                             cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                            cardSuit.scrollToPosition(recognizedCards.size()-1);
+
                                         }
                                     });
                                 }

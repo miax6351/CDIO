@@ -157,7 +157,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
-    cardSuit.setLayoutManager(new LinearLayoutManager(this));
+    // cardSuit.setLayoutManager(new LinearLayoutManager(this));
     CardListAdapter adapter = new CardListAdapter(recognizedCards,this);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
