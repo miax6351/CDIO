@@ -680,6 +680,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case INITIAL:
                 if (!recognizedCardsContains(resultCard)){
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
+                    waitPlayerCardRecognized("Recognized specific card: " + resultCard.getTitle() +", correct?");
                     recognizedCards.add(resultCard);
                     if (!TESTMODE){
                         runOnUiThread(new Runnable() {
@@ -839,9 +840,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
-
                         Toast.makeText(getApplicationContext(),"Move completed",Toast.LENGTH_LONG).show();
-
                         return;
                     }
                 });
@@ -863,6 +862,43 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         }
     }
+
+    public void waitPlayerCardRecognized (String snackbarText) {
+        if (TESTMODE == true){
+            System.out.println(snackbarText);
+            return;
+        }
+
+        continueGame = false;
+        snackbar = Snackbar
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Continue" + "\n", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueGame = true;
+                        Toast.makeText(getApplicationContext(),"Game continued",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                });
+
+        // snackbar UI
+        snackbar.setActionTextColor(Color.GRAY);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.setBackgroundTint(Color.WHITE);
+
+        snackbar.show();
+        int inactiveCount = 0;
+        while (!continueGame){
+            inactiveCount++;
+            // loop until player presses continue
+            if (inactiveCount >= 1000){
+                continueGame = true;
+                break;
+            }
+
+        }
+    }
+
     final class MyResult{
         private final Card from;
         private final Card to;
