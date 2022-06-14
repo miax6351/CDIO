@@ -79,6 +79,12 @@ public class Board {
 
     public void addRecognizedCard(Card card){
         recognizedCards.add(card);
+    public List<Card> addRecognizedCards(List<Card> cards){
+        for (int i = 0; i < cards.size()-1; i++) {
+            recognizedCards.add(cards.get(i)) ;
+        }
+
+
     }
 
 
