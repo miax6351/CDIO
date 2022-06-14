@@ -11,7 +11,7 @@ public class Game {
     private Board board = new Board();
     public void init(List<Card> startingCards){
 
-        board.startGameSetup()
+        board.startGameSetup(startingCards);
     }
 
 }

@@ -22,6 +22,7 @@ import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.env.Utils;
+import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private Integer sensorOrientation = 90;
 
     private Classifier detector;
+    private Game game = new Game();
 
     private Matrix frameToCropTransform;
     private Matrix cropToFrameTransform;
@@ -148,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2.0f);
+
+
+        //initializes the game of 7 cards are recognized.
+        if(((DetectorActivity)detector).canStartGame()){
+            game.init(((DetectorActivity)detector).getStartingCards());
+        }
 
         final List<Classifier.Recognition> mappedRecognitions =
                 new LinkedList<Classifier.Recognition>();
