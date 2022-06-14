@@ -1,7 +1,7 @@
 package org.tensorflow.lite.examples.detection.logic;
 
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
-import org.tensorflow.lite.examples.detection.logic.moves.Board;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Board;
 
 import java.util.List;
 

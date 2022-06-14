@@ -8,27 +8,27 @@ import java.util.List;
  */
 
 public class Table {
-    private Stack[] rows = new Stack[7];
+    private Stack[] columns = new Stack[7];
 
     public Table(){
         for (int i = 0; i <7; i++){
-            rows[i] = new Stack();
+            columns[i] = new Stack();
         }
     }
     public void setStacks(Stack[] stacks){
-        this.rows = stacks;
+        this.columns = stacks;
     }
-    public Stack[] getRows(){
-        return rows;
+    public Stack[] getColumns(){
+        return columns;
     }
-    public Stack getRow(int i){
-        return rows[i];
+    public Stack getColumn(int i){
+        return columns[i];
     }
 
     public Stack getOneEmptyStack(){
         for (int i = 0; i < 7; i++){
-            if (rows[i].isEmpty()){
-                return rows[i];
+            if (columns[i].isEmpty()){
+                return columns[i];
             }
         }
         return null;
@@ -41,7 +41,7 @@ public class Table {
         List<Stack> allRowsOptions = new ArrayList<>();
 
 
-        for (Stack stack : rows){
+        for (Stack stack : columns){
             //don't want to check if the card can be moved on it's own stack
             if (stack.equals(stackFrom)){
                 Card topCard = stack.getSouthMostCard();
@@ -61,5 +61,4 @@ public class Table {
         }
         return allRowsOptions;
     }
-
 }

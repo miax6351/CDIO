@@ -16,7 +16,7 @@
 
 package org.tensorflow.lite.examples.detection;
 
-import static org.tensorflow.lite.examples.detection.DetectorActivity.recognizedCards;
+
 
 import android.Manifest;
 import android.app.Fragment;

@@ -1,12 +1,4 @@
-package org.tensorflow.lite.examples.detection.logic.moves;
-
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Deck;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Foundation;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Stack;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Stock;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Table;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Talon;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
+package org.tensorflow.lite.examples.detection.logic.BoardElements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +14,7 @@ public class Board {
     private Foundation foundation;
     private Talon talon;
     private List<Card> knownStockTalon = new ArrayList<>();
+    private List<Card> recognizedCards = new ArrayList<>();
 
 
     public Board startGameSetup(List<Card> firstCards){
@@ -35,7 +28,7 @@ public class Board {
         this.setTalon(new Talon());
 
         for (int i = 0; i < 7; i++){
-            Stack stack = this.getTable().getRows()[i];
+            Stack stack = this.getTable().getColumns()[i];
             for (int j = 0; j< i+ 1; j++){
                 if (j ==i){
                     stack.addCard(cards.get(i));
@@ -82,6 +75,13 @@ public class Board {
     }
     public List<Card> getKnownStockTalon(){
         return knownStockTalon;
+    }
+    public List<Card> addRecognizedCards(List<Card>){
+
+        for (int i = 0; i < 6; i++) {
+            table.getColumn(i)
+        }
+
     }
 
 

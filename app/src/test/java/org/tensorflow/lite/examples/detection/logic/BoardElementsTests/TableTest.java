@@ -13,7 +13,7 @@ public class TableTest {
         deck.buildDeck();
 
         for (int i = 0; i < 7; i++){
-            Stack stack = table.getRows()[i];
+            Stack stack = table.getColumns()[i];
             for (int j = 0; j < i + 1; j++){
                 if (i == j){
 
@@ -29,7 +29,7 @@ public class TableTest {
 
     @Test
     public void getRows() {
-        table.getRows();
+        table.getColumns();
 
 
     }

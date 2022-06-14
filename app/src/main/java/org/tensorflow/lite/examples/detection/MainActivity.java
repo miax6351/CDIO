@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
         //initializes the game of 7 cards are recognized.
         if(((DetectorActivity)detector).canStartGame()){
+            System.out.println("Starting Game");
             game.init(((DetectorActivity)detector).getStartingCards());
         }
 

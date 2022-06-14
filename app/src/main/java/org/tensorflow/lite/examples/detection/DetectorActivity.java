@@ -298,6 +298,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                     Card resultCard = new Card(result.getTitle().trim());
                                     if(checkCardDuplicate(resultCard)){
+                                        System.out.println("Added Card to list");
                                         startingCards.add(resultCard);
                                     }
 
