@@ -140,6 +140,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static int numberOfCardsDeck = 24;
     private static int numberOfCardsTalon = 0;
 
+    private int newestEmptyColumn;
+
     public void initializeCardColumns() {
         if (cardColumns == null) {
             cardColumns = new LinkedList[7];
@@ -338,6 +340,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 new LinkedList<Classifier.Recognition>();
 
                         for (final Classifier.Recognition result : results) {
+
                             final RectF location = result.getLocation();
                             if (location != null && result.getConfidence() >= minimumConfidence) {
                                 canvas.drawRect(location, paint);
@@ -346,7 +349,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
                                 result.setLocation(location);
                                 mappedRecognitions.add(result);
-
                                 /*
                                 GAME LOGIC
                                  */
@@ -356,7 +358,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                     if (gameState == SOLITARE_STATES.DISPLAY_HIDDEN_CARD)
                                         PHASE_CHANGE_COUNTER++;
 
-                                            playGame(resultCard);
+                                        playGame(resultCard);
+
                                             printBoard();
                                             printMoves();
                                        // }
@@ -525,6 +528,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     //}
                     cardColumns[j].addAll(cardColumns[i]);
                     cardColumns[i].clear();
+                    newestEmptyColumn = i;
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
             }
@@ -734,7 +738,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 }
 
                 if (!recognizedCardsContains(resultCard)) {
-                    recognizedCards.add(new Card(resultCard.getTitle()));
+                    recognizedCards.add(resultCard);
                     if (!TESTMODE){
                         runOnUiThread(new Runnable() {
                             @Override
@@ -745,24 +749,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             }
                         });
                     }
+                    pauseUntilConfirmation(resultCard.getTitle(), resultCard);
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
-                    for (int i = 0; i < 7; i++) {
-                        if (cardColumns[i].isEmpty()){
-                            cardColumns[i].add(resultCard);
-                        gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                        return;
+                    //for (int i = 0; i < 7; i++) {
+                        if (newestEmptyColumn != -1){
+                            if (cardColumns[newestEmptyColumn].isEmpty()){
+                                cardColumns[newestEmptyColumn].add(resultCard);
+                                gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                                return;
 
+                            }
                         }
-                        if (i == 6){
+                        /*if (i == 6){
                             System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
                             cardMoves.add("T");
                             gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                             break;
                             // pickupDeckCard = true;
 
-                        }
-                    }
+                        }*/
+                    //}
                 }
 
 
@@ -776,6 +783,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 PHASE_CHANGE_COUNTER = 0;
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
+                    recognizedCards.add(resultCard);
+                    if (!TESTMODE){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                cardSuit.scrollToPosition(recognizedCards.size()-1);
+
+                            }
+                        });
+                    }
+                    pauseUntilConfirmation(resultCard.getTitle(), resultCard);
                     System.out.println("-------- found a new card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     if (!cardsToFoundationPile(resultCard)){
@@ -784,17 +803,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 // add the new card to the list
                                 Card oldListLastCard = ((Card) cardColumns[i].getLast());
                                 cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(resultCard);
-                                if (!TESTMODE){
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                                            cardSuit.scrollToPosition(recognizedCards.size()-1);
-
-                                        }
-                                    });
-                                }
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle() );
                                     System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
                                     cardMoves.add(resultCard.getTitle() + "-" + ( i + 1));
@@ -809,7 +817,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             else if(emptyColoumn != -1){
                                 // add the new card to the list
                                 cardColumns[emptyColoumn].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.getTitle()));
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
+                                        cardSuit.scrollToPosition(recognizedCards.size()-1);
+
+                                    }
+                                });
                                 //for (int k = 0; k < 10; k++) {
                                 waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + "empty columnn" );
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
@@ -825,7 +840,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         }
                     }else{
                         cardCanBeUsed = true;
-                        recognizedCards.add(resultCard);
                     }
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
@@ -834,11 +848,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         drawTest = true;
                         //  waitNSeconds(1);
                         //}
+                        recognizedCards.remove(resultCard);
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     }
                 }
-
                 break;
             default:
                 break;
@@ -854,8 +868,39 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         continueGame = false;
         snackbar = Snackbar
                 .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("Done" +
-                        "\n\n\n\n", new View.OnClickListener() {
+                .setAction("\nDone" +
+                        "\n", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueGame = true;
+                        return;
+                    }
+                });
+        snackbar.show();
+        int inactiveCount = 0;
+        while (!continueGame){
+            inactiveCount++;
+            // loop until player presses done
+            if (inactiveCount >= 1000){
+                continueGame = true;
+                break;
+            }
+
+        }
+    }
+
+
+    public void pauseUntilConfirmation (String snackbarText, Card resultCard) {
+        if (TESTMODE == true){
+            System.out.println(snackbarText);
+            return;
+        }
+
+        continueGame = false;
+        snackbar = Snackbar
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
+                .setAction("\n Done" +
+                        "\n", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
