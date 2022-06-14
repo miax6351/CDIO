@@ -1,4 +1,4 @@
-package org.tensorflow.lite.examples.detection.logic;
+package org.tensorflow.lite.examples.detection.logic.BoardElements;
 
 public class Card {
     private String title;

@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
 import java.util.LinkedList;
 

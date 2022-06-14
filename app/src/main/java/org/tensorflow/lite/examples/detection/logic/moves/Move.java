@@ -1,6 +1,6 @@
 package org.tensorflow.lite.examples.detection.logic.moves;
 
-import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
 public class Move {
 

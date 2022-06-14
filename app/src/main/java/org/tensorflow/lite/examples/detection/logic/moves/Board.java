@@ -6,7 +6,7 @@ import org.tensorflow.lite.examples.detection.logic.BoardElements.Stack;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Stock;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Table;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Talon;
-import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ public class Board {
     private Foundation foundation;
     private Talon talon;
     private List<Card> knownStockTalon = new ArrayList<>();
+
 
     public static Board startGameSetup(List<Card> firstCards){
         Deck deck = new Deck();

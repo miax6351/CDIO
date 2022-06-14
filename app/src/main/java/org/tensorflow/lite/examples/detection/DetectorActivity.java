@@ -46,7 +46,9 @@ import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallbac
 import org.tensorflow.lite.examples.detection.env.BorderedText;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
-import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Foundation;
+import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.DetectorFactory;
@@ -90,25 +92,31 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private BorderedText borderedText;
 
     private Snackbar snackbar;
+/*
 
     private boolean continueGame = true;
+*/
 
-    /*
+/*
+    */
+/*
     Rows
-     */
+     *//*
+
     public static boolean TESTMODE = false;
     private static LinkedList[] cardColumns = null;
     public static LinkedList recognizedCards = new LinkedList<Card>();
     public static LinkedList deckCards = new LinkedList<Card>();
+*/
 
-    //Test//
+ /*   //Test//
     public static List<Card> fromTest = new LinkedList<Card>();
     public static int toEmptyTest = -1;
     public static Card toTest;
     public static Boolean pickupDeckCardTest = false;
     public static Boolean moveCardTest = false;
     public static Card fromDeckTest;
-    public static  Boolean drawTest = false;
+    public static Boolean drawTest = false;
     public static Boolean moveToFoundationTest = false;
     public static Boolean moveCardColoumnTest = true;
     public static int roundCounterTest = 0;
@@ -122,17 +130,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static int waitTimeCount = 0;
     private static int emptyColoumn = -1;
 
-
+*/
     /*
     Foundation piles
-     */
+     *//*
+    private static Foundation foundation = new Foundation();
     private static LinkedList<Card> spades = new LinkedList<>();
     private static LinkedList<Card> clubs = new LinkedList<>();
     private static LinkedList<Card> hearts = new LinkedList<>();
     private static LinkedList<Card> diamonds = new LinkedList<>();
     private static LinkedList<Card> finishedCard = new LinkedList<>();
-
-    //Deck
+*/
+/*    //Deck
     //den samlede mængde af kort i deck og talon skal være 3 eller over ellers kan kabalen ikke løses.
     private static int numberOfCardsDeck = 24;
     private static int numberOfCardsTalon = 0;
@@ -144,7 +153,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 cardColumns[i] = new LinkedList<Card>();
             }
         }
-    }
+    }*/
+    private List<Card> startingCards = new LinkedList<>();
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -281,7 +291,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     @Override
     protected void processImage() {
         //initializing card columns
-        initializeCardColumns();
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
@@ -348,14 +357,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 GAME LOGIC
                                  */
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
-                                        Card resultCard = new Card(result.getTitle().trim());
-                                       // if (!recognizedCardsContains(resultCard)){
-                                    PHASE_CHANGE_COUNTER++;
-                                            playGame(resultCard);
+                                    Card resultCard = new Card(result.getTitle().trim());
+                                    if(checkCardDuplicate(resultCard)){
+                                        startingCards.add(resultCard);
+                                        if(startingCards.size() == 7){
+                                            Game.init(startingCards);
+                                        }
+                                    }
 
-                                       // }
                                 }
-
 
 
                             }
@@ -405,7 +415,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         runInBackground(() -> detector.setNumThreads(numThreads));
     }
 
-    public static int getCardNumber(Card card) {
+    private boolean checkCardDuplicate(Card resultCard){
+        //Checks if card is allready added to startingCards
+        boolean containsCard = false;
+        for (int i= 0 ; i < startingCards.size()-1;i++){
+            if(!startingCards.get(i).getTitle().equals(resultCard.getTitle())){
+                containsCard = true;
+            }
+        }
+        return  containsCard;
+    }
+
+    /*public static int getCardNumber(Card card) {
 
         char[] toArray = card.getTitle().toCharArray();
         if ((char) (toArray[0]) == 'A')
@@ -478,12 +499,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     private SOLITARE_STATES handleCheckShownCards() {
-     /*   int number, number1;
+     *//*   int number, number1;
         char color;
         String cardMatch1 = "";
         String cardMatch2 = "";
         Card temp;
-*/
+*//*
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
             if((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
@@ -524,12 +545,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
         }
         // then check if some card can be move to another list
-            /*number = getCardNumber((Card) cardColumns[i].getFirst());
+            *//*number = getCardNumber((Card) cardColumns[i].getFirst());
             color = getCardColor( ((Card) cardColumns[i].getFirst()));
-            number1 = number + 1;*/
+            number1 = number + 1;*//*
 
             // check if king is shown and can be moved to empty column
-           /* if (cardColumns[i].isEmpty()){
+           *//* if (cardColumns[i].isEmpty()){
                 for (int j = 0; j < 7; j++) {
                     String kings = ((Card) cardColumns[j].getFirst()).getTitle();
                     if ((kings.equals("Kh") && kings.equals("Kd") && kings.equals("Kc") && kings.equals("Ks")) &&  !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
@@ -540,24 +561,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     }
                 }
                 continue;
-            }*/
+            }*//*
 
-         /*   if (color == 'h' || color == 'd') {
+     *//*   if (color == 'h' || color == 'd') {
                 cardMatch1 = getCardMatch(number1, 'c').trim();
                 cardMatch2 = getCardMatch(number1, 's').trim();
             } else {
                 cardMatch1 = getCardMatch(number1, 'h').trim();
                 cardMatch2 = getCardMatch(number1, 'd').trim();
-            }*/
+            }*//*
             //System.out.println("************ CARD MATCH 1 " + cardMatch1
             //  + "******** CARD MATCH 2: "+ cardMatch2 );
-         /*   for (int j = 0; j < 7; j++) {
+         *//*   for (int j = 0; j < 7; j++) {
 
                 temp = ((Card) cardColumns[j].getLast());
                 if ((temp.getTitle().equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.getTitle().equals(cardMatch2.toLowerCase()))) {
 
                 }
-            }*/
+            }*//*
         // no card can be moved, then pickup new card
         return SOLITARE_STATES.PICKUP_DECK_CARD;
     }
@@ -864,4 +885,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             this.to = to;
         }
     }
+}
+*/
 }

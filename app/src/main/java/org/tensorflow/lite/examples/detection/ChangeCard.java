@@ -1,6 +1,6 @@
 package org.tensorflow.lite.examples.detection;
 
-import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
 import java.util.LinkedList;
 

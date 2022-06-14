@@ -1,20 +1,16 @@
 package org.tensorflow.lite.examples.detection.logic.BoardElements;
 
-import org.tensorflow.lite.examples.detection.logic.Card;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class is more for testing purpose. It act as a deck consisting of all the cards.
  */
 public class Deck {
      private List<Card> cardList;
+     private int numberOfCardsDeck = 24;
 
     public Deck(){
          this.cardList = new ArrayList<>();

@@ -1,17 +1,10 @@
 package org.tensorflow.lite.examples.detection.logic.BoardElementsTests;
 
-import static org.junit.Assert.*;
-
-import com.google.android.material.tabs.TabLayout;
-
 import org.junit.Test;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Deck;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Stack;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Table;
-import org.tensorflow.lite.examples.detection.logic.Card;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
 public class TableTest {
     Table table = new Table();

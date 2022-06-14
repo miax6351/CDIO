@@ -1,7 +1,5 @@
 package org.tensorflow.lite.examples.detection.logic.BoardElements;
 
-import org.tensorflow.lite.examples.detection.logic.Card;
-
 import java.util.ArrayList;
 import java.util.List;
 

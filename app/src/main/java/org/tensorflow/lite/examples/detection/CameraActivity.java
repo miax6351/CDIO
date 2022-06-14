@@ -50,7 +50,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -61,12 +60,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
-import org.tensorflow.lite.examples.detection.logic.Card;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
