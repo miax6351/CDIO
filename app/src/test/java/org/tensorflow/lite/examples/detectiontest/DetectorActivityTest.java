@@ -1,3 +1,4 @@
+/*
 package org.tensorflow.lite.examples.detectiontest;
 
 import static org.junit.Assert.*;
@@ -210,7 +211,8 @@ public class DetectorActivityTest {
     public void testGetCardNumber() {
         allCards t = new allCards();
         Card revealedCard = new Card("");
-        /*List<Card> row1 = Stream.of(t.d4).collect(Collectors.toList());
+        */
+/*List<Card> row1 = Stream.of(t.d4).collect(Collectors.toList());
         List<Card> row2 = Stream.of(t.d7, t.c9).collect(Collectors.toList());
         List<Card> row3 = Stream.of(t.d8, t.s7, t.c10).collect(Collectors.toList());
         List<Card> row4 = Stream.of(t.h2, t.d3, t.s2, t.h7).collect(Collectors.toList());
@@ -218,7 +220,8 @@ public class DetectorActivityTest {
         List<Card> row6 = Stream.of(t.sq, t.h6, t.s10, t.hq, t.d6, t.s3).collect(Collectors.toList());
         List<Card> row7 = Stream.of(t.d5, t.cq, t.c4, t.c8, t.ha, t.c2, t.c7).collect(Collectors.toList());
         List<Card> deck = Stream.of(t.cj, t.hk, t.h5, t.d2, t.c6, t.s4, t.hj, t.s8, t.d10, t.s5, t.h8, t.h10, t.dk, t.h4, t.h9, t.d9, t.dq, t.sk, t.c3, t.c5, t.dj, t.sj, t.ck, t.sa).collect(Collectors.toList());
-        */
+        
+
         List<Card> row1 = Stream.of(t.cq).collect(Collectors.toList());
         List<Card> row2 = Stream.of(t.s4, t.ca).collect(Collectors.toList());
         List<Card> row3 = Stream.of(t.s10, t.ha, t.sa).collect(Collectors.toList());
@@ -551,4 +554,4 @@ public class DetectorActivityTest {
         activity.playGame(card1);
         activity.playGame(card8);
     }
-}
+}*/

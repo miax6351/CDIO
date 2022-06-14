@@ -14,4 +14,8 @@ public class Game {
         board.startGameSetup(startingCards);
     }
 
+    public void playGame(Card card){
+
+    }
+
 }

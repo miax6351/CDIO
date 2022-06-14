@@ -60,10 +60,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
@@ -110,6 +113,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
   ArrayList<String> deviceStrings = new ArrayList<String>();
 
+
+
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
@@ -129,17 +134,19 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
 
+      // cardSuit in recyclerview (bottom sheet)
+
+      cardSuit = findViewById(R.id.recycler_view_card_list);
+      cardSuit.setLayoutManager(new LinearLayoutManager(this));
+      CardListAdapter adapter = new CardListAdapter((LinkedList) recognizedCards,this);
+      adapter.getItemCount();
+      cardSuit.setAdapter(adapter);
 
 
 
 
 
-    // cardSuit in recyclerview (bottom sheet)
-    cardSuit = findViewById(R.id.recycler_view_card_list);
-    cardSuit.setLayoutManager(new LinearLayoutManager(this));
-    CardListAdapter adapter = new CardListAdapter(recognizedCards,this);
-    adapter.getItemCount();
-    cardSuit.setAdapter(adapter);
+
 
   /*  // cardRank in recyclerview (bottom sheet)
     RecyclerView cardRank = findViewById(R.id.textView_card_rank);

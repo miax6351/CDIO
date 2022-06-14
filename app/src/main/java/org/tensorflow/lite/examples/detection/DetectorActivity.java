@@ -30,7 +30,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -38,8 +37,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
@@ -47,9 +44,6 @@ import org.tensorflow.lite.examples.detection.env.BorderedText;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Foundation;
-import org.tensorflow.lite.examples.detection.logic.Game;
-import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.DetectorFactory;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
@@ -93,7 +87,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     private Snackbar snackbar;
 
-    private List<Card> startingCards = new LinkedList<>();
+    private List<Card> recognizedCards = new LinkedList<>();
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -299,7 +293,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                     Card resultCard = new Card(result.getTitle().trim());
                                     if(checkCardDuplicate(resultCard)){
                                         System.out.println("Added Card to list");
-                                        startingCards.add(resultCard);
+                                        recognizedCards.add(resultCard);
                                     }
 
                                 }
@@ -324,6 +318,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 });
                     }
                 });
+    }
+
+    public List<Card>getRecogizedCards(){
+        return recognizedCards;
     }
 
     @Override
@@ -355,8 +353,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private boolean checkCardDuplicate(Card resultCard){
         //Checks if card is allready added to startingCards
         boolean containsCard = false;
-        for (int i= 0 ; i < startingCards.size()-1;i++){
-            if(!startingCards.get(i).getTitle().equals(resultCard.getTitle())){
+        for (int i = 0; i < recognizedCards.size()-1; i++){
+            if(!recognizedCards.get(i).getTitle().equals(resultCard.getTitle())){
                 containsCard = true;
             }
         }
@@ -364,14 +362,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     public boolean canStartGame(){
-        if(startingCards.size() == 7){
+        if(recognizedCards.size() == 7){
             return true;
         }
         return false;
     }
 
-    public List<Card> getStartingCards(){
-        return startingCards;
+    public List<Card> getRecognizedCards(){
+        return recognizedCards;
     }
 
 }
