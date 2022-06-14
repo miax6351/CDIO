@@ -133,27 +133,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
 
-    recognizedCards.add(new Card("5h"));
-    recognizedCards.add(new Card("10s"));
-    recognizedCards.add(new Card("3s"));
-
-    recognizedCards.add(new Card("8h"));
-
-    recognizedCards.add(new Card("2d"));
-
-    recognizedCards.add(new Card("9c"));
-    recognizedCards.add(new Card("8h"));
-
-    recognizedCards.add(new Card("2d"));
-
-    recognizedCards.add(new Card("9c"));
-    recognizedCards.add(new Card("8h"));
-
-    recognizedCards.add(new Card("2d"));
-
-    recognizedCards.add(new Card("9c"));
-
-
 
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);

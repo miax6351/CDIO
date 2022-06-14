@@ -742,7 +742,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             }
                         });
                     }
-                    System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
+                    System.out.println("------- Found lately opened card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty()){
@@ -753,6 +753,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         }
                         if (i == 6){
                             System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
+                            //TODO: wipe card from talon in recognized cards
                             cardMoves.add("T");
                             gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                             break;
@@ -773,7 +774,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 PHASE_CHANGE_COUNTER = 0;
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
-                    System.out.println("-------- find a new card " + resultCard.getTitle() + "-------");
+                    System.out.println("-------- found a new card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
@@ -898,7 +899,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-    public void printMoves(){
+    public static void printMoves(){
         int last = 0;
         System.out.println("");
         for (String move : cardMoves){

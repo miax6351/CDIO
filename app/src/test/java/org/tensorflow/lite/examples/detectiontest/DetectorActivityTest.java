@@ -171,7 +171,7 @@ class allCards{
     public Card h10 = new Card("10h");
     public Card hj = new Card("Jh");
     public Card hq = new Card("Qh");
-    public Card hk = new Card("Kh");
+    public Card hk = new Card("Kc");
 
     public Card da = new Card("Ad");
     public Card d2 = new Card("2d");
@@ -199,7 +199,7 @@ class allCards{
     public Card c10 = new Card("10c");
     public Card cj = new Card("Jc");
     public Card cq = new Card("Qc");
-    public Card ck = new Card("Kc");
+    public Card ck = new Card("Kh");
 
 }
 
@@ -345,7 +345,7 @@ public class DetectorActivityTest {
         }while(dowhile <= 500);
         //test
         board.PrintBoard(board);
-
+        DetectorActivity.printMoves();
 
     }
 
