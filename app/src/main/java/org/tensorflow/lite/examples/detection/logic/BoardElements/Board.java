@@ -76,12 +76,9 @@ public class Board {
     public List<Card> getKnownStockTalon(){
         return knownStockTalon;
     }
-    public List<Card> addRecognizedCards(List<Card>){
 
-        for (int i = 0; i < 6; i++) {
-            table.getColumn(i)
-        }
-
+    public void addRecognizedCard(Card card){
+        recognizedCards.add(card);
     }
 
 

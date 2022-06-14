@@ -30,7 +30,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -38,8 +37,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
@@ -47,9 +44,7 @@ import org.tensorflow.lite.examples.detection.env.BorderedText;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
-import org.tensorflow.lite.examples.detection.logic.BoardElements.Foundation;
 import org.tensorflow.lite.examples.detection.logic.Game;
-import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.DetectorFactory;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
