@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hamsa.twosteppickerdialog.TwoStepPickerDialog;
+
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
 
@@ -32,7 +34,12 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         this.context = context;
     }
 
+
+
+
     public Dialog CreateDialog(int index, int arrayID, boolean suit) {
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final int[] choice = new int[1];
 
@@ -48,11 +55,10 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
                         if (suit) {
                             dataset.get(index).fixSuit(context.getResources().getStringArray(arrayID)[choice[0]]);
-                            notifyItemChanged(index);
                         } else {
                             dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
-                            notifyItemChanged(index);
                         }
+                        notifyItemChanged(index);
 
 
                     }
