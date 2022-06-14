@@ -43,7 +43,22 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final int[] choice = new int[1];
 
-        builder
+        builder.setSingleChoiceItems(arrayID, 5, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                choice[0] = i;
+                if (suit) {
+                    dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
+                } else {
+                    dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
+                }
+                notifyItemChanged(index);
+                dialogInterface.dismiss();
+
+            }
+        });
+
+       /* builder
                 .setSingleChoiceItems(arrayID, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -54,7 +69,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         if (suit) {
-                            dataset.get(index).fixSuit(context.getResources().getStringArray(arrayID)[choice[0]]);
+                            dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
                         } else {
                             dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
                         }
@@ -67,7 +82,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                });
+                });*/
         return builder.create();
 
     }
