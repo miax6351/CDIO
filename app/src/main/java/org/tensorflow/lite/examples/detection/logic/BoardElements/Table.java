@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Seven piles that make up the main table
+ * Stack position range from 0-6, Talon position is 10, Stock position is 15.
  */
 
 public class Table {
@@ -13,7 +14,7 @@ public class Table {
 
     public Table(){
         for (int i = 0; i <7; i++){
-            columns[i] = new Stack();
+            columns[i] = new Stack(i);
         }
     }
     public void setStacks(Stack[] stacks){
@@ -50,8 +51,7 @@ public class Table {
 
     public int containsKing(){
         for (int i = 0; i < columns.length-1; i++) {
-            if (columns[i].isEmpty()){
-                emptyColumns.add(i);
+            if (columns[i].containsKing()){
                 return i;
             }
         }

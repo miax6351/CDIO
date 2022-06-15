@@ -7,10 +7,11 @@ import java.util.List;
  * Stack is a pile of cards so as long as it's more than one card it is a stack.
  */
 public class Stack {
-
+    protected int position;
     protected List<Card> cards;
 
-    public Stack(){
+    public Stack(int position){
+        this.position = position;
         this.cards = new ArrayList<>();
     }
 
@@ -37,6 +38,15 @@ public class Stack {
         }
         return cards.get(cards.size()-1);
     }
+    public Boolean containsKing(){
+        for (int i = 0; i <cards.size(); i++) {
+            if(cards.get(i).getCardNumber() == 'K'){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeSouthCard(){
         Card card = getNorthMostCard();
         if (card == null){
@@ -62,4 +72,7 @@ public class Stack {
         return cards.isEmpty();
     }
 
+    public int getPosition() {
+        return position;
+    }
 }

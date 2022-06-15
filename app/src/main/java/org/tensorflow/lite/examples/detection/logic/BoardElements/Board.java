@@ -24,9 +24,9 @@ public class Board {
 
         this.setFoundation(new Foundation());
 
-        this.setTalon(new Talon());
+        this.setTalon(new Talon(10));
 
-        this.setStock(new Stock());
+        this.setStock(new Stock(15));
 
         for (int i = 0; i < 7; i++){
             Stack stack = this.getTable().getColumns()[i];

@@ -10,14 +10,14 @@ public class Game {
 
 
     private Board board = new Board();
-    private MovePlanner movePlanner = new MovePlanner();
+    private MovePlanner movePlanner = new MovePlanner(board);
     public void init(List<Card> startingCards){
 
         board.startGameSetup(startingCards);
+        movePlanner.generateMoves();
     }
 
     public void playGame(Card card){
-
 
     }
 

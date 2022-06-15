@@ -1,4 +1,4 @@
-package org.tensorflow.lite.examples.detection.logic;
+package org.tensorflow.lite.examples.detection.logic.moves;
 
 public enum SOLITARE_STATES {
     INITIAL, ANALYZE_CARD_MOVE, DISPLAY_HIDDEN_CARD, PICKUP_DECK_CARD

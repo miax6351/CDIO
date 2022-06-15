@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
-import org.tensorflow.lite.examples.detection.logic.SOLITARE_STATES;
+import org.tensorflow.lite.examples.detection.logic.moves.SOLITARE_STATES;
 import java.util.Random;
 
 import java.util.LinkedList;
