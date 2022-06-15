@@ -9,34 +9,63 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.tensorflow.lite.examples.detection.CameraActivity;
+import org.tensorflow.lite.examples.detection.DetectorActivity;
+
 
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHolder> {
 
+    private GameViewModel gameViewModel;
     private LinkedList<Card> dataset;
     private Context context;
 
-    public CardListAdapter(LinkedList dataset, Context context) {
-        this.dataset = dataset;
+    public CardListAdapter(GameViewModel gameViewModel, Context context) {
         this.context = context;
+        this.gameViewModel = gameViewModel;
+        this.dataset = gameViewModel.getRecognizedCards();
     }
 
+
+
+
     public Dialog CreateDialog(int index, int arrayID, boolean suit) {
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final int[] choice = new int[1];
 
-        builder
+        builder.setSingleChoiceItems(arrayID, 5, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                choice[0] = i;
+                if (suit) {
+                    dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
+                } else {
+                    dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
+                }
+                notifyItemChanged(index);
+                dialogInterface.dismiss();
+
+            }
+        });
+
+       /* builder
                 .setSingleChoiceItems(arrayID, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -47,12 +76,11 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         if (suit) {
-                            dataset.get(index).fixSuit(context.getResources().getStringArray(arrayID)[choice[0]]);
-                            notifyItemChanged(index);
+                            dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
                         } else {
                             dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
-                            notifyItemChanged(index);
                         }
+                        notifyItemChanged(index);
 
 
                     }
@@ -61,7 +89,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                });
+                });*/
         return builder.create();
 
     }
@@ -93,7 +121,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
         Card card = dataset.get(position);
 
-
         if (Objects.equals(card.getSuit(), "h")) {
             viewHolder.cardSuit.setImageResource(R.drawable.heart);
         } else if (Objects.equals(card.getSuit(), "c")) {
@@ -114,6 +141,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DetectorActivity.recognizedCards.remove(viewHolder.getAdapterPosition());
                 dataset.remove(viewHolder.getAdapterPosition());
                 notifyItemRemoved(viewHolder.getAdapterPosition());
             }

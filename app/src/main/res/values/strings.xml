@@ -2,10 +2,16 @@
     <string name="tfe_od_app_name" translation_description="Object Detection demo app [CHAR_LIMIT=40]">Solitaire Helper</string>
     <string name="tfe_od_camera_error" translation_description="Error regarding camera support[CHAR_LIMIT=40]">This device doesn\'t support Camera2 API.</string>
     <string-array name="suits">
-        <item>S</item>
-        <item>C</item>
-        <item>H</item>
-        <item>D</item>
+        <item>♠</item>
+        <item>♣</item>
+        <item>♥</item>
+        <item>♦</item>
+    </string-array>
+    <string-array name="suitsText">
+        <item>s</item>
+        <item>c</item>
+        <item>h</item>
+        <item>d</item>
     </string-array>
     <string-array name="ranks">
         <item>A</item>
