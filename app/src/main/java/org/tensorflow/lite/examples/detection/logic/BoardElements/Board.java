@@ -32,11 +32,15 @@ public class Board {
             Stack stack = this.getTable().getColumns()[i];
             for (int j = 0; j< i+ 1; j++){
                 if (j ==i){
-                    recognizedCards.add(cards.get(i));
+                    Card card = cards.get(i);
+                    card.setPosition(i);
+                    recognizedCards.add(card);
                     stack.addCard(cards.get(i));
                     stack.getCards().get(i).setFaceUp(true);
                 }else{
-                    stack.addCard(new Card("X"));
+                    Card card = new Card("X");
+                    card.setPosition(i);
+                    stack.addCard(card);
                 }
             }
         }

@@ -87,6 +87,10 @@ public class MovePlanner {
         }
         return allPosibleMoves;
     }
+
+    public void evaluateMoves(){
+
+    }
     public void executeMove(){
 
     }
