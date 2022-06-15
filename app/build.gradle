@@ -59,6 +59,8 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite:2.4.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.4.0'
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc01"
+
 //    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.3.0'
 //    implementation 'org.tensorflow:tensorflow-lite:2.2.0'
 //    implementation 'org.tensorflow:tensorflow-lite-gpu:2.2.0'

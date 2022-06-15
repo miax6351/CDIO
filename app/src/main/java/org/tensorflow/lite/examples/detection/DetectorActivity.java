@@ -18,6 +18,7 @@ package org.tensorflow.lite.examples.detection;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 
+import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
 import org.tensorflow.lite.examples.detection.env.BorderedText;
@@ -52,6 +54,7 @@ import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.DetectorFactory;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
+import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -348,11 +351,16 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 GAME LOGIC
                                  */
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
-                                        Card resultCard = new Card(result.getTitle().trim());
-                                       // if (!recognizedCardsContains(resultCard)){
+                                    Card resultCard = new Card(result.getTitle().trim());
+                                    // if (!recognizedCardsContains(resultCard)){
                                     PHASE_CHANGE_COUNTER++;
-                                            playGame(resultCard);
-
+                                    playGame(resultCard);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            cardSuit.getAdapter().notifyDataSetChanged();
+                                        }
+                                    });
                                        // }
                                 }
 
@@ -681,17 +689,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 if (!recognizedCardsContains(resultCard)){
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
                     recognizedCards.add(resultCard);
-                    if (!TESTMODE){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                            }
-                        });
-                    }
-                    cardColumns[cardColumnCounter].add(resultCard);
+                    gameViewModel.addRecognizedCard(resultCard);
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
+                            cardColumns[i].add(recognizedCards.get(i));
                             Card card = (Card) cardColumns[i].getFirst();
                             System.out.println("************ KNOWN CARDS IN COLUMN: " + i + "   "
                                     + card.getTitle().trim() + "**********");
@@ -723,15 +724,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 }
 
                 if (!recognizedCardsContains(resultCard)) {
-                    recognizedCards.add(new Card(resultCard.getTitle()));
-                    if (!TESTMODE){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                            }
-                        });
-                    }
+                    recognizedCards.add(resultCard);
+                    gameViewModel.addRecognizedCard(resultCard);
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     for (int i = 0; i < 7; i++) {
                         if (cardColumns[i].isEmpty()){
@@ -769,15 +763,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 // add the new card to the list
                                 Card oldListLastCard = ((Card) cardColumns[i].getLast());
                                 cardColumns[i].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.getTitle()));
-                                if (!TESTMODE){
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            cardSuit.getAdapter().notifyItemInserted(recognizedCards.size());
-                                        }
-                                    });
-                                }
+                                recognizedCards.add(resultCard);
+                                gameViewModel.addRecognizedCard(resultCard);
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle() );
                                     System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
 
@@ -791,7 +778,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                             else if(emptyColoumn != -1){
                                 // add the new card to the list
                                 cardColumns[emptyColoumn].addLast(resultCard);
-                                recognizedCards.add(new Card(resultCard.getTitle()));
+                                recognizedCards.add(resultCard);
+                                gameViewModel.addRecognizedCard(resultCard);
                                 //for (int k = 0; k < 10; k++) {
                                 waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + "empty columnn" );
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
