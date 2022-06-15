@@ -9,7 +9,6 @@ public enum SOLITARE_STATES {
     or move another column to an empty column
     PICK_DECK_CARD: With nothing to move, tells the player to pick up a card from the deck
      */
-
 }
 
 
