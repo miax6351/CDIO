@@ -866,6 +866,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     public void waitPlayerOption (String snackbarText) {
+        waitNSeconds(3);
         if (TESTMODE == true){
             System.out.println(snackbarText);
             return;
@@ -879,13 +880,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
+                        Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_LONG).show();
                         return;
                     }
                 });
+        snackbar.setActionTextColor(Color.GRAY);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.setBackgroundTint(Color.WHITE);
         snackbar.show();
         int inactiveCount = 0;
         while (!continueGame){
             inactiveCount++;
+            waitNSeconds(1);
             // loop until player presses done
             if (inactiveCount >= 1000){
                 continueGame = true;
@@ -909,13 +915,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         continueGame = false;
         snackbar = Snackbar
                 .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("\n Done" +
+                .setAction("\n OK" +
                         "\n", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
 
-                        Toast.makeText(getApplicationContext(),"Move completed",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_LONG).show();
 
                         return;
                     }
@@ -930,6 +936,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         int inactiveCount = 0;
         while (!continueGame){
             inactiveCount++;
+            waitNSeconds(1);
             // loop until player presses done
             if (inactiveCount >= 1000){
                 continueGame = true;
