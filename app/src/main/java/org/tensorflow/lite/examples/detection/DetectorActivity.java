@@ -140,7 +140,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static int numberOfCardsDeck = 24;
     private static int numberOfCardsTalon = 0;
 
-    private int newestEmptyColumn;
+    private int newestEmptyColumn = -1;
+    private int[] hiddenCardsInColumns = {0,1,2,3,4,5,6};
 
     public void initializeCardColumns() {
         if (cardColumns == null) {
@@ -499,6 +500,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 // this opened card should be moved out to finished card queue
                 if(cardColumns[i].isEmpty()) {
                     // this is the last card in the list
+                    newestEmptyColumn = i;
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
                 // card moved to finish queue, check if other card can be moved
@@ -729,13 +731,24 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             case DISPLAY_HIDDEN_CARD:
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
+                boolean hiddenCardCanBeDisplayed = false;
+                for (int i = 0; i < 7; i++) {
+                    if(cardColumns[i].isEmpty() && hiddenCardsInColumns[i] != 0){
+                        hiddenCardCanBeDisplayed = true;
+                    }
+                }
+                if(!hiddenCardCanBeDisplayed){
+                    waitPlayerOption("Pick up new card from deck!");
+                    gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                    break;
+                }
                 //Counter to change phase
-                PHASE_CHANGE_COUNTER++;
+                /*PHASE_CHANGE_COUNTER++;
                 if (PHASE_CHANGE_COUNTER >= 10){
                     gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                     waitPlayerOption("Pick up new card from deck!");
                     break;
-                }
+                }*/
 
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(resultCard);
@@ -754,7 +767,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     cardMoves.add("T");
                     //for (int i = 0; i < 7; i++) {
                         if (newestEmptyColumn != -1){
-                            if (cardColumns[newestEmptyColumn].isEmpty()){
+                            if (cardColumns[newestEmptyColumn].isEmpty() && hiddenCardsInColumns[newestEmptyColumn] != 0){
+                                updateHiddenCardsInColumns(newestEmptyColumn);
                                 cardColumns[newestEmptyColumn].add(resultCard);
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 return;
@@ -776,6 +790,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 break;
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
+                waitPlayerOption("Pick up card from deck");
                 //TEST//
                 pickupDeckCardTest = true;
                 moveCardTest = false;
@@ -888,6 +903,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         }
     }
+
+    public void updateHiddenCardsInColumns(int column){
+            hiddenCardsInColumns[column]--;
+        }
 
 
     public void pauseUntilConfirmation (String snackbarText, Card resultCard) {
