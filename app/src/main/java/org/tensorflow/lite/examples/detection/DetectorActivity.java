@@ -367,6 +367,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                         @Override
                                         public void run() {
                                             cardSuit.getAdapter().notifyDataSetChanged();
+                                            System.out.println("**************** ALL RECOGNIZED CARDS *******************");
+                                            for (Object card :  DetectorActivity.recognizedCards){
+                                                System.out.println(((Card) card).getTitle());
+                                            }
+                                            System.out.println("**************** ALL RECOGNIZED CARDS *******************");
                                         }
                                     });
                                        // }

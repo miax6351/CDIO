@@ -9,6 +9,7 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.tensorflow.lite.examples.detection.CameraActivity;
 import org.tensorflow.lite.examples.detection.DetectorActivity;
-import com.hamsa.twosteppickerdialog.TwoStepPickerDialog;
+
 
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
@@ -140,10 +141,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(DetectorActivity.recognizedCards.get(viewHolder.getAdapterPosition()));
                 DetectorActivity.recognizedCards.remove(viewHolder.getAdapterPosition());
-                if (DetectorActivity.recognizedCards.get(viewHolder.getAdapterPosition()) != null)
-                System.out.println(DetectorActivity.recognizedCards.get(viewHolder.getAdapterPosition()));
                 dataset.remove(viewHolder.getAdapterPosition());
                 notifyItemRemoved(viewHolder.getAdapterPosition());
             }
