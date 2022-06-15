@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Table {
     private Stack[] columns = new Stack[7];
+    private ArrayList<Integer> emptyColumns = new ArrayList<>();
 
     public Table(){
         for (int i = 0; i <7; i++){
@@ -36,6 +37,27 @@ public class Table {
     public Boolean isRowEmpty(Stack row){
         return row.isEmpty();
     }
+
+    public Boolean containsEmptyColumn(){
+        for (int i = 0; i < columns.length-1; i++) {
+            if (columns[i].isEmpty()){
+                emptyColumns.add(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int containsKing(){
+        for (int i = 0; i < columns.length-1; i++) {
+            if (columns[i].isEmpty()){
+                emptyColumns.add(i);
+                return i;
+            }
+        }
+        return -1;
+    }
+
     //get all move options for a specific card from row to row.
     public List<Stack> getAllMoveOptions(Card cardFrom, Stack stackFrom){
         List<Stack> allRowsOptions = new ArrayList<>();
