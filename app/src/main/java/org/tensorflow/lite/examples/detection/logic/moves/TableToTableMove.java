@@ -3,15 +3,12 @@ package org.tensorflow.lite.examples.detection.logic.moves;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Board;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
-public class TableToTable extends Move{
-    public TableToTable(Card fromCard, Card toCard, Board board) {
+public class TableToTableMove extends Move{
+    private int destinationColumnIndex;
+    public TableToTableMove(Card fromCard, Card toCard, int destinationColumnnIndex) {
         this.fromCard = fromCard;
         this.toCard = toCard;
-        this.board = board;
+        this.destinationColumnIndex = destinationColumnnIndex;
     }
 
-    @Override
-    protected void processMove() {
-
-    }
 }

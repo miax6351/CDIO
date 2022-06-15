@@ -47,6 +47,16 @@ public class Stack {
         return false;
     }
 
+    public int getHiddenCards(){
+        int hiddenCards = 0;
+        for (int i = 0; i <cards.size(); i++) {
+            if(cards.get(i).getTitle().equals("X")){
+                hiddenCards ++;
+            }
+        }
+        return hiddenCards;
+    }
+
     public void removeSouthCard(){
         Card card = getNorthMostCard();
         if (card == null){
@@ -72,7 +82,6 @@ public class Stack {
         return cards.isEmpty();
     }
 
-    public int getPosition() {
-        return position;
-    }
+
+
 }

@@ -57,6 +57,18 @@ public class Table {
         }
         return -1;
     }
+    public int getBiggestPileOfDownCards(){
+        int highestNumberOfHiddenCards = 0;
+        int index = 0;
+        for (int i = 0; i < columns.length-1; i++) {
+            int numberOfHiddenCards = columns[i].getHiddenCards();
+            if (numberOfHiddenCards > highestNumberOfHiddenCards){
+                highestNumberOfHiddenCards = numberOfHiddenCards;
+                index = i;
+            }
+        }
+        return index;
+    }
 
     //get all move options for a specific card from row to row.
     public List<Stack> getAllMoveOptions(Card cardFrom, Stack stackFrom){
