@@ -87,6 +87,9 @@ public class Card {
         if (cardToMoveTo == null){
             return false;
         }
+        if(this.getCardNumber() == 13 && cardToMoveTo.getTitle().equals("X")){
+            return true;
+        }
         boolean suitTheSame = cardToMoveTo.isRed() != this.isRed();
         boolean valueOneHigher = this.getCardNumber() == cardToMoveTo.getCardNumber()-1;
         return valueOneHigher && suitTheSame;
