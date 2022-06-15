@@ -216,7 +216,7 @@ public abstract class CameraActivity extends AppCompatActivity
             int height = gestureLayout.getMeasuredHeight();
 
             //TODO change this?
-            sheetBehavior.setPeekHeight(200);
+            sheetBehavior.setPeekHeight(300);
           }
         });
     sheetBehavior.setHideable(false);
