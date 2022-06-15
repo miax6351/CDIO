@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.tensorflow.lite.examples.detection.CameraActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.Game;
 
 import java.util.LinkedList;
 
 public class GameViewModel extends ViewModel {
 
     private LinkedList<Card> recognizedCards;
-    private int score;
 
     public GameViewModel() {
         System.out.println("GameViewModel created");
@@ -24,14 +24,6 @@ public class GameViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         System.out.println("ViewModel destroyed");
-    }
-
-    public void increment(){
-        score++;
-    }
-
-    public void decrement(){
-        score--;
     }
 
     public void addRecognizedCard(Card card){

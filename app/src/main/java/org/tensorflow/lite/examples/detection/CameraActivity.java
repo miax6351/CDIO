@@ -16,8 +16,6 @@
 
 package org.tensorflow.lite.examples.detection;
 
-import static org.tensorflow.lite.examples.detection.DetectorActivity.recognizedCards;
-
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
@@ -116,7 +114,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   ArrayList<String> deviceStrings = new ArrayList<String>();
 
-  protected GameViewModel gameViewModel;
+  public static GameViewModel gameViewModel;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
