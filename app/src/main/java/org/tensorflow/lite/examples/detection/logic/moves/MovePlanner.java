@@ -3,15 +3,19 @@ package org.tensorflow.lite.examples.detection.logic.moves;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Board;
 import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 
-public class TableToTable extends Move{
-    public TableToTable(Card fromCard, Card toCard, Board board) {
-        this.fromCard = fromCard;
-        this.toCard = toCard;
+public class MovePlanner {
+    private Board board;
+    public MovePlanner(Board board) {
         this.board = board;
     }
 
-    @Override
-    protected void processMove() {
+    public void processCard(Card card){
+
+    }
+    public Move generateMoves(){
+        return new Move();
+    }
+    public void executeMove(){
 
     }
 }

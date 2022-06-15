@@ -5,14 +5,16 @@ import java.util.List;
 
 /**
  * Seven piles that make up the main table
+ * Stack position range from 0-6, Talon position is 10, Stock position is 15.
  */
 
 public class Table {
     private Stack[] columns = new Stack[7];
+    private ArrayList<Integer> emptyColumns = new ArrayList<>();
 
     public Table(){
         for (int i = 0; i <7; i++){
-            columns[i] = new Stack();
+            columns[i] = new Stack(i);
         }
     }
     public void setStacks(Stack[] stacks){
@@ -36,6 +38,26 @@ public class Table {
     public Boolean isRowEmpty(Stack row){
         return row.isEmpty();
     }
+
+    public Boolean containsEmptyColumn(){
+        for (int i = 0; i < columns.length-1; i++) {
+            if (columns[i].isEmpty()){
+                emptyColumns.add(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int containsKing(){
+        for (int i = 0; i < columns.length-1; i++) {
+            if (columns[i].containsKing()){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     //get all move options for a specific card from row to row.
     public List<Stack> getAllMoveOptions(Card cardFrom, Stack stackFrom){
         List<Stack> allRowsOptions = new ArrayList<>();

@@ -16,7 +16,6 @@ public class Board {
     private List<Card> knownStockTalon = new ArrayList<>();
     private List<Card> recognizedCards = new ArrayList<>();
 
-
     public Board startGameSetup(List<Card> firstCards){
         Deck deck = new Deck();
         List<Card> cards = deck.cardsKnownStartGame(firstCards);
@@ -25,12 +24,15 @@ public class Board {
 
         this.setFoundation(new Foundation());
 
-        this.setTalon(new Talon());
+        this.setTalon(new Talon(10));
+
+        this.setStock(new Stock(15));
 
         for (int i = 0; i < 7; i++){
             Stack stack = this.getTable().getColumns()[i];
             for (int j = 0; j< i+ 1; j++){
                 if (j ==i){
+                    recognizedCards.add(cards.get(i));
                     stack.addCard(cards.get(i));
                     stack.getCards().get(i).setFaceUp(true);
                 }else{
@@ -39,7 +41,7 @@ public class Board {
             }
         }
         this.knownStockTalon = new ArrayList<>();
-        this.setStock(new Stock());
+
         for (int i = 0; i < 24; i++){
             this.getStock().addCard(new Card(null));
         }
@@ -76,15 +78,10 @@ public class Board {
     public List<Card> getKnownStockTalon(){
         return knownStockTalon;
     }
-
-    public void addRecognizedCard(Card card){
-        recognizedCards.add(card);
-    public List<Card> addRecognizedCards(List<Card> cards){
+    public void addRecognizedCards(List<Card> cards){
         for (int i = 0; i < cards.size()-1; i++) {
             recognizedCards.add(cards.get(i)) ;
         }
-
-
     }
 
 

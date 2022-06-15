@@ -10,7 +10,8 @@ public class Stock extends Stack{
 
     List<Card> stock;
 
-    public Stock(){
+    public Stock(int position){
+        super(position);
         this.stock = new ArrayList<>();
     }
 

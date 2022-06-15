@@ -22,18 +22,23 @@ import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.env.Utils;
+import org.tensorflow.lite.examples.detection.logic.BoardElements.Card;
 import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.3f;
+    private List<Card> processedCards = new ArrayList<Card>();
+    private boolean startedGame = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Classifier detector;
     private Game game = new Game();
+
 
     private Matrix frameToCropTransform;
     private Matrix cropToFrameTransform;
@@ -153,10 +159,23 @@ public class MainActivity extends AppCompatActivity {
 
 
         //initializes the game of 7 cards are recognized.
-        if(((DetectorActivity)detector).canStartGame()){
+        if(((DetectorActivity)detector).canStartGame() && !startedGame){
             System.out.println("Starting Game");
-            game.init(((DetectorActivity)detector).getStartingCards());
+            game.init(((DetectorActivity)detector).getRecognizedCards());
+            processedCards.addAll(((DetectorActivity)detector).getRecognizedCards());
+            startedGame = true;
         }
+        else{
+            int newCards = ((DetectorActivity)detector).getRecognizedCards().size()-processedCards.size();
+            for (int i = 0; i < newCards; i++) {
+                Card newCard = ((DetectorActivity)detector).getRecognizedCards().get(((DetectorActivity)detector).getRecognizedCards().size()-newCards+i);
+                processedCards.add(newCard);
+                if(startedGame){
+                    game.playGame(newCard);
+                }
+            }
+        }
+
 
         final List<Classifier.Recognition> mappedRecognitions =
                 new LinkedList<Classifier.Recognition>();
