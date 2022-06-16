@@ -84,6 +84,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private Bitmap croppedBitmap = null;
     private Bitmap cropCopyBitmap = null;
 
+    private Snackbar snackbar;
+    private Boolean continueGame;
+
     private boolean computingDetection = false;
 
     private long timestamp = 0;
@@ -313,6 +316,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                             cardSuit.getAdapter().notifyDataSetChanged();
                                         }
                                     });
+                                    if(gameViewModel.getShowBar()){
+                                        waitPlayerOption(gameViewModel.getSnackBarText());
+                                    }
                                     // }
                                 }
 
@@ -362,5 +368,48 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     @Override
     protected void setNumThreads(final int numThreads) {
         runInBackground(() -> detector.setNumThreads(numThreads));
+    }
+
+    public void waitPlayerOption (String snackbarText) {
+        continueGame = false;
+
+        TODO:snackbar = Snackbar
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Complete move" + "\n", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueGame = true;
+                        gameViewModel.setShowBar(false, "");
+                        Toast.makeText(getApplicationContext(),"Move completed",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                });
+
+        // snackbar UI
+        snackbar.setActionTextColor(Color.GRAY);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.setBackgroundTint(Color.WHITE);
+
+        snackbar.show();
+        int inactiveCount = 0;
+        while (!continueGame){
+            waitNSeconds(1);
+            inactiveCount++;
+            // loop until player presses done
+            if (inactiveCount >= 1000){
+                continueGame = true;
+                break;
+            }
+
+        }
+    }
+    private void waitNSeconds(int i) {
+        try {
+            System.out.println("******* WAIT " + i + " SEC **********");
+            Thread.sleep(i * 1000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            ex.printStackTrace();
+        }
     }
 }

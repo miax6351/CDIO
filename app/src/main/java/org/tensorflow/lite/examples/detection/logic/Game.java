@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.tensorflow.lite.examples.detection.CameraActivity;
 import org.tensorflow.lite.examples.detection.DetectorActivity;
+import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,6 +21,8 @@ public class Game {
     private Snackbar snackbar;
 
     private boolean continueGame = true;
+
+    public static GameViewModel gameViewModel;
 
     /*
     Rows
@@ -221,15 +224,7 @@ public class Game {
         return SOLITARE_STATES.PICKUP_DECK_CARD;
     }
 
-    private void waitNSeconds(int i) {
-        try {
-            System.out.println("******* WAIT " + i + " SEC **********");
-            Thread.sleep(i * 1000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            ex.printStackTrace();
-        }
-    }
+
 
     public static boolean recognizedCardsContains(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
@@ -444,43 +439,10 @@ public class Game {
         }
     }
 
-    /*public void waitPlayerOption (String snackbarText) {
-        if (TESTMODE == true){
-            System.out.println(snackbarText);
-            return;
-        }
 
-        continueGame = false;
-        TODO:snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Complete move" + "\n", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        continueGame = true;
 
-                        Toast.makeText(getApplicationContext(),"Move completed",Toast.LENGTH_LONG).show();
 
-                        return;
-                    }
-                });
 
-        // snackbar UI
-        snackbar.setActionTextColor(Color.GRAY);
-        snackbar.setTextColor(Color.BLACK);
-        snackbar.setBackgroundTint(Color.WHITE);
-
-        snackbar.show();
-        int inactiveCount = 0;
-        while (!continueGame){
-            inactiveCount++;
-            // loop until player presses done
-            if (inactiveCount >= 1000){
-                continueGame = true;
-                break;
-            }
-
-        }
-    }*/
     final class MyResult{
         private final Card from;
         private final Card to;
