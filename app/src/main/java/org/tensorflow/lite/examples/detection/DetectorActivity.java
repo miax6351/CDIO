@@ -86,6 +86,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private Bitmap croppedBitmap = null;
     private Bitmap cropCopyBitmap = null;
 
+    /*
+    waitPlayerAction
+     */
     private Snackbar snackbar;
     private Boolean continueGame;
 
@@ -408,16 +411,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-    public void updateHiddenCardsInColumns(int column){
-            hiddenCardsInColumns[column]--;
-        }
 
 
     public void pauseUntilConfirmation (String snackbarText, Card resultCard) {
-        if (TESTMODE == true){
-            System.out.println(snackbarText);
-            return;
-        }
 
         continueGame = false;
         snackbar = Snackbar
