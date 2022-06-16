@@ -57,6 +57,30 @@ public class Card {
         return Integer.parseInt(toArray[0] + "");
     }
 
+    public boolean isCardCanBeUsed(Card resultCard) {
+        int number, number1;
+        char color;
+        String cardMatch1;
+        String cardMatch2;
+        String temp = "";
+        number = resultCard.getCardNumber();
+        color = getCardColor(resultCard);
+        if (isKingMovable(resultCard)){
+            return false;
+        }
+        number1 = number + 1;
+        if (color == 'h' || color == 'd') {
+            cardMatch1 = getCardMatch(number1, 'c').trim();
+            cardMatch2 = getCardMatch(number1, 's').trim();
+        }  else {
+            cardMatch1 = getCardMatch(number1, 'h').trim();
+            cardMatch2 = getCardMatch(number1, 'd').trim();
+        }
+        if (this.getTitle().equalsIgnoreCase(cardMatch1) || this.getTitle().equalsIgnoreCase(cardMatch2))
+            return true;
+        return false;
+    }
+
     public void fixCard(String title) {
         this.title = title;
     }

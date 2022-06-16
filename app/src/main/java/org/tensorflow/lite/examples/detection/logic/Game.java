@@ -78,30 +78,6 @@ public class Game {
         return (String) (returnText + i) + c + "";
     }
 
-    public static boolean isCardCanBeUsed(Card card, Card resultCard) {
-        int number, number1;
-        char color;
-        String cardMatch1;
-        String cardMatch2;
-        String temp = "";
-        number = resultCard.getCardNumber();
-        color = getCardColor(resultCard);
-        if (isKingMovable(resultCard)){
-            return false;
-        }
-        number1 = number + 1;
-        if (color == 'h' || color == 'd') {
-            cardMatch1 = getCardMatch(number1, 'c').trim();
-            cardMatch2 = getCardMatch(number1, 's').trim();
-        }  else {
-            cardMatch1 = getCardMatch(number1, 'h').trim();
-            cardMatch2 = getCardMatch(number1, 'd').trim();
-        }
-        if (card.getTitle().equalsIgnoreCase(cardMatch1) || card.getTitle().equalsIgnoreCase(cardMatch2))
-            return true;
-        return false;
-    }
-
     public static Boolean isKingMovable(Card card){
         if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
             for (int i = 0; i < 7; i++){
@@ -152,7 +128,7 @@ public class Game {
                     }
                     if (cardColumns[j].isEmpty() || (i == j))
                         continue;
-                    if(isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j){
+                    if(((Card) cardColumns[j].getLast()).isCardCanBeUsed((Card) cardColumns[i].getFirst()) && i!=j){
                         movingCard = (Card) cardColumns[i].getFirst();
                         //for (int k = 0; k < 5; k++) {
                         //waitNSeconds(1);
@@ -385,7 +361,7 @@ public class Game {
                     cardMoves.add("T");
                     if (!cardsToFoundationPile(resultCard)){
                         for (int i = 0; i < 7; i++) {
-                            if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
+                            if ((!cardColumns[i].isEmpty()) && ((Card) cardColumns[i].getLast()).isCardCanBeUsed(resultCard) && !finishedCard.contains(resultCard)) {
                                 // add the new card to the list
                                 Card oldListLastCard = ((Card) cardColumns[i].getLast());
                                 cardColumns[i].addLast(resultCard);
