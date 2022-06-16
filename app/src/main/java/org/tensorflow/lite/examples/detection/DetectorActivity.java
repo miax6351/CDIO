@@ -16,6 +16,8 @@
 
 package org.tensorflow.lite.examples.detection;
 
+import static org.tensorflow.lite.examples.detection.viewmodels.GameViewModel.FIRST_RUN;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Camera;
@@ -263,6 +265,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 new Runnable() {
                     @Override
                     public void run() {
+                        if (FIRST_RUN){
+                            waitPlayerOption(gameViewModel.getSnackBarText());
+                            FIRST_RUN = false;
+                        }
+
                         LOGGER.i("Running detection on image " + currTimestamp);
                         final long startTime = SystemClock.uptimeMillis();
                         final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
@@ -307,6 +314,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                         PHASE_CHANGE_COUNTER++;*/
 
                                     game.playGame(resultCard);
+                                    if(gameViewModel.getShowBar()){
+                                        waitPlayerOption(gameViewModel.getSnackBarText());
+                                    }
                                     game.printBoard();
                                     game.printMoves();
 
@@ -316,9 +326,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                             cardSuit.getAdapter().notifyDataSetChanged();
                                         }
                                     });
-                                    if(gameViewModel.getShowBar()){
-                                        waitPlayerOption(gameViewModel.getSnackBarText());
-                                    }
                                     // }
                                 }
 
@@ -372,8 +379,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     public void waitPlayerOption (String snackbarText) {
         continueGame = false;
-
-        TODO:snackbar = Snackbar
+        snackbar = Snackbar
                 .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Complete move" + "\n", new View.OnClickListener() {
                     @Override

@@ -22,7 +22,7 @@ public class Game {
 
     private boolean continueGame = true;
 
-    public static GameViewModel gameViewModel;
+    private GameViewModel gameViewModel;
 
     /*
     Rows
@@ -58,6 +58,7 @@ public class Game {
 
     public Game(){
         //initializing card columns
+        gameViewModel = CameraActivity.gameViewModel;
         initializeCardColumns();
     }
 
@@ -174,6 +175,7 @@ public class Game {
                         //for (int k = 0; k < 5; k++) {
                         //waitNSeconds(1);
                         //TODO:waitPlayerOption("Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
+                        gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                         //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
                         cardMoves.add(movingCard.getTitle() + "-" + (j+1));
@@ -308,6 +310,7 @@ public class Game {
                 }
             }
             //for(int i = 0; i < 5; i++) {
+            gameViewModel.setShowBar(true, "Move " + card.getTitle() + " to foundation pile");
             //TODO:waitPlayerOption("------ move card " + card.getTitle() + " to foundation pile ------");
             //waitNSeconds(1);
             // }
@@ -339,6 +342,7 @@ public class Game {
                         return;
                     } else {
                         cardColumnCounter++;
+                        gameViewModel.setShowBar(true, "Film card on row " + (cardColumnCounter + 1));
                         //TODO:waitPlayerOption("Film card on row " + (cardColumnCounter + 1));
                     }
                 }
@@ -357,6 +361,7 @@ public class Game {
                 PHASE_CHANGE_COUNTER++;
                 if (PHASE_CHANGE_COUNTER >= 10){
                     gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                    gameViewModel.setShowBar(true, "Pick up new card from deck!");
                     //TODO:waitPlayerOption("Pick up new card from deck!");
                     break;
                 }
@@ -400,6 +405,7 @@ public class Game {
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(resultCard);
                                 CameraActivity.gameViewModel.addRecognizedCard(resultCard);
+                                gameViewModel.setShowBar(true, "Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle());
                                 //TODO:waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle() );
                                 System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
                                 cardMoves.add(resultCard.getTitle() + "-" + ( i + 1));
@@ -413,6 +419,7 @@ public class Game {
                                 recognizedCards.add(resultCard);
                                 CameraActivity.gameViewModel.addRecognizedCard(resultCard);
                                 //for (int k = 0; k < 10; k++) {
+                                gameViewModel.setShowBar(true, "Move new card: " + resultCard.getTitle() +" to " + "empty columnn");
                                 //TODO:waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + "empty columnn" );
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
                                 emptyColoumn = -1;
@@ -427,6 +434,7 @@ public class Game {
                     }
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
+                        gameViewModel.setShowBar(true, resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                         //TODO:waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;

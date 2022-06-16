@@ -17,12 +17,15 @@ public class GameViewModel extends ViewModel {
     private LinkedList<Card> recognizedCards;
     public MutableLiveData<Boolean> isShowing;
     private MutableLiveData<String> content;
-
-
+    public static boolean FIRST_RUN = true;
 
     public GameViewModel() {
         System.out.println("GameViewModel created");
         recognizedCards = new LinkedList<>();
+        isShowing = new MutableLiveData<>();
+        content = new MutableLiveData<>();
+        isShowing.setValue(true);
+        content.setValue("Film row 1");
     }
 
     @Override
@@ -44,11 +47,12 @@ public class GameViewModel extends ViewModel {
     }
 
     public void setShowBar(Boolean isShow, String content){
-        this.isShowing.setValue(isShow);
-        this.content.setValue(content);
+        this.isShowing.postValue(isShow);
+        this.content.postValue(content);
 
     }
     public Boolean getShowBar(){
+        System.out.println(this.isShowing.getValue() + "***************FDSASTRHDRTHSRFwdeafrgsrtef");
         return this.isShowing.getValue();
     }
     public String getSnackBarText(){
