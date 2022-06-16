@@ -67,21 +67,7 @@ public class Game {
         }
     }
 
-    public static int getCardNumber(Card card) {
 
-        char[] toArray = card.getTitle().toCharArray();
-        if ((char) (toArray[0]) == 'A')
-            return 1;
-        if ((char) (toArray[0]) == 'J')
-            return 11;
-        else if ((char) (toArray[0]) == 'Q')
-            return 12;
-        else if ((char) (toArray[0]) == 'K')
-            return 13;
-        else if (((char) (toArray[0]) == '1') && ((char) (toArray[1]) == '0'))
-            return 10;
-        return Integer.parseInt(toArray[0] + "");
-    }
 
     private static String getCardMatch(int i, char c) {
         String returnText = "";
@@ -98,7 +84,7 @@ public class Game {
         String cardMatch1;
         String cardMatch2;
         String temp = "";
-        number = getCardNumber(resultCard);
+        number = resultCard.getCardNumber();
         color = getCardColor(resultCard);
         if (isKingMovable(resultCard)){
             return false;
@@ -268,7 +254,7 @@ public class Game {
                 if (spades.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     spades.add(new Card("As"));
                     removeCard = true;
-                } else if (!spades.isEmpty() && (getCardNumber(card) == getCardNumber(spades.getLast()) + 1)) {
+                } else if (!spades.isEmpty() && (card.getCardNumber() == spades.getLast().getCardNumber() + 1)) {
                     spades.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
@@ -278,7 +264,7 @@ public class Game {
                     clubs.add(new Card("Ac"));
                     removeCard = true;
 
-                } else if (!clubs.isEmpty() && (getCardNumber(card) == getCardNumber(clubs.getLast()) + 1)) {
+                } else if (!clubs.isEmpty() && (card.getCardNumber() == clubs.getLast().getCardNumber() + 1)) {
                     clubs.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
@@ -287,7 +273,7 @@ public class Game {
                 if (hearts.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     hearts.add(new Card("Ah"));
                     removeCard = true;
-                } else if (!hearts.isEmpty() && (getCardNumber(card) == getCardNumber(hearts.getLast()) + 1)) {
+                } else if (!hearts.isEmpty() && (card.getCardNumber() == hearts.getLast().getCardNumber() + 1)) {
                     hearts.add(new Card(card.getTitle()));
                     removeCard = true;
                 }
@@ -296,7 +282,7 @@ public class Game {
                 if (diamonds.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
                     diamonds.add(new Card("Ad"));
                     removeCard = true;
-                } else if (!diamonds.isEmpty() && (getCardNumber(card) == getCardNumber(diamonds.getLast()) + 1)) {
+                } else if (!diamonds.isEmpty() && card.getCardNumber() == diamonds.getLast().getCardNumber() + 1) {
                     diamonds.add(new Card(card.getTitle()));
                     removeCard = true;
                 }

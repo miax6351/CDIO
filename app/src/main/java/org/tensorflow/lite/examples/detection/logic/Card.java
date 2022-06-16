@@ -40,8 +40,10 @@ public class Card {
         return card.getTitle().charAt(2);
     }
 
-    public int getCardNumber(String title) {
-        char[] toArray = title.toCharArray();
+
+    public int getCardNumber() {
+
+        char[] toArray = this.getTitle().toCharArray();
         if ((char) (toArray[0]) == 'A')
             return 1;
         if ((char) (toArray[0]) == 'J')
