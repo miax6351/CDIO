@@ -3,6 +3,7 @@ package org.tensorflow.lite.examples.detection.logic.BoardElements;
 public class Card {
     private String title;
     private Boolean faceUp = false;
+    private int position;
 
     public Card(String title) {
         this.title = title;
@@ -87,9 +88,20 @@ public class Card {
         if (cardToMoveTo == null){
             return false;
         }
+        if(this.getCardNumber() == 13 && cardToMoveTo.getTitle().equals("X")){
+            return true;
+        }
         boolean suitTheSame = cardToMoveTo.isRed() != this.isRed();
         boolean valueOneHigher = this.getCardNumber() == cardToMoveTo.getCardNumber()-1;
         return valueOneHigher && suitTheSame;
 
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

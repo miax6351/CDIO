@@ -7,17 +7,47 @@ import java.util.List;
  * Four foundation columns
  */
 public class Foundation {
-    private List<Card> hearts;
-    private List<Card> diamonds;
-    private List<Card> clovers;
-    private List<Card> spades;
+    private Stack hearts;
+    private Stack diamonds;
+    private Stack clovers;
+    private Stack spades;
 
     public Foundation() {
-        this.hearts = new LinkedList<>();
-        this.diamonds = new LinkedList<>();
-        this.clovers = new LinkedList<>();
-        this.spades = new LinkedList<>();
+        this.hearts = new Stack(11);
+        this.diamonds = new Stack(12);
+        this.clovers = new Stack(13);
+        this.spades = new Stack(14);
     }
 
+    public Stack getHearts() {
+        return hearts;
+    }
 
+    public Stack getDiamonds() {
+        return diamonds;
+    }
+
+    public Stack getClovers() {
+        return clovers;
+    }
+
+    public Stack getSpades() {
+        return spades;
+    }
+
+    public void addCardHearts(Card card){
+        this.hearts.addCard(card);
+    }
+
+    public void addCardDiamonds(Card card) {
+        this.diamonds.addCard(card);
+    }
+
+    public void addCardClovers(Card card) {
+        this.clovers.addCard(card);
+    }
+
+    public void addCardSpades(Card card) {
+        this.spades.addCard(card);
+    }
 }

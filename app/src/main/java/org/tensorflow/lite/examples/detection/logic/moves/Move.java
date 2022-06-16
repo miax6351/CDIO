@@ -7,7 +7,6 @@ public class Move {
 
     protected Card fromCard;
     protected Card toCard;
-    protected Board board;
 
 
     protected Card getFromCard() {
@@ -19,7 +18,4 @@ public class Move {
     }
 
 
-    protected void processMove(){
-
-    }
 }

@@ -13,8 +13,8 @@ public class Board {
     private Stock stock;
     private Foundation foundation;
     private Talon talon;
-    private List<Card> knownStockTalon = new ArrayList<>();
-    private List<Card> recognizedCards = new ArrayList<>();
+    private static List<Card> knownStockTalon = new ArrayList<>();
+    private static List<Card> recognizedCards = new ArrayList<>();
 
     public Board startGameSetup(List<Card> firstCards){
         Deck deck = new Deck();
@@ -32,11 +32,15 @@ public class Board {
             Stack stack = this.getTable().getColumns()[i];
             for (int j = 0; j< i+ 1; j++){
                 if (j ==i){
-                    recognizedCards.add(cards.get(i));
+                    Card card = cards.get(i);
+                    card.setPosition(i);
+                    recognizedCards.add(card);
                     stack.addCard(cards.get(i));
                     stack.getCards().get(i).setFaceUp(true);
                 }else{
-                    stack.addCard(new Card(null));
+                    Card card = new Card("X");
+                    card.setPosition(i);
+                    stack.addCard(card);
                 }
             }
         }
