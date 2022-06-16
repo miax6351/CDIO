@@ -69,26 +69,12 @@ public class Game {
 
 
 
-    /*private static String getCardMatch(int i, char c) {
-        String returnText = "";
-        if (i == 1) return "A" + c + "";
-        if (i == 11) return "J" + c + "";
-        else if (i == 12) return "Q" + c + "";
-        else if (i == 13) return "K" + c + "";
-        return (String) (returnText + i) + c + "";
-    }
-*/
 
 
 
 
     private SOLITARE_STATES handleCheckShownCards() {
-     /*   int number, number1;
-        char color;
-        String cardMatch1 = "";
-        String cardMatch2 = "";
-        Card temp;
-*/
+
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
             if((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
@@ -128,41 +114,7 @@ public class Game {
                 }
             }
         }
-        // then check if some card can be move to another list
-            /*number = getCardNumber((Card) cardColumns[i].getFirst());
-            color = getCardColor( ((Card) cardColumns[i].getFirst()));
-            number1 = number + 1;*/
 
-        // check if king is shown and can be moved to empty column
-           /* if (cardColumns[i].isEmpty()){
-                for (int j = 0; j < 7; j++) {
-                    String kings = ((Card) cardColumns[j].getFirst()).getTitle();
-                    if ((kings.equals("Kh") && kings.equals("Kd") && kings.equals("Kc") && kings.equals("Ks")) &&  !((Card) cardColumns[j].getFirst()).getLockedPosition()) {
-                        System.out.println("------ move card " + cardColumns[j].getFirst() + "to card column " + i + "------");
-                        cardColumns[j] = cardColumns[i];
-                        ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
-                        cardColumns[i].clear();
-                    }
-                }
-                continue;
-            }*/
-
-         /*   if (color == 'h' || color == 'd') {
-                cardMatch1 = getCardMatch(number1, 'c').trim();
-                cardMatch2 = getCardMatch(number1, 's').trim();
-            } else {
-                cardMatch1 = getCardMatch(number1, 'h').trim();
-                cardMatch2 = getCardMatch(number1, 'd').trim();
-            }*/
-        //System.out.println("************ CARD MATCH 1 " + cardMatch1
-        //  + "******** CARD MATCH 2: "+ cardMatch2 );
-         /*   for (int j = 0; j < 7; j++) {
-
-                temp = ((Card) cardColumns[j].getLast());
-                if ((temp.getTitle().equals(cardMatch1.toLowerCase(Locale.ROOT))) || (temp.getTitle().equals(cardMatch2.toLowerCase()))) {
-
-                }
-            }*/
         // no card can be moved, then pickup new card
         return SOLITARE_STATES.PICKUP_DECK_CARD;
     }
