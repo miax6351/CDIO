@@ -10,7 +10,7 @@ public class TableTest {
     Table table = new Table();
     Deck deck = new Deck();
     public TableTest(){
-        deck.buildDeck();
+        deck.buildDeckWithAllCards();
 
         for (int i = 0; i < 7; i++){
             Stack stack = table.getColumns()[i];

@@ -57,6 +57,15 @@ public class Stack {
         return hiddenCards;
     }
 
+    public boolean containsAceOrDeuce(){
+        for (int i = 0; i < cards.size(); i++) {
+            if(cards.get(i).getCardNumber() == 'A' || cards.get(i).getCardNumber() == '2'){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeSouthCard(){
         Card card = getNorthMostCard();
         if (card == null){

@@ -70,6 +70,18 @@ public class Table {
         return index;
     }
 
+    //returns a list of integers of all the coloumns which contains ace or two's.
+    public List<Integer> getColumnsWithAceOrDeuce(){
+        List<Integer> indexes = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++) {
+            if (columns[i].containsAceOrDeuce()){
+                indexes.add(i);
+            }
+        }
+            return indexes;
+    }
+
     //get all move options for a specific card from row to row.
     public List<Stack> getAllMoveOptions(Card cardFrom, Stack stackFrom){
         List<Stack> allRowsOptions = new ArrayList<>();
