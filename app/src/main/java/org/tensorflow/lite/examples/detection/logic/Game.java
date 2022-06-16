@@ -122,6 +122,9 @@ public class Game {
                         cardColumns[i].clear();
                         return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                     }
+                    else if(((Card) cardColumns[i].getFirst()).isKing()){
+                        setEmptySpot();
+                    }
                 }
             }
         }
@@ -355,6 +358,9 @@ public class Game {
                                 cardCanBeUsed = true;
                                 break;
                             }
+                            else if(((Card) cardColumns[i].getFirst()).isKing()){
+                                setEmptySpot();
+                            }
                             else if(emptyColoumn != -1){
                                 // add the new card to the list
                                 cardColumns[emptyColoumn].addLast(resultCard);
@@ -470,5 +476,16 @@ public class Game {
 
     public SOLITARE_STATES getGameState(){
         return gameState;
+    }
+
+    public void setEmptySpot(){
+        for (int i = 0; i < 7; i++) {
+            //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
+            //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
+            //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
+            if (cardColumns[i].isEmpty()) {
+                emptyColoumn = i;
+            }
+        }
     }
 }

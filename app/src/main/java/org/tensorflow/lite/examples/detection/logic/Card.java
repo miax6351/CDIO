@@ -65,7 +65,7 @@ public class Card {
         String temp = "";
         number = resultCard.getCardNumber();
         color = getCardColor(resultCard);
-        if (isKingMovable(resultCard)){
+        if (resultCard.isKing()){
             return false;
         }
         number1 = number + 1;
@@ -89,20 +89,7 @@ public class Card {
         return this.getTitle().charAt(2);
     }
 
-    public Boolean isKingMovable(){
-        if(isKing()) {
-            for (int i = 0; i < 7; i++) {
-                //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
-                //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
-                //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
-                if (cardColumns[i].isEmpty()) {
-                    emptyColoumn = i;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 
     public Boolean isKing(){
         if (this.getTitle().equals("Kh") || this.getTitle().equals("Kd") || this.getTitle().equals("Kc") || this.getTitle().equals("Ks")) {
