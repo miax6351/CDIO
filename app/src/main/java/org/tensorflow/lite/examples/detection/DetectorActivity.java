@@ -100,8 +100,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     private BorderedText borderedText;
 
-    private Game game;
-
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         final float textSizePx =
@@ -161,6 +159,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 });
 
         tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
+        game = new Game();
     }
 
     protected void updateActiveModel() {
@@ -236,7 +235,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     @Override
     protected void processImage() {
-        game = new Game();
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
