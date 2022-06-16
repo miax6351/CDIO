@@ -69,7 +69,7 @@ public class Game {
 
 
 
-    private static String getCardMatch(int i, char c) {
+    /*private static String getCardMatch(int i, char c) {
         String returnText = "";
         if (i == 1) return "A" + c + "";
         if (i == 11) return "J" + c + "";
@@ -77,29 +77,10 @@ public class Game {
         else if (i == 13) return "K" + c + "";
         return (String) (returnText + i) + c + "";
     }
+*/
 
-    public static Boolean isKingMovable(Card card){
-        if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
-            for (int i = 0; i < 7; i++){
-                //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
-                //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
-                //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
-                if (cardColumns[i].isEmpty()){
-                    emptyColoumn = i;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
-    public static char getCardColor(Card card) {
 
-        if (card.getTitle().charAt(1) != '0') {
-            return card.getTitle().charAt(1);
-        }
-        return card.getTitle().charAt(2);
-    }
 
     private SOLITARE_STATES handleCheckShownCards() {
      /*   int number, number1;
@@ -224,7 +205,7 @@ public class Game {
 
     private boolean cardsToFoundationPile(Card card) {
         boolean removeCard = false;
-        char lastColor = getCardColor(card);
+        char lastColor = card.getCardColor();
         switch (lastColor) {
             case 's':
                 if (spades.isEmpty() && card.getTitle().toLowerCase(Locale.ROOT).charAt(0) == 'a') {
