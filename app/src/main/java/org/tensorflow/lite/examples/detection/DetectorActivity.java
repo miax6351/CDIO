@@ -102,7 +102,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     Rows
      */
     public static boolean TESTMODE = false;
-    private static LinkedList[] cardColumns = null;
+    public static LinkedList[] cardColumns = null;
     public static LinkedList recognizedCards = new LinkedList<Card>();
     public static Stack deckCards = new Stack<Card>();
     public static ArrayList<String> cardMoves = new ArrayList<String>();

@@ -24,6 +24,7 @@ import org.tensorflow.lite.examples.detection.DetectorActivity;
 
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.CardEditor;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 import java.util.LinkedList;
@@ -55,8 +56,10 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
             public void onClick(DialogInterface dialogInterface, int i) {
                 choice[0] = i;
                 if (suit) {
+                    CardEditor.EditCard(DetectorActivity.cardColumns, dataset.get(index), context.getResources().getStringArray(R.array.suitsText)[choice[0]], true);
                     dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
                 } else {
+                    CardEditor.EditCard(DetectorActivity.cardColumns,dataset.get(index), context.getResources().getStringArray(arrayID)[choice[0]], false);
                     dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
                 }
                 notifyItemChanged(index);
@@ -141,7 +144,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DetectorActivity.recognizedCards.remove(viewHolder.getAdapterPosition());
+                CardEditor.RemoveCard(DetectorActivity.cardColumns, dataset.get(viewHolder.getAdapterPosition()));
                 dataset.remove(viewHolder.getAdapterPosition());
                 notifyItemRemoved(viewHolder.getAdapterPosition());
             }
