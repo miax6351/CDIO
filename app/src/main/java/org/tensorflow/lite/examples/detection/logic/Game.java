@@ -1,13 +1,6 @@
 package org.tensorflow.lite.examples.detection.logic;
 
-import android.graphics.Color;
-import android.view.View;
-import android.widget.Toast;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import org.tensorflow.lite.examples.detection.CameraActivity;
-import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 import java.util.ArrayList;
@@ -52,10 +45,11 @@ public class Game {
     private static int numberOfCardsDeck = 24;
     private static int numberOfCardsTalon = 0;
 
-    private int newestEmptyColumn = -1;
+    public static int NEWEST_EMPTY_COLUMN;
     private int[] hiddenCardsInColumns = {0,1,2,3,4,5,6};
 
     public Game(){
+        NEWEST_EMPTY_COLUMN = -1;
         //initializing card columns
         gameViewModel = CameraActivity.gameViewModel;
         initializeCardColumns();
@@ -154,7 +148,7 @@ public class Game {
                 // this opened card should be moved out to finished card queue
                 if(cardColumns[i].isEmpty()) {
                     // this is the last card in the list
-                    newestEmptyColumn = i;
+                    NEWEST_EMPTY_COLUMN = i;
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
                 // card moved to finish queue, check if other card can be moved
@@ -180,7 +174,7 @@ public class Game {
                         //}
                         cardColumns[j].addAll(cardColumns[i]);
                         cardColumns[i].clear();
-                        newestEmptyColumn = i;
+                        NEWEST_EMPTY_COLUMN = i;
                         return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                     }
                 }
@@ -348,12 +342,12 @@ public class Game {
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     //for (int i = 0; i < 7; i++) {
-                    if (newestEmptyColumn != -1){
-                        if (cardColumns[newestEmptyColumn].isEmpty() && hiddenCardsInColumns[newestEmptyColumn] != 0){
-                            updateHiddenCardsInColumns(newestEmptyColumn);
-                            cardColumns[newestEmptyColumn].add(resultCard);
+                    if (NEWEST_EMPTY_COLUMN != -1){
+                        if (cardColumns[NEWEST_EMPTY_COLUMN].isEmpty() && hiddenCardsInColumns[NEWEST_EMPTY_COLUMN] != 0){
+                            updateHiddenCardsInColumns(NEWEST_EMPTY_COLUMN);
+                            cardColumns[NEWEST_EMPTY_COLUMN].add(resultCard);
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                            newestEmptyColumn = -1;
+                            NEWEST_EMPTY_COLUMN = -1;
                             return;
 
                         }
