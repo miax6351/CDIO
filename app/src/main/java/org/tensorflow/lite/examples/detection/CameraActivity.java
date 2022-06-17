@@ -16,8 +16,6 @@
 
 package org.tensorflow.lite.examples.detection;
 
-import static org.tensorflow.lite.examples.detection.DetectorActivity.recognizedCards;
-
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
@@ -68,6 +66,7 @@ import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 public abstract class CameraActivity extends AppCompatActivity
@@ -116,7 +115,9 @@ public abstract class CameraActivity extends AppCompatActivity
 
   ArrayList<String> deviceStrings = new ArrayList<String>();
 
-  protected GameViewModel gameViewModel;
+  public static GameViewModel gameViewModel;
+
+  protected Game game;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -137,8 +138,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
 
-
-
+    game = new Game();
     gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
     System.out.println("gameViewModel is initialized");
     // cardSuit in recyclerview (bottom sheet)
