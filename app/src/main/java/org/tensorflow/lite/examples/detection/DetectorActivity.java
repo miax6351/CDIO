@@ -294,26 +294,16 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 /*
                                 GAME LOGIC
                                  */
+
                                 if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
                                     Card resultCard = new Card(result.getTitle().trim());
-                                    // if (!recognizedCardsContains(resultCard)){
-                                    /*if (game.getGameState() == SOLITARE_STATES.DISPLAY_HIDDEN_CARD)
-                                        PHASE_CHANGE_COUNTER++;*/
-                                    /*if (!Game.recognizedCards.contains(resultCard)){
-                                        Game.recognizedCards.add(resultCard);
-                                        gameViewModel.setShowBar(true, "If not " + resultCard.getTitle() + ", slide up and remove");
-                                        if (Game.recognizedCards.contains(resultCard))
-                                            Game.recognizedCards.remove(resultCard);
-                                    }*/
                                     game.playGame(resultCard);
                                     game.printBoard();
                                     game.printMoves();
-
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             cardSuit.getAdapter().notifyDataSetChanged();
-
                                         }
                                     });
                                     // }
@@ -367,14 +357,4 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         runInBackground(() -> detector.setNumThreads(numThreads));
     }
 
-
-    private void waitNSeconds(int i) {
-        try {
-            System.out.println("******* WAIT " + i + " SEC **********");
-            Thread.sleep(i * 1000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            ex.printStackTrace();
-        }
-    }
 }
