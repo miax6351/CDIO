@@ -31,6 +31,8 @@ import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -41,6 +43,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 
+import org.tensorflow.lite.examples.detection.customview.FragmentDialog;
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
 import org.tensorflow.lite.examples.detection.env.BorderedText;
@@ -90,6 +93,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private BorderedText borderedText;
 
     private Snackbar snackbar;
+    private TextView textViewSnackbarText;
+    private Button continueButton;
+    private Button editButton;
 
     private boolean continueGame = true;
 
@@ -828,6 +834,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     public void waitPlayerOption (String snackbarText) {
+
         if (TESTMODE == true){
             System.out.println(snackbarText);
             return;
@@ -864,29 +871,56 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     }
 
     public void waitPlayerCardRecognized (String snackbarText) {
+
+        textViewSnackbarText = (TextView) findViewById(R.id.snackbarText);
+//        continueButton = (Button) findViewById(R.id.continueButton);
+//        editButton = (Button) findViewById(R.id.editButton);
+
         if (TESTMODE == true){
             System.out.println(snackbarText);
             return;
         }
 
         continueGame = false;
-        snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Continue" + "\n", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        continueGame = true;
-                        Toast.makeText(getApplicationContext(),"Game continued",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                });
 
-        // snackbar UI
-        snackbar.setActionTextColor(Color.GRAY);
-        snackbar.setTextColor(Color.BLACK);
-        snackbar.setBackgroundTint(Color.WHITE);
+        //Pop up with 2 actions
+        openDialog();
 
-        snackbar.show();
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                continueGame = true;
+                return;
+            }
+        });
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                continueGame = false;
+                // find bottom sheet
+                return;
+            }
+        });
+
+//        snackbar = Snackbar
+//                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+//                .setAction("Continue" + "\n", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        continueGame = true;
+//                        Toast.makeText(getApplicationContext(),"Game continued",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                });
+//
+//        // snackbar UI
+//        snackbar.setActionTextColor(Color.GRAY);
+//        snackbar.setTextColor(Color.BLACK);
+//        snackbar.setBackgroundTint(Color.WHITE);
+//
+//        snackbar.show();
+
         int inactiveCount = 0;
         while (!continueGame){
             inactiveCount++;
@@ -897,6 +931,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
 
         }
+    }
+
+    public void openDialog() {
+        FragmentDialog fragmentDialog = new FragmentDialog();
+        fragmentDialog.show(getSupportFragmentManager(), "Open fragment dialog");
     }
 
     final class MyResult{

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/snackbarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text=""
+        android:textSize="30sp"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="121dp"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/snackbarText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="192dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="97dp"
+        android:layout_marginRight="-314dp"
+        android:backgroundTint="@color/white"
+        android:text="Continue"
+        android:textSize="15sp"
+        android:textColor="@color/tfe_color_primary" />
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/continueButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="319dp"
+        android:layout_marginTop="-48dp"
+        android:layout_marginEnd="9dp"
+        android:backgroundTint="@color/white"
+        android:text="Edit"
+        android:textSize="15sp"
+        android:textColor="@color/tfe_color_primary" />
+</RelativeLayout>
