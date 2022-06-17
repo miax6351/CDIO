@@ -21,7 +21,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -53,7 +52,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,12 +64,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
-import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
@@ -119,7 +115,9 @@ public abstract class CameraActivity extends AppCompatActivity
   protected ListView deviceView;
   protected TextView threadsTextView;
   protected ListView modelView;
-  /** Current indices of device and model. */
+  /**
+   * Current indices of device and model.
+   */
   int currentDevice = -1;
   int currentModel = -1;
   int currentNumThreads = -1;
@@ -129,14 +127,14 @@ public abstract class CameraActivity extends AppCompatActivity
   protected Game game;
   public static GameViewModel gameViewModel;
 
-  private int inactiveCount;
+  public static int inactiveCount;
   /*
 waitPlayerAction
  */
   private Snackbar snackbar;
-  private Boolean continueGame;
+  public static Boolean continueGame;
 
-  private boolean FIRST_RUN = true;
+  private boolean FIRST_RUN;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -154,16 +152,14 @@ waitPlayerAction
       requestPermission();
     }
 
-
-
-
+    FIRST_RUN = true;
     gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
     game = new Game();
     System.out.println("gameViewModel is initialized");
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
     cardSuit.setLayoutManager(new LinearLayoutManager(this));
-    CardListAdapter adapter = new CardListAdapter(gameViewModel,this);
+    CardListAdapter adapter = new CardListAdapter(gameViewModel, this);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
 
@@ -186,7 +182,7 @@ waitPlayerAction
     deviceView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     ArrayAdapter<String> deviceAdapter =
             new ArrayAdapter<>(
-                    CameraActivity.this , R.layout.deviceview_row, R.id.deviceview_row_text, deviceStrings);
+                    CameraActivity.this, R.layout.deviceview_row, R.id.deviceview_row_text, deviceStrings);
     deviceView.setAdapter(deviceAdapter);
     deviceView.setItemChecked(defaultDeviceIndex, true);
     currentDevice = defaultDeviceIndex;
@@ -208,7 +204,7 @@ waitPlayerAction
     modelView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     ArrayAdapter<String> modelAdapter =
             new ArrayAdapter<>(
-                    CameraActivity.this , R.layout.listview_row, R.id.listview_row_text, modelStrings);
+                    CameraActivity.this, R.layout.listview_row, R.id.listview_row_text, modelStrings);
     modelView.setAdapter(modelAdapter);
     modelView.setItemChecked(defaultModelIndex, true);
     currentModel = defaultModelIndex;
@@ -222,51 +218,50 @@ waitPlayerAction
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
-        new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override
-          public void onGlobalLayout() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-              gestureLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            } else {
-              gestureLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-            //                int width = bottomSheetLayout.getMeasuredWidth();
-            int height = gestureLayout.getMeasuredHeight();
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+              @Override
+              public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                  gestureLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                  gestureLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                //                int width = bottomSheetLayout.getMeasuredWidth();
+                int height = gestureLayout.getMeasuredHeight();
 
-            //TODO change this?
-            sheetBehavior.setPeekHeight(300);
-          }
-        });
+                //TODO change this?
+                sheetBehavior.setPeekHeight(300);
+              }
+            });
     sheetBehavior.setHideable(false);
 
     sheetBehavior.setBottomSheetCallback(
-        new BottomSheetBehavior.BottomSheetCallback() {
-          @Override
-          public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            switch (newState) {
-              case BottomSheetBehavior.STATE_HIDDEN:
-                break;
-              case BottomSheetBehavior.STATE_EXPANDED:
-                {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down_black);
+            new BottomSheetBehavior.BottomSheetCallback() {
+              @Override
+              public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                  case BottomSheetBehavior.STATE_HIDDEN:
+                    break;
+                  case BottomSheetBehavior.STATE_EXPANDED: {
+                    bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down_black);
+                  }
+                  break;
+                  case BottomSheetBehavior.STATE_COLLAPSED: {
+                    bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up_black);
+                  }
+                  break;
+                  case BottomSheetBehavior.STATE_DRAGGING:
+                    break;
+                  case BottomSheetBehavior.STATE_SETTLING:
+                    bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up_black);
+                    break;
                 }
-                break;
-              case BottomSheetBehavior.STATE_COLLAPSED:
-                {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up_black);
-                }
-                break;
-              case BottomSheetBehavior.STATE_DRAGGING:
-                break;
-              case BottomSheetBehavior.STATE_SETTLING:
-                bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up_black);
-                break;
-            }
-          }
+              }
 
-          @Override
-          public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
-        });
+              @Override
+              public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+              }
+            });
 
     frameValueTextView = findViewById(R.id.frame_info);
     cropValueTextView = findViewById(R.id.crop_info);
@@ -280,9 +275,10 @@ waitPlayerAction
       @Override
       public void onChanged(@Nullable final String newContent) {
         // Update the UI, in this case, a TextView.
-        if (FIRST_RUN){
+        if (FIRST_RUN) {
           messageTextViewBox = findViewById(R.id.messageTextViewBox);
           messageTextView = findViewById(R.id.textView);
+          messageTextView.setText(newContent);
           doneButton = findViewById(R.id.doneButton);
           editButton = findViewById(R.id.editButton);
           editButton.setVisibility(View.GONE);
@@ -290,52 +286,36 @@ waitPlayerAction
           editTextInput.setVisibility(View.GONE);
 
           doneButton.setOnClickListener(event -> {
+              gameViewModel.setEditContent(editTextInput.getText().toString());
+
             messageTextViewBox.setVisibility(View.GONE);
             messageTextView.setVisibility(View.GONE);
             doneButton.setVisibility(View.GONE);
             editTextInput.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_SHORT).show();
+            gameViewModel.setIsShowingEdit(false);
+            Toast.makeText(getApplicationContext(), "Completed", Toast.LENGTH_SHORT).show();
             FIRST_RUN = false;
             continueGame = true;
           });
           editButton.setOnClickListener(event -> {
+            editTextInput.setText(newContent);
             editButton.setVisibility(View.GONE);
             editTextInput.setVisibility(View.VISIBLE);
             doneButton.setVisibility(View.VISIBLE);
+            continueGame = true;
           });
         } else {
-          while (!continueGame){
-            inactiveCount++;
-            waitNSeconds(1);
-            // loop until player presses done
-            if (inactiveCount >= 1000){
-              continueGame = true;
+          if (!newContent.equals("")) {
               inactiveCount = 0;
-              break;
-            }
+              continueGame = false;
+              messageTextView.setText(newContent);
+              messageTextViewBox.setVisibility(View.VISIBLE);
+              messageTextView.setVisibility(View.VISIBLE);
+              doneButton.setVisibility(View.VISIBLE);
 
           }
         }
 
-        if (!newContent.equals("")){
-          if (gameViewModel.getIsShowingEdit()){
-            inactiveCount = 0;
-            continueGame = false;
-            messageTextView.setText(newContent);
-            messageTextViewBox.setVisibility(View.VISIBLE);
-            messageTextView.setVisibility(View.VISIBLE);
-            doneButton.setVisibility(View.GONE);
-            editButton.setVisibility(View.VISIBLE);
-          } else {
-            inactiveCount = 0;
-            continueGame = false;
-            messageTextView.setText(newContent);
-            messageTextViewBox.setVisibility(View.VISIBLE);
-            messageTextView.setVisibility(View.VISIBLE);
-            editButton.setVisibility(View.GONE);
-          }
-
-        }
 
 
       }
@@ -343,13 +323,24 @@ waitPlayerAction
 
     // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
     gameViewModel.content.observe(this, snackbarContentObserver);
-    gameViewModel.editContent.observe(this, snackbarContentObserver);
+
+
+    // Create the observer which updates the UI.
+    final Observer<Boolean> editButtonObserver = new Observer<Boolean>() {
+      @Override
+      public void onChanged(@Nullable final Boolean editButtonVisible) {
+              if (editButtonVisible)
+                editButton.setVisibility(View.VISIBLE);
+              else
+                editButton.setVisibility(View.GONE);
+      }
+    };
+    gameViewModel.isShowingEdit.observe(this, editButtonObserver);
 
   }
 
 
-
-  protected ArrayList<String> getModelStrings(AssetManager mgr, String path){
+  protected ArrayList<String> getModelStrings(AssetManager mgr, String path) {
     ArrayList<String> res = new ArrayList<String>();
     try {
       String[] files = mgr.list(path);
@@ -360,8 +351,7 @@ waitPlayerAction
         }
       }
 
-    }
-    catch (IOException e){
+    } catch (IOException e) {
       System.err.println("getModelStrings: " + e.getMessage());
     }
     return res;
@@ -380,7 +370,9 @@ waitPlayerAction
     return yuvBytes[0];
   }
 
-  /** Callback for android.hardware.Camera API */
+  /**
+   * Callback for android.hardware.Camera API
+   */
   @Override
   public void onPreviewFrame(final byte[] bytes, final Camera camera) {
     if (isProcessingFrame) {
@@ -407,25 +399,27 @@ waitPlayerAction
     yRowStride = previewWidth;
 
     imageConverter =
-        new Runnable() {
-          @Override
-          public void run() {
-            ImageUtils.convertYUV420SPToARGB8888(bytes, previewWidth, previewHeight, rgbBytes);
-          }
-        };
+            new Runnable() {
+              @Override
+              public void run() {
+                ImageUtils.convertYUV420SPToARGB8888(bytes, previewWidth, previewHeight, rgbBytes);
+              }
+            };
 
     postInferenceCallback =
-        new Runnable() {
-          @Override
-          public void run() {
-            camera.addCallbackBuffer(bytes);
-            isProcessingFrame = false;
-          }
-        };
+            new Runnable() {
+              @Override
+              public void run() {
+                camera.addCallbackBuffer(bytes);
+                isProcessingFrame = false;
+              }
+            };
     processImage();
   }
 
-  /** Callback for Camera2 API */
+  /**
+   * Callback for Camera2 API
+   */
   @Override
   public void onImageAvailable(final ImageReader reader) {
     // We need wait until we have some size from onPreviewSizeChosen
@@ -455,30 +449,30 @@ waitPlayerAction
       final int uvPixelStride = planes[1].getPixelStride();
 
       imageConverter =
-          new Runnable() {
-            @Override
-            public void run() {
-              ImageUtils.convertYUV420ToARGB8888(
-                  yuvBytes[0],
-                  yuvBytes[1],
-                  yuvBytes[2],
-                  previewWidth,
-                  previewHeight,
-                  yRowStride,
-                  uvRowStride,
-                  uvPixelStride,
-                  rgbBytes);
-            }
-          };
+              new Runnable() {
+                @Override
+                public void run() {
+                  ImageUtils.convertYUV420ToARGB8888(
+                          yuvBytes[0],
+                          yuvBytes[1],
+                          yuvBytes[2],
+                          previewWidth,
+                          previewHeight,
+                          yRowStride,
+                          uvRowStride,
+                          uvPixelStride,
+                          rgbBytes);
+                }
+              };
 
       postInferenceCallback =
-          new Runnable() {
-            @Override
-            public void run() {
-              image.close();
-              isProcessingFrame = false;
-            }
-          };
+              new Runnable() {
+                @Override
+                public void run() {
+                  image.close();
+                  isProcessingFrame = false;
+                }
+              };
 
       processImage();
     } catch (final Exception e) {
@@ -541,7 +535,7 @@ waitPlayerAction
 
   @Override
   public void onRequestPermissionsResult(
-      final int requestCode, final String[] permissions, final int[] grantResults) {
+          final int requestCode, final String[] permissions, final int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == PERMISSIONS_REQUEST) {
       if (allPermissionsGranted(grantResults)) {
@@ -573,18 +567,18 @@ waitPlayerAction
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
         Toast.makeText(
-                CameraActivity.this,
-                "Camera permission is required for this demo",
-                Toast.LENGTH_LONG)
-            .show();
+                        CameraActivity.this,
+                        "Camera permission is required for this demo",
+                        Toast.LENGTH_LONG)
+                .show();
       }
-      requestPermissions(new String[] {PERMISSION_CAMERA}, PERMISSIONS_REQUEST);
+      requestPermissions(new String[]{PERMISSION_CAMERA}, PERMISSIONS_REQUEST);
     }
   }
 
   // Returns true if the device supports the required hardware level, or better.
   private boolean isHardwareLevelSupported(
-      CameraCharacteristics characteristics, int requiredLevel) {
+          CameraCharacteristics characteristics, int requiredLevel) {
     int deviceLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
     if (deviceLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
       return requiredLevel == deviceLevel;
@@ -606,7 +600,7 @@ waitPlayerAction
         }
 
         final StreamConfigurationMap map =
-            characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
         if (map == null) {
           continue;
@@ -616,9 +610,9 @@ waitPlayerAction
         // This should help with legacy situations where using the camera2 API causes
         // distorted or otherwise broken previews.
         useCamera2API =
-            (facing == CameraCharacteristics.LENS_FACING_EXTERNAL)
-                || isHardwareLevelSupported(
-                    characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL);
+                (facing == CameraCharacteristics.LENS_FACING_EXTERNAL)
+                        || isHardwareLevelSupported(
+                        characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL);
         LOGGER.i("Camera API lv2?: %s", useCamera2API);
         return cameraId;
       }
@@ -635,24 +629,24 @@ waitPlayerAction
     Fragment fragment;
     if (useCamera2API) {
       CameraConnectionFragment camera2Fragment =
-          CameraConnectionFragment.newInstance(
-              new CameraConnectionFragment.ConnectionCallback() {
-                @Override
-                public void onPreviewSizeChosen(final Size size, final int rotation) {
-                  previewHeight = size.getHeight();
-                  previewWidth = size.getWidth();
-                  CameraActivity.this.onPreviewSizeChosen(size, rotation);
-                }
-              },
-              this,
-              getLayoutId(),
-              getDesiredPreviewFrameSize());
+              CameraConnectionFragment.newInstance(
+                      new CameraConnectionFragment.ConnectionCallback() {
+                        @Override
+                        public void onPreviewSizeChosen(final Size size, final int rotation) {
+                          previewHeight = size.getHeight();
+                          previewWidth = size.getWidth();
+                          CameraActivity.this.onPreviewSizeChosen(size, rotation);
+                        }
+                      },
+                      this,
+                      getLayoutId(),
+                      getDesiredPreviewFrameSize());
 
       camera2Fragment.setCamera(cameraId);
       fragment = camera2Fragment;
     } else {
       fragment =
-          new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize());
+              new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize());
     }
 
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
@@ -736,6 +730,7 @@ waitPlayerAction
   }
 
   protected abstract void updateActiveModel();
+
   protected abstract void processImage();
 
   protected abstract void onPreviewSizeChosen(final Size size, final int rotation);
@@ -779,13 +774,26 @@ waitPlayerAction
     }
   }*/
 
-  private void waitNSeconds(int i) {
+  private static void waitNSeconds(int i) {
     try {
       System.out.println("******* WAIT " + i + " SEC **********");
       Thread.sleep(i * 1000);
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
       ex.printStackTrace();
+    }
+  }
+
+  public static void waitPlayerOptionLoop() {
+    while (!continueGame) {
+      inactiveCount++;
+      waitNSeconds(1);
+      // loop until player presses done
+      if (inactiveCount >= 1000) {
+        continueGame = true;
+        inactiveCount = 0;
+        break;
+      }
     }
   }
 }

@@ -1,15 +1,9 @@
 package org.tensorflow.lite.examples.detection.viewmodels;
 
-import static org.tensorflow.lite.examples.detection.CameraActivity.cardSuit;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.RecyclerView;
 
-import org.tensorflow.lite.examples.detection.CameraActivity;
-import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
-import org.tensorflow.lite.examples.detection.logic.Game;
 
 import java.util.LinkedList;
 
@@ -19,15 +13,15 @@ public class GameViewModel extends ViewModel {
     public MutableLiveData<Boolean> isShowing;
     public MutableLiveData<Boolean> isShowingEdit;
     public MutableLiveData<String> content;
-    public MutableLiveData<String> editContent;
+    private String editInputContent;
 
     public GameViewModel() {
         System.out.println("GameViewModel created");
         recognizedCards = new LinkedList<>();
         isShowing = new MutableLiveData<>();
-        editContent = new MutableLiveData<>();
+        editInputContent = "";
         isShowingEdit = new MutableLiveData<>();
-        isShowingEdit.setValue(true);
+        isShowingEdit.setValue(false);
         content = new MutableLiveData<>();
         isShowing.setValue(true);
         content.setValue("Film row 1");
@@ -54,6 +48,15 @@ public class GameViewModel extends ViewModel {
     public void setShowBar(Boolean isShow, String content){
         this.isShowing.postValue(isShow);
         this.content.postValue(content);
+
+    }
+
+    public void setIsShowingEdit(Boolean isShowingEdit){
+        this.isShowingEdit.postValue(isShowingEdit);
+    }
+
+    public void setEditContent(String editInputContent){
+        this.editInputContent = editInputContent;
     }
 
 
@@ -63,6 +66,10 @@ public class GameViewModel extends ViewModel {
 
     public Boolean getIsShowingEdit(){
         return this.isShowingEdit.getValue();
+    }
+
+    public String getEditContent(){
+        return this.editInputContent;
     }
 
 }

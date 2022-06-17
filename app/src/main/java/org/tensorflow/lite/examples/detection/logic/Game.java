@@ -1,5 +1,7 @@
 package org.tensorflow.lite.examples.detection.logic;
 
+import android.graphics.Camera;
+
 import org.tensorflow.lite.examples.detection.CameraActivity;
 import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
@@ -167,6 +169,7 @@ public class Game {
                         //for (int k = 0; k < 5; k++) {
                         //waitNSeconds(1);
                         gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
+                        CameraActivity.waitPlayerOptionLoop();
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                         //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
                         cardMoves.add(movingCard.getTitle() + "-" + (j+1));
@@ -272,6 +275,7 @@ public class Game {
                 }
             }
             gameViewModel.setShowBar(true, "Move card " + card.getTitle() + " to foundation pile");
+            CameraActivity.waitPlayerOptionLoop();
             cardMoves.add(card.getTitle() + "-F");
         }
         return removeCard;
@@ -302,6 +306,7 @@ public class Game {
                     } else {
                         cardColumnCounter++;
                         gameViewModel.setShowBar(true, "Film card on row " + (cardColumnCounter + 1));
+                        CameraActivity.waitPlayerOptionLoop();
                     }
                 }
 
@@ -314,6 +319,7 @@ public class Game {
 
             case DISPLAY_HIDDEN_CARD:
                 gameViewModel.setShowBar(true, "Display hidden card");
+                CameraActivity.waitPlayerOptionLoop();
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 boolean hiddenCardCanBeDisplayed = false;
                 for (int i = 0; i < 7; i++) {
@@ -323,6 +329,7 @@ public class Game {
                 }
                 if(!hiddenCardCanBeDisplayed){
                     gameViewModel.setShowBar(true, "Pick up new card from deck!");
+                    CameraActivity.waitPlayerOptionLoop();
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     break;
                 }
@@ -338,6 +345,7 @@ public class Game {
                     recognizedCards.add(resultCard);
                     gameViewModel.addRecognizedCard(resultCard);
                     gameViewModel.setShowBar(true, resultCard.getTitle());
+                    CameraActivity.waitPlayerOptionLoop();
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     //for (int i = 0; i < 7; i++) {
@@ -366,10 +374,12 @@ public class Game {
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
                 gameViewModel.setShowBar(true, "Pick up card from deck");
+                CameraActivity.waitPlayerOptionLoop();
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
                     recognizedCards.add(resultCard);
                     gameViewModel.setShowBar(true, resultCard.getTitle());
+                    CameraActivity.waitPlayerOptionLoop();
                     System.out.println("-------- found a new card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     if (!cardsToFoundationPile(resultCard)){
@@ -381,6 +391,7 @@ public class Game {
                                 recognizedCards.add(resultCard);
                                 gameViewModel.addRecognizedCard(resultCard);
                                 gameViewModel.setShowBar(true,"Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle());
+                                CameraActivity.waitPlayerOptionLoop();
                                 System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
                                 cardMoves.add(resultCard.getTitle() + "-" + ( i + 1));
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
@@ -394,6 +405,7 @@ public class Game {
                                 gameViewModel.addRecognizedCard(resultCard);
                                 //for (int k = 0; k < 10; k++) {
                                 gameViewModel.setShowBar(true,"Move new card: " + resultCard.getTitle() +" to " + "empty columnn");
+                                CameraActivity.waitPlayerOptionLoop();
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
 
                                 emptyColoumn = -1;
@@ -409,6 +421,7 @@ public class Game {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         gameViewModel.setShowBar(true,resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                         recognizedCards.remove(resultCard);
+                        CameraActivity.waitPlayerOptionLoop();
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     }
@@ -456,4 +469,6 @@ public class Game {
         }
         System.out.println("");
     }
+
+
 }
