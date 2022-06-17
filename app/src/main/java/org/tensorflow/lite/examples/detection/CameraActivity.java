@@ -54,6 +54,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -110,8 +111,11 @@ public abstract class CameraActivity extends AppCompatActivity
   protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
+  protected TextView messageTextViewBox;
   protected TextView messageTextView;
+  protected Button editButton;
   protected Button doneButton;
+  protected EditText editTextInput;
   protected ListView deviceView;
   protected TextView threadsTextView;
   protected ListView modelView;
@@ -277,14 +281,27 @@ waitPlayerAction
       public void onChanged(@Nullable final String newContent) {
         // Update the UI, in this case, a TextView.
         if (FIRST_RUN){
+          messageTextViewBox = findViewById(R.id.messageTextViewBox);
           messageTextView = findViewById(R.id.textView);
           doneButton = findViewById(R.id.doneButton);
+          editButton = findViewById(R.id.editButton);
+          editButton.setVisibility(View.GONE);
+          editTextInput = findViewById(R.id.editTextInput);
+          editTextInput.setVisibility(View.GONE);
+
           doneButton.setOnClickListener(event -> {
+            messageTextViewBox.setVisibility(View.GONE);
             messageTextView.setVisibility(View.GONE);
             doneButton.setVisibility(View.GONE);
+            editTextInput.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_SHORT).show();
             FIRST_RUN = false;
             continueGame = true;
+          });
+          editButton.setOnClickListener(event -> {
+            editButton.setVisibility(View.GONE);
+            editTextInput.setVisibility(View.VISIBLE);
+            doneButton.setVisibility(View.VISIBLE);
           });
         } else {
           while (!continueGame){
@@ -301,11 +318,22 @@ waitPlayerAction
         }
 
         if (!newContent.equals("")){
-          inactiveCount = 0;
-          continueGame = false;
-          messageTextView.setText(newContent);
-          messageTextView.setVisibility(View.VISIBLE);
-          doneButton.setVisibility(View.VISIBLE);
+          if (gameViewModel.getIsShowingEdit()){
+            inactiveCount = 0;
+            continueGame = false;
+            messageTextView.setText(newContent);
+            messageTextViewBox.setVisibility(View.VISIBLE);
+            messageTextView.setVisibility(View.VISIBLE);
+            doneButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.VISIBLE);
+          } else {
+            inactiveCount = 0;
+            continueGame = false;
+            messageTextView.setText(newContent);
+            messageTextViewBox.setVisibility(View.VISIBLE);
+            messageTextView.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.GONE);
+          }
 
         }
 
@@ -315,7 +343,7 @@ waitPlayerAction
 
     // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
     gameViewModel.content.observe(this, snackbarContentObserver);
-
+    gameViewModel.editContent.observe(this, snackbarContentObserver);
 
   }
 
