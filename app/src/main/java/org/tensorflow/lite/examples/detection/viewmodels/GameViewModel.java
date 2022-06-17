@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.tensorflow.lite.examples.detection.CameraActivity;
+import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.Game;
 
@@ -16,8 +17,7 @@ public class GameViewModel extends ViewModel {
 
     private LinkedList<Card> recognizedCards;
     public MutableLiveData<Boolean> isShowing;
-    private MutableLiveData<String> content;
-    public static boolean FIRST_RUN = true;
+    public MutableLiveData<String> content;
 
     public GameViewModel() {
         System.out.println("GameViewModel created");
@@ -49,7 +49,6 @@ public class GameViewModel extends ViewModel {
     public void setShowBar(Boolean isShow, String content){
         this.isShowing.postValue(isShow);
         this.content.postValue(content);
-
     }
     public Boolean getShowBar(){
         System.out.println(this.isShowing.getValue() + "***************FDSASTRHDRTHSRFwdeafrgsrtef");

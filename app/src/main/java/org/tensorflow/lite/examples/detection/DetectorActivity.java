@@ -16,8 +16,6 @@
 
 package org.tensorflow.lite.examples.detection;
 
-import static org.tensorflow.lite.examples.detection.viewmodels.GameViewModel.FIRST_RUN;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Camera;
@@ -86,12 +84,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private Bitmap croppedBitmap = null;
     private Bitmap cropCopyBitmap = null;
 
-    /*
-    waitPlayerAction
-     */
-    private Snackbar snackbar;
-    private Boolean continueGame;
-
     private boolean computingDetection = false;
 
     private long timestamp = 0;
@@ -102,8 +94,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private MultiBoxTracker tracker;
 
     private BorderedText borderedText;
-
-    private Game game;
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -239,7 +229,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     @Override
     protected void processImage() {
-        game = new Game();
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
@@ -268,11 +257,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (FIRST_RUN){
-                            waitPlayerOption(gameViewModel.getSnackBarText());
-                            FIRST_RUN = false;
-                        }
-
                         LOGGER.i("Running detection on image " + currTimestamp);
                         final long startTime = SystemClock.uptimeMillis();
                         final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
@@ -315,11 +299,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                     // if (!recognizedCardsContains(resultCard)){
                                     /*if (game.getGameState() == SOLITARE_STATES.DISPLAY_HIDDEN_CARD)
                                         PHASE_CHANGE_COUNTER++;*/
-
+                                    /*if (!Game.recognizedCards.contains(resultCard)){
+                                        Game.recognizedCards.add(resultCard);
+                                        gameViewModel.setShowBar(true, "If not " + resultCard.getTitle() + ", slide up and remove");
+                                        if (Game.recognizedCards.contains(resultCard))
+                                            Game.recognizedCards.remove(resultCard);
+                                    }*/
                                     game.playGame(resultCard);
-                                    if(gameViewModel.getShowBar()){
-                                        waitPlayerOption(gameViewModel.getSnackBarText());
-                                    }
                                     game.printBoard();
                                     game.printMoves();
 
@@ -381,73 +367,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         runInBackground(() -> detector.setNumThreads(numThreads));
     }
 
-    public void waitPlayerOption (String snackbarText) {
-        continueGame = false;
-        snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Complete move" + "\n", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        continueGame = true;
-                        gameViewModel.setShowBar(false, "");
-                        Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                });
-        snackbar.setActionTextColor(Color.GRAY);
-        snackbar.setTextColor(Color.BLACK);
-        snackbar.setBackgroundTint(Color.WHITE);
-        snackbar.show();
-        int inactiveCount = 0;
-        while (!continueGame){
-            inactiveCount++;
-            waitNSeconds(1);
-            // loop until player presses done
-            if (inactiveCount >= 1000){
-                continueGame = true;
-                break;
-            }
 
-        }
-    }
-
-
-
-    public void pauseUntilConfirmation (String snackbarText, Card resultCard) {
-
-        continueGame = false;
-        snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("\n OK" +
-                        "\n", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        continueGame = true;
-
-                        Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_LONG).show();
-
-                        return;
-                    }
-                });
-
-        // snackbar UI
-        snackbar.setActionTextColor(Color.GRAY);
-        snackbar.setTextColor(Color.BLACK);
-        snackbar.setBackgroundTint(Color.WHITE);
-
-        snackbar.show();
-        int inactiveCount = 0;
-        while (!continueGame){
-            waitNSeconds(1);
-            inactiveCount++;
-            // loop until player presses done
-            if (inactiveCount >= 1000){
-                continueGame = true;
-                break;
-            }
-
-        }
-    }
     private void waitNSeconds(int i) {
         try {
             System.out.println("******* WAIT " + i + " SEC **********");

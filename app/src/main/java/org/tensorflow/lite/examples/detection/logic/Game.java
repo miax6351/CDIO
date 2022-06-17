@@ -1,6 +1,7 @@
 package org.tensorflow.lite.examples.detection.logic;
 
 import org.tensorflow.lite.examples.detection.CameraActivity;
+import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 import java.util.ArrayList;
@@ -13,22 +14,13 @@ public class Game {
 
     private GameViewModel gameViewModel;
 
-    /*
-    Rows
-     */
-    public static boolean TESTMODE = false;
-    private static LinkedList[] cardColumns = null;
-    public static LinkedList recognizedCards = new LinkedList<Card>();
-    public static Stack deckCards = new Stack<Card>();
-    public static ArrayList<String> cardMoves = new ArrayList<String>();
-
-    private static int PHASE_CHANGE_COUNTER = 0;
-
-    private static int cardColumnCounter = 0;
-    public static SOLITARE_STATES gameState = SOLITARE_STATES.INITIAL;
+    private static LinkedList[] cardColumns;
+    public static LinkedList recognizedCards;
+    public static ArrayList<String> cardMoves;
+    private static int cardColumnCounter;
+    public static SOLITARE_STATES gameState;
     private static Card movingCard;
-    private static int waitTimeCount = 0;
-    private static int emptyColoumn = -1;
+    private static int emptyColoumn;
 
 
     /*
@@ -49,10 +41,17 @@ public class Game {
     private int[] hiddenCardsInColumns = {0,1,2,3,4,5,6};
 
     public Game(){
+        gameViewModel = DetectorActivity.gameViewModel;
+        cardColumns = null;
+        emptyColoumn = -1;
+        gameState = SOLITARE_STATES.INITIAL;
+        cardColumnCounter = 0;
         NEWEST_EMPTY_COLUMN = -1;
         //initializing card columns
-        gameViewModel = CameraActivity.gameViewModel;
         initializeCardColumns();
+        cardMoves = new ArrayList<String>();
+        recognizedCards = new LinkedList<Card>();
+
     }
 
     public void initializeCardColumns() {
@@ -310,11 +309,11 @@ public class Game {
 
             case ANALYZE_CARD_MOVE:
                 System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
-                PHASE_CHANGE_COUNTER = 0;
                 gameState = handleCheckShownCards();
                 break;
 
             case DISPLAY_HIDDEN_CARD:
+                gameViewModel.setShowBar(true, "Display hidden card");
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 boolean hiddenCardCanBeDisplayed = false;
                 for (int i = 0; i < 7; i++) {
