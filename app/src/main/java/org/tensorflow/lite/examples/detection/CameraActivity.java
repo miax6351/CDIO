@@ -21,6 +21,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -36,8 +37,10 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Trace;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +52,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,6 +60,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -66,6 +71,7 @@ import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 public abstract class CameraActivity extends AppCompatActivity
@@ -104,6 +110,8 @@ public abstract class CameraActivity extends AppCompatActivity
   protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
+  protected TextView messageTextView;
+  protected Button doneButton;
   protected ListView deviceView;
   protected TextView threadsTextView;
   protected ListView modelView;
@@ -114,7 +122,17 @@ public abstract class CameraActivity extends AppCompatActivity
 
   ArrayList<String> deviceStrings = new ArrayList<String>();
 
+  protected Game game;
   public static GameViewModel gameViewModel;
+
+  private int inactiveCount;
+  /*
+waitPlayerAction
+ */
+  private Snackbar snackbar;
+  private Boolean continueGame;
+
+  private boolean FIRST_RUN = true;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -135,9 +153,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
 
-
-
     gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+    game = new Game();
     System.out.println("gameViewModel is initialized");
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
@@ -145,7 +162,6 @@ public abstract class CameraActivity extends AppCompatActivity
     CardListAdapter adapter = new CardListAdapter(gameViewModel,this);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
-
 
   /*  // cardRank in recyclerview (bottom sheet)
     RecyclerView cardRank = findViewById(R.id.textView_card_rank);
@@ -254,6 +270,53 @@ public abstract class CameraActivity extends AppCompatActivity
 
     plusImageView.setOnClickListener(this);
     minusImageView.setOnClickListener(this);
+
+    // Create the observer which updates the UI.
+    final Observer<String> snackbarContentObserver = new Observer<String>() {
+      @Override
+      public void onChanged(@Nullable final String newContent) {
+        // Update the UI, in this case, a TextView.
+        if (FIRST_RUN){
+          messageTextView = findViewById(R.id.textView);
+          doneButton = findViewById(R.id.doneButton);
+          doneButton.setOnClickListener(event -> {
+            messageTextView.setVisibility(View.GONE);
+            doneButton.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_SHORT).show();
+            FIRST_RUN = false;
+            continueGame = true;
+          });
+        } else {
+          while (!continueGame){
+            inactiveCount++;
+            waitNSeconds(1);
+            // loop until player presses done
+            if (inactiveCount >= 1000){
+              continueGame = true;
+              inactiveCount = 0;
+              break;
+            }
+
+          }
+        }
+
+        if (!newContent.equals("")){
+          inactiveCount = 0;
+          continueGame = false;
+          messageTextView.setText(newContent);
+          messageTextView.setVisibility(View.VISIBLE);
+          doneButton.setVisibility(View.VISIBLE);
+
+        }
+
+
+      }
+    };
+
+    // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+    gameViewModel.content.observe(this, snackbarContentObserver);
+
+
   }
 
 
@@ -565,6 +628,7 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+
   }
 
   protected void fillBytes(final Plane[] planes, final byte[][] yuvBytes) {
@@ -655,5 +719,46 @@ public abstract class CameraActivity extends AppCompatActivity
   protected abstract void setNumThreads(int numThreads);
 
   protected abstract void setUseNNAPI(boolean isChecked);
+
+  /*
+  public void waitPlayerOption(String snackbarText) {
+    continueGame = false;
+    snackbar = Snackbar
+            .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+            .setAction("Complete move" + "\n", new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                messageTextView.setVisibility(View.GONE);
+                continueGame = true;
+                gameViewModel.setShowBar(false, "");
+                Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_SHORT).show();
+                return;
+              }
+            });
+    snackbar.setActionTextColor(Color.GRAY);
+    snackbar.setTextColor(Color.BLACK);
+    snackbar.setBackgroundTint(Color.WHITE);
+    snackbar.show();
+    int inactiveCount = 0;
+    while (!continueGame){
+      inactiveCount++;
+      // loop until player presses done
+      if (inactiveCount >= 1000){
+        continueGame = true;
+        break;
+      }
+
+    }
+  }*/
+
+  private void waitNSeconds(int i) {
+    try {
+      System.out.println("******* WAIT " + i + " SEC **********");
+      Thread.sleep(i * 1000);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+      ex.printStackTrace();
+    }
+  }
 }
 
