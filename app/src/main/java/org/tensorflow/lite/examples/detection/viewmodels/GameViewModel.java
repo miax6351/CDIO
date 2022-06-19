@@ -3,6 +3,7 @@ package org.tensorflow.lite.examples.detection.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.tensorflow.lite.examples.detection.CameraActivity;
 import org.tensorflow.lite.examples.detection.logic.Card;
 
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public class GameViewModel extends ViewModel {
     }
 
     public void setShowBar(Boolean isShow, String content){
+        CameraActivity.waitNSeconds(3);
         this.isShowing.postValue(isShow);
         this.content.postValue(content);
 

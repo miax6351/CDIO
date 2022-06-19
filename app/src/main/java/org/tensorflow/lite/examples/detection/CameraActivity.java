@@ -312,7 +312,6 @@ waitPlayerAction
               messageTextViewBox.setVisibility(View.VISIBLE);
               messageTextView.setVisibility(View.VISIBLE);
               doneButton.setVisibility(View.VISIBLE);
-
           }
         }
 
@@ -774,7 +773,7 @@ waitPlayerAction
     }
   }*/
 
-  private static void waitNSeconds(int i) {
+  public static void waitNSeconds(int i) {
     try {
       System.out.println("******* WAIT " + i + " SEC **********");
       Thread.sleep(i * 1000);

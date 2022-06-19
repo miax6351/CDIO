@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Locale;
-import java.util.Stack;
 
 public class Game {
 
@@ -137,12 +136,6 @@ public class Game {
     }
 
     private SOLITARE_STATES handleCheckShownCards() {
-     /*   int number, number1;
-        char color;
-        String cardMatch1 = "";
-        String cardMatch2 = "";
-        Card temp;
-*/
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
             if((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
@@ -171,7 +164,6 @@ public class Game {
                         gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         CameraActivity.waitPlayerOptionLoop();
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
-                        //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
                         cardMoves.add(movingCard.getTitle() + "-" + (j+1));
                         //}
                         cardColumns[j].addAll(cardColumns[i]);
@@ -333,13 +325,6 @@ public class Game {
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     break;
                 }
-                //Counter to change phase
-                /*PHASE_CHANGE_COUNTER++;
-                if (PHASE_CHANGE_COUNTER >= 10){
-                    gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                    waitPlayerOption("Pick up new card from deck!");
-                    break;
-                }*/
 
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(resultCard);
@@ -359,14 +344,7 @@ public class Game {
 
                         }
                     }
-                        /*if (i == 6){
-                            System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
-                            cardMoves.add("T");
-                            gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                            break;
-                            // pickupDeckCard = true;
-                        }*/
-                    //}
+
                 }
 
 
