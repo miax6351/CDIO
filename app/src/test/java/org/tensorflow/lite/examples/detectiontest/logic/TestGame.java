@@ -240,16 +240,6 @@ public class TestGame extends DetectorActivity {
         return SOLITARE_STATES.PICKUP_DECK_CARD;
     }
 
-    private void waitNSeconds(int i) {
-        try {
-            System.out.println("******* WAIT " + i + " SEC **********");
-            Thread.sleep(i * 1000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            ex.printStackTrace();
-        }
-    }
-
     public static boolean recognizedCardsContains(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
