@@ -42,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Stack;
 
 import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
@@ -707,6 +708,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
                     recognizedCards.add(resultCard);
                     gameViewModel.addRecognizedCard(resultCard);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Objects.requireNonNull(cardSuit.getAdapter()).notifyItemInserted(recognizedCards.size()-1);
+                        }
+                    });
                     if (cardColumnCounter == 6) {
                         for (int i = 0; i < 7; i++) {
                             cardColumns[i].add(recognizedCards.get(i));
@@ -756,6 +763,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 if (!recognizedCardsContains(resultCard)) {
                     recognizedCards.add(resultCard);
                     gameViewModel.addRecognizedCard(resultCard);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Objects.requireNonNull(cardSuit.getAdapter()).notifyItemInserted(recognizedCards.size()-1);
+                        }
+                    });
                     pauseUntilConfirmation(resultCard.getTitle(), resultCard);
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
@@ -815,6 +828,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(resultCard);
                                 gameViewModel.addRecognizedCard(resultCard);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Objects.requireNonNull(cardSuit.getAdapter()).notifyItemInserted(recognizedCards.size()-1);
+                                    }
+                                });
                                     waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle() );
                                     System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
                                     cardMoves.add(resultCard.getTitle() + "-" + ( i + 1));
@@ -831,6 +850,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 cardColumns[emptyColoumn].addLast(resultCard);
                                 recognizedCards.add(resultCard);
                                 gameViewModel.addRecognizedCard(resultCard);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Objects.requireNonNull(cardSuit.getAdapter()).notifyItemInserted(recognizedCards.size()-1);
+                                    }
+                                });
                                 //for (int k = 0; k < 10; k++) {
                                 waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + "empty columnn" );
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
@@ -991,3 +1016,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
 
 }
+
+
+
+
+
+
