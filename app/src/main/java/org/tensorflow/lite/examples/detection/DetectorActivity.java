@@ -70,10 +70,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     //confidence level where the card recognized is accepted. To avoid wrong recognition
     private static final float RECOGNIZED_CARD_CONFIDENCE = 0.9f;
+    private static final float RECOGNIZED_SPADES_CONFIDENCE = 0.80f;
     private static final boolean MAINTAIN_ASPECT = true;
     private static final Size DESIRED_PREVIEW_SIZE = new Size(200, 640);
     private static final boolean SAVE_PREVIEW_BITMAP = false;
     private static final float TEXT_SIZE_DIP = 10;
+    private static boolean isSpades = false;
     OverlayView trackingOverlay;
     private Integer sensorOrientation;
 
@@ -295,7 +297,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 GAME LOGIC
                                  */
 
-                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
+                                if (result.getTitle().trim().charAt(0) == 'A'){
+                                    isSpades = true;
+                                }
+
+                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE || (isSpades && result.getConfidence() >= RECOGNIZED_SPADES_CONFIDENCE)) {
                                     Card resultCard = new Card(result.getTitle().trim());
                                     game.playGame(resultCard);
                                     game.printBoard();
@@ -307,6 +313,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                         }
                                     });
                                     // }
+                                    isSpades = false;
                                 }
 
 

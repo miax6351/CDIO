@@ -15,7 +15,7 @@ public class Game {
 
     private GameViewModel gameViewModel;
 
-    private static LinkedList[] cardColumns;
+    public static LinkedList[] cardColumns;
     public static LinkedList recognizedCards;
     public static ArrayList<String> cardMoves;
     private static int cardColumnCounter;
@@ -39,7 +39,7 @@ public class Game {
     private static int numberOfCardsTalon = 0;
 
     public static int NEWEST_EMPTY_COLUMN;
-    private int[] hiddenCardsInColumns = {0,1,2,3,4,5,6};
+    public static int[] hiddenCardsInColumns = {0,1,2,3,4,5,6};
 
     public Game(){
         gameViewModel = DetectorActivity.gameViewModel;
