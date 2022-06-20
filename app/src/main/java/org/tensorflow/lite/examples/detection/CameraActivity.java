@@ -274,6 +274,8 @@ waitPlayerAction
     final Observer<String> snackbarContentObserver = new Observer<String>() {
       @Override
       public void onChanged(@Nullable final String newContent) {
+        System.out.println(Thread.activeCount());
+
         // Update the UI, in this case, a TextView.
         if (FIRST_RUN) {
           messageTextViewBox = findViewById(R.id.messageTextViewBox);
@@ -312,7 +314,10 @@ waitPlayerAction
               messageTextViewBox.setVisibility(View.VISIBLE);
               messageTextView.setVisibility(View.VISIBLE);
               doneButton.setVisibility(View.VISIBLE);
+            //waitPlayerOptionLoop();
+
           }
+
         }
 
 

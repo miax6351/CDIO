@@ -69,7 +69,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
     private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     //confidence level where the card recognized is accepted. To avoid wrong recognition
-    private static final float RECOGNIZED_CARD_CONFIDENCE = 0.9f;
+    private static final float RECOGNIZED_CARD_CONFIDENCE = 0.85f;
     private static final boolean MAINTAIN_ASPECT = true;
     private static final Size DESIRED_PREVIEW_SIZE = new Size(200, 640);
     private static final boolean SAVE_PREVIEW_BITMAP = false;

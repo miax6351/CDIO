@@ -22,7 +22,7 @@ public class GameViewModel extends ViewModel {
         isShowing = new MutableLiveData<>();
         editInputContent = "";
         isShowingEdit = new MutableLiveData<>();
-        isShowingEdit.setValue(false);
+        isShowingEdit.setValue(true);
         content = new MutableLiveData<>();
         isShowing.setValue(true);
         content.setValue("Film row 1");
