@@ -1,7 +1,7 @@
 package org.tensorflow.lite.examples.detection.logic;
 
 public enum SOLITARE_STATES {
-    INITIAL, ANALYZE_CARD_MOVE, DISPLAY_HIDDEN_CARD, PICKUP_DECK_CARD
+    INITIAL, ANALYZE_CARD_MOVE, DISPLAY_HIDDEN_CARD, PICKUP_DECK_CARD, WAIT
     /*
     INITIAL PHASE: First 7 cards are recognized and inserted into LinkedList "columns"
     ANALYZE_CARD_MOVE: Analyze which cards can be moved to where, and tells player to move
@@ -9,5 +9,6 @@ public enum SOLITARE_STATES {
     or move another column to an empty column
     PICK_DECK_CARD: With nothing to move, tells the player to pick up a card from the deck
      */
-
 }
+
+
