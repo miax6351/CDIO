@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import org.tensorflow.lite.examples.detection.R;
+import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
