@@ -705,6 +705,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case INITIAL:
                 if (!recognizedCardsContains(resultCard)){
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
+                    waitPlayerCardRecognized("Recognized specific card: " + resultCard.getTitle());
                     recognizedCards.add(resultCard);
                     gameViewModel.addRecognizedCard(resultCard);
                     if (cardColumnCounter == 6) {
@@ -720,7 +721,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         return;
                     } else {
                         cardColumnCounter++;
-                        waitPlayerOption("Film card on row " + (cardColumnCounter + 1));
+                        //waitPlayerOption("Film card on row " + (cardColumnCounter + 1));
                     }
                 }
 
@@ -874,13 +875,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         continueGame = false;
         snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("\nDone" +
-                        "\n", new View.OnClickListener() {
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Done" + "\n", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         continueGame = true;
-                        Toast.makeText(getApplicationContext(),"Completed",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Game continues",Toast.LENGTH_LONG).show();
                         return;
                     }
                 });
@@ -893,6 +893,42 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             inactiveCount++;
             waitNSeconds(1);
             // loop until player presses done
+            if (inactiveCount >= 1000){
+                continueGame = true;
+                break;
+            }
+
+        }
+    }
+
+    public void waitPlayerCardRecognized (String snackbarText) {
+
+        if (TESTMODE == true){
+            System.out.println(snackbarText);
+            return;
+        }
+
+        continueGame = false;
+
+        snackbar = Snackbar
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Continue" + "\n", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueGame = true;
+                        Toast.makeText(getApplicationContext(),"Continued, film row " + (cardColumnCounter + 1), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                });
+        snackbar.setActionTextColor(Color.GRAY);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.setBackgroundTint(Color.WHITE);
+        snackbar.show();
+
+        int inactiveCount = 0;
+        while (!continueGame){
+            inactiveCount++;
+            // loop until player presses continue
             if (inactiveCount >= 1000){
                 continueGame = true;
                 break;
