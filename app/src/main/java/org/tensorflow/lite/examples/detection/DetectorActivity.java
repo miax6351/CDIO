@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 
-import org.tensorflow.lite.examples.detection.customview.FragmentDialog;
+//import org.tensorflow.lite.examples.detection.customview.FragmentDialog;
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
 import org.tensorflow.lite.examples.detection.env.BorderedText;
@@ -686,7 +686,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             case INITIAL:
                 if (!recognizedCardsContains(resultCard)){
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
-                    waitPlayerCardRecognized("Recognized specific card: " + resultCard.getTitle() +", correct?");
+                    waitPlayerCardRecognized("Recognized specific card: " + resultCard.getTitle());
                     recognizedCards.add(resultCard);
                     if (!TESTMODE){
                         runOnUiThread(new Runnable() {
@@ -872,7 +872,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     public void waitPlayerCardRecognized (String snackbarText) {
 
-        textViewSnackbarText = (TextView) findViewById(R.id.snackbarText);
+//        textViewSnackbarText = (TextView) findViewById(R.id.snackbarText);
 //        continueButton = (Button) findViewById(R.id.continueButton);
 //        editButton = (Button) findViewById(R.id.editButton);
 
@@ -883,43 +883,43 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         continueGame = false;
 
-        //Pop up with 2 actions
-        openDialog();
-
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                continueGame = true;
-                return;
-            }
-        });
-
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                continueGame = false;
-                // find bottom sheet
-                return;
-            }
-        });
-
-//        snackbar = Snackbar
-//                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
-//                .setAction("Continue" + "\n", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        continueGame = true;
-//                        Toast.makeText(getApplicationContext(),"Game continued",Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                });
+//        //Dialog with 2 actions
+//        openDialog();
 //
-//        // snackbar UI
-//        snackbar.setActionTextColor(Color.GRAY);
-//        snackbar.setTextColor(Color.BLACK);
-//        snackbar.setBackgroundTint(Color.WHITE);
+//        continueButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                continueGame = true;
+//                return;
+//            }
+//        });
 //
-//        snackbar.show();
+//        editButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                continueGame = false;
+//                // find bottom sheet
+//                return;
+//            }
+//        });
+
+        snackbar = Snackbar
+                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Continue" + "\n", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueGame = true;
+                        Toast.makeText(getApplicationContext(),"Game continued",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                });
+
+        // snackbar UI
+        snackbar.setActionTextColor(Color.GRAY);
+        snackbar.setTextColor(Color.BLACK);
+        snackbar.setBackgroundTint(Color.WHITE);
+
+        snackbar.show();
 
         int inactiveCount = 0;
         while (!continueGame){
@@ -933,10 +933,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
     }
 
-    public void openDialog() {
-        FragmentDialog fragmentDialog = new FragmentDialog();
-        fragmentDialog.show(getSupportFragmentManager(), "Open fragment dialog");
-    }
+//    public void openDialog() {
+//        FragmentDialog fragmentDialog = new FragmentDialog();
+//        fragmentDialog.show(getSupportFragmentManager(), "Open fragment dialog");
+//    }
 
     final class MyResult{
         private final Card from;
