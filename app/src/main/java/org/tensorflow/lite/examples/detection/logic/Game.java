@@ -403,7 +403,6 @@ public class Game {
                         gameViewModel.setShowBar(true,resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                         recognizedCards.remove(resultCard);
                         CameraActivity.waitPlayerOptionLoop();
-                        playGame(resultCard);
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                         playGame(resultCard);

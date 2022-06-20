@@ -22,7 +22,7 @@ public class GameViewModel extends ViewModel {
         isShowing = new MutableLiveData<>();
         editInputContent = "";
         isShowingEdit = new MutableLiveData<>();
-        isShowingEdit.setValue(true);
+        isShowingEdit.setValue(false);
         content = new MutableLiveData<>();
         isShowing.setValue(true);
         content.setValue("Film row 1");
@@ -47,6 +47,9 @@ public class GameViewModel extends ViewModel {
     }
 
     public void setShowBar(Boolean isShow, String content){
+        if (this.content.equals(content)){
+            return;
+        }
         CameraActivity.waitNSeconds(3);
         this.isShowing.postValue(isShow);
         this.content.postValue(content);

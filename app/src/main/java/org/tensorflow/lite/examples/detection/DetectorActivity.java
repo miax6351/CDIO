@@ -66,6 +66,7 @@ import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
 
+    private Card oldResultCard = new Card("");
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
     private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     //confidence level where the card recognized is accepted. To avoid wrong recognition
@@ -294,22 +295,30 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 /*
                                 GAME LOGIC
                                  */
-
-                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
-                                    Card resultCard = new Card(result.getTitle().trim());
-                                    game.playGame(resultCard);
-                                    game.printBoard();
-                                    game.printMoves();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            cardSuit.getAdapter().notifyDataSetChanged();
-                                        }
-                                    });
-                                    // }
+                                Card resultCard = new Card(result.getTitle().trim());
+                                boolean cardisAceAccepted = false;
+                                if((resultCard.getTitle().equals("As") ||resultCard.getTitle().equals("Ah") ||resultCard.getTitle().equals("Ac") ||resultCard.getTitle().equals("Ad"))&& result.getConfidence() >=0.75f){
+                                    cardisAceAccepted = true;
                                 }
+                                if ((result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE && !gameViewModel.getRecognizedCards().contains(resultCard))||cardisAceAccepted){
+                                    if (!oldResultCard.getTitle().equals(result.getTitle())){
+                                        gameViewModel.setShowBar(true,resultCard.getTitle());
+                                        gameViewModel.setEditContent(resultCard.getTitle());
+                                        gameViewModel.setIsShowingEdit(true);
+                                        //waitNSeconds(10);
+                                        game.playGame(new Card(gameViewModel.getEditContent()));
+                                        game.printBoard();
+                                        game.printMoves();
+                                        oldResultCard = resultCard;
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cardSuit.getAdapter().notifyDataSetChanged();
+                                            }
+                                        });
+                                    }
 
-
+                                }
                             }
                         }
 

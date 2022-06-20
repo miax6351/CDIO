@@ -300,7 +300,7 @@ waitPlayerAction
             continueGame = true;
           });
           editButton.setOnClickListener(event -> {
-            editTextInput.setText(newContent);
+            editTextInput.setText(gameViewModel.getEditContent().toString());
             editButton.setVisibility(View.GONE);
             editTextInput.setVisibility(View.VISIBLE);
             doneButton.setVisibility(View.VISIBLE);
@@ -314,6 +314,7 @@ waitPlayerAction
               messageTextViewBox.setVisibility(View.VISIBLE);
               messageTextView.setVisibility(View.VISIBLE);
               doneButton.setVisibility(View.VISIBLE);
+              editTextInput.setText(gameViewModel.getEditContent());
             //waitPlayerOptionLoop();
 
           }
