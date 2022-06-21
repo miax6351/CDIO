@@ -47,6 +47,7 @@ public class TestGame {
     public static List<Card> fromTest = new LinkedList<Card>();
     public static int toEmptyTest = -1;
     public static Card toTest;
+    public static boolean kingToEmpty = false;
     public static Boolean pickupDeckCardTest = false;
     public static Boolean moveCardTest = false;
     public static Card fromDeckTest;
@@ -180,23 +181,36 @@ public class TestGame {
                     }
                     if (cardColumns[j].isEmpty() || (i == j))
                         continue;
-                    if (isCardCanBeUsed((Card) cardColumns[j].getLast(), (Card) cardColumns[i].getFirst()) && i != j) {
-                        movingCard = (Card) cardColumns[i].getFirst();
-                        //for (int k = 0; k < 5; k++) {
-                        //waitNSeconds(1);
+                    if ((isCardCanBeUsed((Card) cardColumns[j].getLast(), (Card) cardColumns[i].getFirst()) && i != j) || isKingMovable((Card) cardColumns[i].getFirst())) {
+                        if (emptyColoumn != -1){
+                            cardColumns[emptyColoumn].addAll(cardColumns[i]);
+                            moveCardColoumnTest = true;
+                            kingToEmpty = true;
+                            toEmptyTest = emptyColoumn;
+                            NEWEST_EMPTY_COLUMN = i;
 
-                        System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
-                        //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
-                        cardMoves.add(movingCard.getTitle() + "-" + (j + 1));
-                        moveCardColoumnTest = true;
-                        fromTest.clear();
-                        fromTest.addAll(cardColumns[i]);
-                        toTest = ((Card) cardColumns[j].getLast());
+                            fromTest.clear();
+                            fromTest.addAll(cardColumns[i]);
+                            cardColumns[i].clear();
+                            emptyColoumn = -1;
+                        }else{
+                            movingCard = (Card) cardColumns[i].getFirst();
+                            //for (int k = 0; k < 5; k++) {
+                            //waitNSeconds(1);
 
-                        //}
-                        cardColumns[j].addAll(cardColumns[i]);
-                        cardColumns[i].clear();
-                        NEWEST_EMPTY_COLUMN = i;
+                            System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
+                            //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
+                            cardMoves.add(movingCard.getTitle() + "-" + (j + 1));
+                            moveCardColoumnTest = true;
+                            fromTest.clear();
+                            fromTest.addAll(cardColumns[i]);
+                            toTest = ((Card) cardColumns[j].getLast());
+
+                            //}
+                            cardColumns[j].addAll(cardColumns[i]);
+                            cardColumns[i].clear();
+                            NEWEST_EMPTY_COLUMN = i;
+                        }
                         return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                     }
                 }
@@ -274,6 +288,7 @@ public class TestGame {
             System.out.println("Move to foundation: " + card.getTitle());
             moveToFoundationTest = true;
             cardMoves.add(card.getTitle() + "-F");
+
         }
         return removeCard;
     }

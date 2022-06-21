@@ -353,6 +353,7 @@ public class TestGameTest {
         Card revealedCard = new Card("");
 
         List<Card> insertList = new ArrayList<>();
+        //vores kabale
         //insertList = Stream.of(t.hk, t.s6, t.h6, t.s7, t.d8, t.da, t.hj, t.d7, t.s5, t.h9, t.d5, t.ck, t.sk, t.s8, t.c5, t.d6, t.c4, t.hq, t.sq, t.sj, t.dk, t.h2, t.c3, t.h4, t.c2, t.s2, t.s9, t.d2, t.c8, t.h5, t.d3, t.h3, t.c7, t.c6, t.d4, t.c10,t.h10,t.d9,t.sa,t.cj,t.dj,t.d10,t.h7,t.ha,t.ca,t.dq,t.h8,t.s3,t.c9,t.s10,t.s4,t.cq).collect(Collectors.toList());
 
         //gruppe 6
@@ -426,18 +427,26 @@ public class TestGameTest {
             }
             if (TestGame.moveCardColoumnTest == true){
                 for (int i = 0; i < board.coloumnCards.size(); i++) {
-                    if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) TestGame.fromTest).getLast()) {
-                        for (int j = 0; j <= TestGame.fromTest.size()-1; j++){
-                            board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                    if (TestGame.kingToEmpty == true && board.coloumnCards.get(i).isEmpty()){
+                        for (int j = 0; j < TestGame.fromTest.size(); j++) {
+                            board.getRow(i+1).add(TestGame.fromTest.get(j));
                         }
-                        revealedCard = board.getFrontOfRow(i + 1);
-                    }
-                    if (board.getFrontOfRow(i + 1) == TestGame.toTest) {
-                        for (int j = 0; j <= TestGame.fromTest.size()-1; j++){
-                            //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
-                            board.getRow(i + 1).add(TestGame.fromTest.get(j));
+                        TestGame.kingToEmpty = false;
+                    }else{
+                        if (board.getFrontOfRow(i + 1) == ((LinkedList<Card>) TestGame.fromTest).getLast()) {
+                            for (int j = 0; j <= TestGame.fromTest.size()-1; j++){
+                                board.getRow(i + 1).remove(board.coloumnCards.get(i).size() - 1);
+                            }
+                            revealedCard = board.getFrontOfRow(i + 1);
+                        }
+                        if (board.getFrontOfRow(i + 1) == TestGame.toTest) {
+                            for (int j = 0; j <= TestGame.fromTest.size()-1; j++){
+                                //board.getRow(i + 1).add(((LinkedList<Card>) DetectorActivity.from).getLast());
+                                board.getRow(i + 1).add(TestGame.fromTest.get(j));
+                            }
                         }
                     }
+
                 }
                 if (board.getCurrentDeckCard().equals(((LinkedList<Card>) TestGame.fromTest).getLast())){
                     board.deck.remove(board.getCurrentDeckCard());
