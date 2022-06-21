@@ -320,7 +320,7 @@ public class Game {
                     }
                 }
                 if(!hiddenCardCanBeDisplayed){
-                    gameViewModel.setShowBar(true, "Pick up new card from deck!");
+                    gameViewModel.setShowBar(true, "Film talon card");
                     CameraActivity.waitPlayerOptionLoop();
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     break;
@@ -351,7 +351,7 @@ public class Game {
                 break;
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
-                gameViewModel.setShowBar(true, "Pick up card from deck");
+                gameViewModel.setShowBar(true, "Film talon card");
                 CameraActivity.waitPlayerOptionLoop();
                 boolean cardCanBeUsed = false;
                 if (!recognizedCardsContains(resultCard)){
@@ -397,7 +397,7 @@ public class Game {
                     }
                     if (!cardCanBeUsed) {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
-                        gameViewModel.setShowBar(true,resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
+                        gameViewModel.setShowBar(true,resultCard.getTitle() + " cannot be used anywhere, pick 3 new cards.");
                         recognizedCards.remove(resultCard);
                         CameraActivity.waitPlayerOptionLoop();
                     }else{
