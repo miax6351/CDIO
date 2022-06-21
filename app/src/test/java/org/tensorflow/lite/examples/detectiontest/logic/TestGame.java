@@ -131,14 +131,16 @@ public class TestGame {
     }
 
     public static Boolean isKingMovable(Card card) {
-        if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
-            for (int i = 0; i < 7; i++) {
-                //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
-                //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
-                //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
-                if (cardColumns[i].isEmpty()) {
-                    emptyColoumn = i;
-                    return true;
+        if (!card.getLockedPosition()){
+            if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
+                for (int i = 0; i < 7; i++) {
+                    //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
+                    //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
+                    //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
+                    if (cardColumns[i].isEmpty()) {
+                        emptyColoumn = i;
+                        return true;
+                    }
                 }
             }
         }
@@ -181,9 +183,10 @@ public class TestGame {
                     }
                     if (cardColumns[j].isEmpty() || (i == j))
                         continue;
-                    if ((isCardCanBeUsed((Card) cardColumns[j].getLast(), (Card) cardColumns[i].getFirst()) && i != j) || isKingMovable((Card) cardColumns[i].getFirst())) {
+                    if ((isCardCanBeUsed((Card) cardColumns[j].getLast(), (Card) cardColumns[i].getFirst()) && i != j) || (isKingMovable((Card) cardColumns[i].getFirst()) )) {
                         if (emptyColoumn != -1){
                             cardColumns[emptyColoumn].addAll(cardColumns[i]);
+                            ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
                             moveCardColoumnTest = true;
                             kingToEmpty = true;
                             toEmptyTest = emptyColoumn;
@@ -193,6 +196,7 @@ public class TestGame {
                             fromTest.addAll(cardColumns[i]);
                             cardColumns[i].clear();
                             emptyColoumn = -1;
+
                         }else{
                             movingCard = (Card) cardColumns[i].getFirst();
                             //for (int k = 0; k < 5; k++) {
@@ -426,10 +430,12 @@ public class TestGame {
                                 cardColumns[emptyColoumn].addLast(resultCard);
                                 recognizedCards.add(resultCard);
 
+
+
                                 //for (int k = 0; k < 10; k++) {
 
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
-
+                                resultCard.setLockedPosition(true);
                                 fromDeckTest = resultCard;
                                 toEmptyTest = emptyColoumn;
                                 moveCardTest = true;
