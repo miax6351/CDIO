@@ -271,6 +271,7 @@ public class TestGame {
 
             fromTest.clear();
             fromTest.add(card);
+            System.out.println("Move to foundation: " + card.getTitle());
             moveToFoundationTest = true;
             cardMoves.add(card.getTitle() + "-F");
         }
@@ -433,6 +434,7 @@ public class TestGame {
                         recognizedCards.remove(resultCard);
                         drawTest = true;
                     } else {
+                        TestGame.pickupDeckCardTest = false;
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     }
                 }
