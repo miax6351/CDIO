@@ -16,8 +16,6 @@
 
 package org.tensorflow.lite.examples.detection;
 
-import static org.tensorflow.lite.examples.detection.viewmodels.GameViewModel.FIRST_RUN;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Camera;
@@ -76,10 +74,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     //confidence level where the card recognized is accepted. To avoid wrong recognition
     private static final float RECOGNIZED_CARD_CONFIDENCE = 0.9f;
+    private static final float RECOGNIZED_SPADES_CONFIDENCE = 0.80f;
     private static final boolean MAINTAIN_ASPECT = true;
     private static final Size DESIRED_PREVIEW_SIZE = new Size(200, 640);
     private static final boolean SAVE_PREVIEW_BITMAP = false;
     private static final float TEXT_SIZE_DIP = 10;
+    private static boolean isSpades = false;
     OverlayView trackingOverlay;
     private Integer sensorOrientation;
 
@@ -89,9 +89,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     private Bitmap rgbFrameBitmap = null;
     private Bitmap croppedBitmap = null;
     private Bitmap cropCopyBitmap = null;
-
-    private Snackbar snackbar;
-    private Boolean continueGame;
 
     private boolean computingDetection = false;
 
@@ -267,11 +264,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (FIRST_RUN){
-                            waitPlayerOption(gameViewModel.getSnackBarText());
-                            FIRST_RUN = false;
-                        }
-
                         LOGGER.i("Running detection on image " + currTimestamp);
                         final long startTime = SystemClock.uptimeMillis();
                         final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
@@ -309,19 +301,16 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 /*
                                 GAME LOGIC
                                  */
-                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE) {
-                                    Card resultCard = new Card(result.getTitle().trim());
-                                    // if (!recognizedCardsContains(resultCard)){
-                                    /*if (game.getGameState() == SOLITARE_STATES.DISPLAY_HIDDEN_CARD)
-                                        PHASE_CHANGE_COUNTER++;*/
 
+                                if (result.getTitle().trim().charAt(0) == 'A'){
+                                    isSpades = true;
+                                }
+
+                                if (result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE || (isSpades && result.getConfidence() >= RECOGNIZED_SPADES_CONFIDENCE)) {
+                                    Card resultCard = new Card(result.getTitle().trim());
                                     game.playGame(resultCard);
-                                    if(gameViewModel.getShowBar()){
-                                        waitPlayerOption(gameViewModel.getSnackBarText());
-                                    }
                                     game.printBoard();
                                     game.printMoves();
-
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -329,6 +318,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                         }
                                     });
                                     // }
+                                    isSpades = false;
                                 }
 
 
@@ -379,45 +369,4 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         runInBackground(() -> detector.setNumThreads(numThreads));
     }
 
-    public void waitPlayerOption (String snackbarText) {
-        continueGame = false;
-        snackbar = Snackbar
-                .make(findViewById(android.R.id.content).getRootView(), snackbarText + "\n\n", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Complete move" + "\n", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        continueGame = true;
-                        gameViewModel.setShowBar(false, "");
-                        Toast.makeText(getApplicationContext(),"Move completed",Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                });
-
-        // snackbar UI
-        snackbar.setActionTextColor(Color.GRAY);
-        snackbar.setTextColor(Color.BLACK);
-        snackbar.setBackgroundTint(Color.WHITE);
-
-        snackbar.show();
-        int inactiveCount = 0;
-        while (!continueGame){
-            waitNSeconds(1);
-            inactiveCount++;
-            // loop until player presses done
-            if (inactiveCount >= 1000){
-                continueGame = true;
-                break;
-            }
-
-        }
-    }
-    private void waitNSeconds(int i) {
-        try {
-            System.out.println("******* WAIT " + i + " SEC **********");
-            Thread.sleep(i * 1000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            ex.printStackTrace();
-        }
-    }
 }

@@ -1,50 +1,30 @@
 package org.tensorflow.lite.examples.detection.viewmodels;
 
-import static org.tensorflow.lite.examples.detection.CameraActivity.cardSuit;
-
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.graphics.Camera;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import org.tensorflow.lite.examples.detection.CameraActivity;
-import org.tensorflow.lite.examples.detection.DetectorActivity;
-import org.tensorflow.lite.examples.detection.dao.GameStateDao;
-import org.tensorflow.lite.examples.detection.database.GameStateDatabase;
 import org.tensorflow.lite.examples.detection.logic.Card;
-import org.tensorflow.lite.examples.detection.logic.Game;
-import org.tensorflow.lite.examples.detection.logic.GameState;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class GameViewModel extends ViewModel {
 
     private LinkedList<Card> recognizedCards;
-    private LinkedList<Card> loadedCards;
     public MutableLiveData<Boolean> isShowing;
-    private MutableLiveData<String> content;
-    public static boolean FIRST_RUN = true;
-    private GameState state;
-    private GameStateDatabase stateDB;
-    private GameStateDao stateDao;
+    public MutableLiveData<Boolean> isShowingEdit;
+    public MutableLiveData<String> content;
+    private String editInputContent;
 
     public GameViewModel() {
         System.out.println("GameViewModel created");
         recognizedCards = new LinkedList<>();
-        loadedCards = new LinkedList<>();
         isShowing = new MutableLiveData<>();
+        editInputContent = "";
+        isShowingEdit = new MutableLiveData<>();
+        isShowingEdit.setValue(false);
         content = new MutableLiveData<>();
         isShowing.setValue(true);
-        stateDB = Room.databaseBuilder(CameraActivity.context, GameStateDatabase.class,"State-Database").allowMainThreadQueries().build();
-        stateDao = stateDB.gameStateDao();
-        state = new GameState();
         content.setValue("Film row 1");
     }
 
@@ -54,45 +34,44 @@ public class GameViewModel extends ViewModel {
         System.out.println("ViewModel destroyed");
     }
 
-    public void addRecognizedCard(Card card) {
+    public void addRecognizedCard(Card card){
         recognizedCards.add(card);
-        state.setRecognizedCards(recognizedCards);
-        stateDao.updateState(state);
     }
 
-    public void removeRecognizedCard(Card card) {
+    public void removeRecognizedCard(Card card){
         recognizedCards.remove(card);
     }
 
-    public LinkedList<Card> getRecognizedCards() {
+    public LinkedList<Card> getRecognizedCards(){
         return recognizedCards;
     }
 
-    public LinkedList<Card> getLoadedCards(){return loadedCards;}
-
-    public void loadRecognizedCards(){
-       GameState temp =  stateDao.getRecognizedCards(0);
-       List<String> tempList = List.of(temp.recognizedCards.split(","));
-        for (String s:tempList
-             ) {
-            loadedCards.add(new Card((s.replace(" ",""))));
-        }
-        System.out.println(tempList);
-    }
-
-    public void setShowBar(Boolean isShow, String content) {
+    public void setShowBar(Boolean isShow, String content){
+        CameraActivity.waitNSeconds(3);
         this.isShowing.postValue(isShow);
         this.content.postValue(content);
 
     }
 
-    public Boolean getShowBar() {
-        System.out.println(this.isShowing.getValue() + "***************FDSASTRHDRTHSRFwdeafrgsrtef");
-        return this.isShowing.getValue();
+    public void setIsShowingEdit(Boolean isShowingEdit){
+        this.isShowingEdit.postValue(isShowingEdit);
     }
 
-    public String getSnackBarText() {
+    public void setEditContent(String editInputContent){
+        this.editInputContent = editInputContent;
+    }
+
+
+    public String getSnackBarText(){
         return this.content.getValue();
+    }
+
+    public Boolean getIsShowingEdit(){
+        return this.isShowingEdit.getValue();
+    }
+
+    public String getEditContent(){
+        return this.editInputContent;
     }
 
 }

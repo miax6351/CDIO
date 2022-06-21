@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import org.tensorflow.lite.examples.detection.R;
+import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
@@ -54,6 +55,36 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                 notifyItemChanged(index);
                 dialogInterface.dismiss();
 
+
+                String lastEditedCardTitle = dataset.get(index).getTitle();
+                LinkedList<Card> cardsOnEditedCard = new LinkedList<Card>();
+                for (int j = 0; j < 7; j++) {
+                    for (int k = 0; k < Game.cardColumns[j].size(); k++) {
+
+                        if (((Card) Game.cardColumns[j].get(k)).getTitle().equals(lastEditedCardTitle)) {
+                            for (int h = k + 1; h < Game.cardColumns[j].size(); h++) {
+                                cardsOnEditedCard.add((Card) Game.cardColumns[j].get(h));
+                            }
+                            if(!Game.cardColumns[j].isEmpty())
+                                Game.cardColumns[j].removeAll(cardsOnEditedCard);
+                        }
+
+                    }
+                }
+                boolean hasAdded = false;
+                int emptyIndex = 0;
+                for (int j = 0; j < 7; j++) {
+                    if(Game.cardColumns[j].isEmpty() && Game.hiddenCardsInColumns[j] > 0) {
+                        hasAdded = true;
+                        Game.cardColumns[j] = cardsOnEditedCard;
+                        break;
+                    }
+                    else if(Game.cardColumns[j].isEmpty()) {
+                        emptyIndex = j;
+                    }
+                }
+                if(!hasAdded)
+                    Game.cardColumns[emptyIndex] = cardsOnEditedCard;
             }
         });
 
