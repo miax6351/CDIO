@@ -315,7 +315,6 @@ public class Game {
             case ANALYZE_CARD_MOVE:
                 System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
                 gameState = handleCheckShownCards();
-                playGame(resultCard);
                 break;
 
             case DISPLAY_HIDDEN_CARD:
@@ -329,10 +328,9 @@ public class Game {
                     }
                 }
                 if(!hiddenCardCanBeDisplayed){
-                   // gameViewModel.setShowBar(true, "Pick up new card from deck!");
+                    gameViewModel.setShowBar(true, "Pick up new card from deck!");
                     CameraActivity.waitPlayerOptionLoop();
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                    playGame(resultCard);
                     break;
                 }
 
@@ -350,7 +348,6 @@ public class Game {
                             cardColumns[NEWEST_EMPTY_COLUMN].add(resultCard);
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                             NEWEST_EMPTY_COLUMN = -1;
-                            playGame(resultCard);
                             return;
 
                         }
@@ -413,7 +410,6 @@ public class Game {
                         CameraActivity.waitPlayerOptionLoop();
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                        playGame(resultCard);
                     }
                 }
                 break;
