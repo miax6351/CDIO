@@ -1,5 +1,6 @@
 package org.tensorflow.lite.examples.detection.logic;
 
+import android.graphics.Camera;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
@@ -56,10 +57,22 @@ public class Game {
     private static int numberOfCardsDeck = 24;
     private static int numberOfCardsTalon = 0;
 
-    public Game(){
+    public Game() {
         //initializing card columns
         gameViewModel = CameraActivity.gameViewModel;
+
         initializeCardColumns();
+
+
+    }
+
+    public void loadGame(){
+        gameViewModel.loadRecognizedCards();
+        for (Card c: gameViewModel.getRecognizedCards()
+        ) {
+            playGame(c);
+        }
+        gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
     }
 
     public void initializeCardColumns() {
@@ -104,14 +117,14 @@ public class Game {
         String temp = "";
         number = getCardNumber(resultCard);
         color = getCardColor(resultCard);
-        if (isKingMovable(resultCard)){
+        if (isKingMovable(resultCard)) {
             return false;
         }
         number1 = number + 1;
         if (color == 'h' || color == 'd') {
             cardMatch1 = getCardMatch(number1, 'c').trim();
             cardMatch2 = getCardMatch(number1, 's').trim();
-        }  else {
+        } else {
             cardMatch1 = getCardMatch(number1, 'h').trim();
             cardMatch2 = getCardMatch(number1, 'd').trim();
         }
@@ -120,13 +133,13 @@ public class Game {
         return false;
     }
 
-    public static Boolean isKingMovable(Card card){
+    public static Boolean isKingMovable(Card card) {
         if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
-            for (int i = 0; i < 7; i++){
+            for (int i = 0; i < 7; i++) {
                 //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
                 //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
                 //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
-                if (cardColumns[i].isEmpty()){
+                if (cardColumns[i].isEmpty()) {
                     emptyColoumn = i;
                     return true;
                 }
@@ -152,9 +165,9 @@ public class Game {
 */
         // first check if a card can be removed and put into finished card queue
         for (int i = 0; i < 7; i++) {
-            if((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
+            if ((!cardColumns[i].isEmpty()) && cardsToFoundationPile((Card) cardColumns[i].getLast())) {
                 // this opened card should be moved out to finished card queue
-                if(cardColumns[i].isEmpty()) {
+                if (cardColumns[i].isEmpty()) {
                     // this is the last card in the list
                     return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                 }
@@ -163,14 +176,14 @@ public class Game {
             }
 
             //Card can be moved to another column
-            else{
-                for (int j = 0; j < 7; j++){
-                    if (cardColumns[i].isEmpty()){
+            else {
+                for (int j = 0; j < 7; j++) {
+                    if (cardColumns[i].isEmpty()) {
                         continue;
                     }
                     if (cardColumns[j].isEmpty() || (i == j))
                         continue;
-                    if(isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j){
+                    if (isCardCanBeUsed((Card) cardColumns[j].getLast(), (Card) cardColumns[i].getFirst()) && i != j) {
                         movingCard = (Card) cardColumns[i].getFirst();
                         //for (int k = 0; k < 5; k++) {
                         //waitNSeconds(1);
@@ -178,7 +191,7 @@ public class Game {
                         gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
                         System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
                         //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
-                        cardMoves.add(movingCard.getTitle() + "-" + (j+1));
+                        cardMoves.add(movingCard.getTitle() + "-" + (j + 1));
                         //}
                         cardColumns[j].addAll(cardColumns[i]);
                         cardColumns[i].clear();
@@ -227,11 +240,10 @@ public class Game {
     }
 
 
-
     public static boolean recognizedCardsContains(Card card) {
         ListIterator listIterator = recognizedCards.listIterator();
         while (listIterator.hasNext()) {
-            Card columnCard =  (Card)listIterator.next();
+            Card columnCard = (Card) listIterator.next();
             if (columnCard.getTitle().equals(card.getTitle())) {
                 return true;
             }
@@ -239,22 +251,21 @@ public class Game {
         return false;
     }
 
-    private boolean canMoveCardFromDeck(){
-        if(numberOfCardsDeck + numberOfCardsTalon == 3 && numberOfCardsTalon != 0){
+    private boolean canMoveCardFromDeck() {
+        if (numberOfCardsDeck + numberOfCardsTalon == 3 && numberOfCardsTalon != 0) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
-    private void moveCardFromDeck(){
-        if(numberOfCardsTalon == 0){
+
+    private void moveCardFromDeck() {
+        if (numberOfCardsTalon == 0) {
             numberOfCardsDeck -= 3;
             numberOfCardsTalon = 3;
         }
-        numberOfCardsTalon --;
+        numberOfCardsTalon--;
     }
-
 
 
     private boolean cardsToFoundationPile(Card card) {
@@ -299,9 +310,9 @@ public class Game {
                 }
                 break;
         }
-        if(removeCard) {
+        if (removeCard) {
             for (int i = 0; i < 7; i++) {
-                if(!cardColumns[i].isEmpty() && ((Card)cardColumns[i].getLast()).getTitle().equalsIgnoreCase(card.getTitle())) {
+                if (!cardColumns[i].isEmpty() && ((Card) cardColumns[i].getLast()).getTitle().equalsIgnoreCase(card.getTitle())) {
                     //TEST//
                     //TODO:DetectorActivity.fromTest.clear();
                     //TEST//
@@ -318,14 +329,16 @@ public class Game {
         }
         return removeCard;
     }
+
     public void playGame(Card resultCard) {
+
 
         emptyColoumn = -1;
 
         switch (gameState) {
 
             case INITIAL:
-                if (!recognizedCardsContains(resultCard)){
+                if (!recognizedCardsContains(resultCard)) {
                     System.out.println("RECOGNIZED SPECIFIC CARD:" + resultCard.getTitle());
                     recognizedCards.add(resultCard);
                     CameraActivity.gameViewModel.addRecognizedCard(resultCard);
@@ -359,7 +372,7 @@ public class Game {
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 //Counter to change phase
                 PHASE_CHANGE_COUNTER++;
-                if (PHASE_CHANGE_COUNTER >= 10){
+                if (PHASE_CHANGE_COUNTER >= 10) {
                     gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                     gameViewModel.setShowBar(true, "Pick up new card from deck!");
                     //TODO:waitPlayerOption("Pick up new card from deck!");
@@ -372,13 +385,13 @@ public class Game {
                     System.out.println("------- Find lately opened card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
                     for (int i = 0; i < 7; i++) {
-                        if (cardColumns[i].isEmpty()){
+                        if (cardColumns[i].isEmpty()) {
                             cardColumns[i].add(resultCard);
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                             return;
 
                         }
-                        if (i == 6){
+                        if (i == 6) {
                             System.out.println("----------------- No new card opened and no column to move, pickup new card from deck +++++++++++++++++++++++++++++++++++");
                             cardMoves.add("T");
                             gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
@@ -394,10 +407,10 @@ public class Game {
             case PICKUP_DECK_CARD:
                 System.out.println("*************  ENTER PICKUP_DECK_CARD *****");
                 boolean cardCanBeUsed = false;
-                if (!recognizedCardsContains(resultCard)){
+                if (!recognizedCardsContains(resultCard)) {
                     System.out.println("-------- found a new card " + resultCard.getTitle() + "-------");
                     cardMoves.add("T");
-                    if (!cardsToFoundationPile(resultCard)){
+                    if (!cardsToFoundationPile(resultCard)) {
                         for (int i = 0; i < 7; i++) {
                             if ((!cardColumns[i].isEmpty()) && isCardCanBeUsed(((Card) cardColumns[i].getLast()), resultCard) && !finishedCard.contains(resultCard)) {
                                 // add the new card to the list
@@ -405,21 +418,20 @@ public class Game {
                                 cardColumns[i].addLast(resultCard);
                                 recognizedCards.add(resultCard);
                                 CameraActivity.gameViewModel.addRecognizedCard(resultCard);
-                                gameViewModel.setShowBar(true, "Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle());
+                                gameViewModel.setShowBar(true, "Move new card: " + resultCard.getTitle() + " to " + oldListLastCard.getTitle());
                                 //TODO:waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + oldListLastCard.getTitle() );
                                 System.out.println("Move new card " + resultCard.getTitle() + "to" + oldListLastCard.getTitle());
-                                cardMoves.add(resultCard.getTitle() + "-" + ( i + 1));
+                                cardMoves.add(resultCard.getTitle() + "-" + (i + 1));
                                 gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                                 cardCanBeUsed = true;
                                 break;
-                            }
-                            else if(emptyColoumn != -1){
+                            } else if (emptyColoumn != -1) {
                                 // add the new card to the list
                                 cardColumns[emptyColoumn].addLast(resultCard);
                                 recognizedCards.add(resultCard);
                                 CameraActivity.gameViewModel.addRecognizedCard(resultCard);
                                 //for (int k = 0; k < 10; k++) {
-                                gameViewModel.setShowBar(true, "Move new card: " + resultCard.getTitle() +" to " + "empty columnn");
+                                gameViewModel.setShowBar(true, "Move new card: " + resultCard.getTitle() + " to " + "empty columnn");
                                 //TODO:waitPlayerOption("Move new card: " + resultCard.getTitle() +" to " + "empty columnn" );
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
                                 emptyColoumn = -1;
@@ -428,7 +440,7 @@ public class Game {
                                 break;
                             }
                         }
-                    }else{
+                    } else {
                         cardCanBeUsed = true;
                         recognizedCards.add(resultCard);
                     }
@@ -436,7 +448,7 @@ public class Game {
                         gameState = SOLITARE_STATES.PICKUP_DECK_CARD;
                         gameViewModel.setShowBar(true, resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                         //TODO:waitPlayerOption(resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
-                    }else{
+                    } else {
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                     }
                 }
@@ -448,10 +460,7 @@ public class Game {
     }
 
 
-
-
-
-    final class MyResult{
+    final class MyResult {
         private final Card from;
         private final Card to;
 
@@ -461,19 +470,19 @@ public class Game {
         }
     }
 
-    public void printBoard(){
+    public void printBoard() {
         int biggestRow = 0;
 
-        for (int k = 6; k >= 0; k--){
-            if(biggestRow < cardColumns[k].size()){
+        for (int k = 6; k >= 0; k--) {
+            if (biggestRow < cardColumns[k].size()) {
                 biggestRow = cardColumns[k].size();
             }
         }
-        for(int j = 0; j < biggestRow; j++){
-            for (int i = 0; i < 7; i++){
+        for (int j = 0; j < biggestRow; j++) {
+            for (int i = 0; i < 7; i++) {
                 try {
-                    System.out.print(((Card) (cardColumns[i].get(j))).getTitle()+ "       ");
-                } catch (Exception e){
+                    System.out.print(((Card) (cardColumns[i].get(j))).getTitle() + "       ");
+                } catch (Exception e) {
                     System.out.print("         ");
                 }
             }
@@ -481,21 +490,21 @@ public class Game {
         }
     }
 
-    public void printMoves(){
+    public void printMoves() {
         int last = 0;
         System.out.println("");
-        for (String move : cardMoves){
-            if (last == cardMoves.size() - 1){
+        for (String move : cardMoves) {
+            if (last == cardMoves.size() - 1) {
                 System.out.print(move);
             } else {
-                System.out.print(" "+ move + " ,");
+                System.out.print(" " + move + " ,");
                 last++;
             }
         }
         System.out.println("");
     }
 
-    public SOLITARE_STATES getGameState(){
+    public SOLITARE_STATES getGameState() {
         return gameState;
     }
 }

@@ -51,6 +51,8 @@ project.ext.TMP_DIR = project.buildDir.toString() + '/downloads'
 //apply from: 'download_model.gradle'
 
 dependencies {
+    def room_version = "2.4.2"
+
 //    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 //    implementation files('bin/gdbserver')
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -60,8 +62,10 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.4.0'
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc01"
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.room:room-rxjava2:$room_version"
+
 
 
 //    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.3.0'

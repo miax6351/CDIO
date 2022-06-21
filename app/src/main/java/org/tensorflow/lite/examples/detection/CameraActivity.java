@@ -83,6 +83,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final String ASSET_PATH = "";
   protected int previewWidth = 0;
   protected int previewHeight = 0;
+  public static Context context;
   private boolean debug = false;
   public static RecyclerView cardSuit;
   protected Handler handler;
@@ -116,6 +117,7 @@ public abstract class CameraActivity extends AppCompatActivity
   ArrayList<String> deviceStrings = new ArrayList<String>();
 
   public static GameViewModel gameViewModel;
+  public static Boolean load;
 
   protected Game game;
 
@@ -127,6 +129,7 @@ public abstract class CameraActivity extends AppCompatActivity
     setContentView(R.layout.tfe_od_activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    context = this;
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     if (hasPermission()) {
@@ -135,12 +138,18 @@ public abstract class CameraActivity extends AppCompatActivity
       requestPermission();
     }
 
-
-
-
-    game = new Game();
+    load = getIntent().getBooleanExtra("load", false);
     gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+    game = new Game();
     System.out.println("gameViewModel is initialized");
+
+
+   /* CameraActivity.gameViewModel.addRecognizedCard(new Card("6h"));
+    CameraActivity.gameViewModel.addRecognizedCard(new Card("3h"));
+    CameraActivity.gameViewModel.addRecognizedCard(new Card("2h"));*/
+
+
+    //CameraActivity.gameViewModel.loadRecognizedCards();
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
     cardSuit.setLayoutManager(new LinearLayoutManager(this));

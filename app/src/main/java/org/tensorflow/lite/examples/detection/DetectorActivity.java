@@ -36,14 +36,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.datastore.preferences.core.Preferences;
-import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
-import androidx.datastore.rxjava3.RxDataStore;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -71,7 +69,6 @@ import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
  */
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
 
-    RxDataStore<Preferences> dataStore = new RxPreferenceDataStoreBuilder(this,"settings").build();
 
     private static final Logger LOGGER = new Logger();
 

@@ -1,47 +1,36 @@
 package org.tensorflow.lite.examples.detection.logic;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@Entity
 public class GameState {
 
-    private String moves;
-    private LinkedList recognizedCards;
-    private SOLITARE_STATES state;
-    private LinkedList cardColumns;
-    private static GameState instance;
+    @PrimaryKey
+    public int id;
 
+    @ColumnInfo(name = "recognized_Cards")
+    public String recognizedCards;
 
-    private GameState(){
-    }
+    @Ignore
+    public void setRecognizedCards(LinkedList<Card> recognizedCards) {
+        id = 0;
+        List<String> values = new ArrayList<>();
 
-    public static GameState CreateState(){
-        if (instance == null) {
-            instance = new GameState();
+        for (Card c : recognizedCards
+        ) {
+            values.add(c.getTitle());
         }
-        return instance;
-    }
-
-    public static void setNewState(GameState newState){
-        instance = newState;
-    }
-
-    public void setCardColumns(LinkedList cardColumns) {
-        this.cardColumns = cardColumns;
-    }
-
-    public void setState(SOLITARE_STATES state){
-        this.state = state;
-    }
-
-    public void setRecognizedCards(LinkedList recognizedCards) {
-        this.recognizedCards = recognizedCards;
-    }
-
-    public void setMoves(String moves) {
-        this.moves = moves;
+        this.recognizedCards = values.toString()
+                .replace("[","")
+                .replace("]","");
     }
 
 }
