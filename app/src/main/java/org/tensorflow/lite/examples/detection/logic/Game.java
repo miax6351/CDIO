@@ -62,13 +62,14 @@ public class Game {
         gameViewModel = CameraActivity.gameViewModel;
 
         initializeCardColumns();
-
+        //loadGame();
 
     }
 
-    public void loadGame(){
-        gameViewModel.loadRecognizedCards();
-        for (Card c: gameViewModel.getRecognizedCards()
+    public void loadGame() {
+        CameraActivity.gameViewModel.loadRecognizedCards();
+        LinkedList<Card> temp = (LinkedList<Card>) gameViewModel.getLoadedCards();
+        for (Card c : temp
         ) {
             playGame(c);
         }

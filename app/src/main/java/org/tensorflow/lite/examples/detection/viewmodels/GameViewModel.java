@@ -27,6 +27,7 @@ import java.util.List;
 public class GameViewModel extends ViewModel {
 
     private LinkedList<Card> recognizedCards;
+    private LinkedList<Card> loadedCards;
     public MutableLiveData<Boolean> isShowing;
     private MutableLiveData<String> content;
     public static boolean FIRST_RUN = true;
@@ -37,6 +38,7 @@ public class GameViewModel extends ViewModel {
     public GameViewModel() {
         System.out.println("GameViewModel created");
         recognizedCards = new LinkedList<>();
+        loadedCards = new LinkedList<>();
         isShowing = new MutableLiveData<>();
         content = new MutableLiveData<>();
         isShowing.setValue(true);
@@ -66,13 +68,16 @@ public class GameViewModel extends ViewModel {
         return recognizedCards;
     }
 
+    public LinkedList<Card> getLoadedCards(){return loadedCards;}
+
     public void loadRecognizedCards(){
        GameState temp =  stateDao.getRecognizedCards(0);
        List<String> tempList = List.of(temp.recognizedCards.split(","));
         for (String s:tempList
              ) {
-            recognizedCards.add(new Card((s)));
+            loadedCards.add(new Card((s.replace(" ",""))));
         }
+        System.out.println(tempList);
     }
 
     public void setShowBar(Boolean isShow, String content) {
