@@ -274,6 +274,8 @@ waitPlayerAction
     final Observer<String> snackbarContentObserver = new Observer<String>() {
       @Override
       public void onChanged(@Nullable final String newContent) {
+        System.out.println(Thread.activeCount());
+
         // Update the UI, in this case, a TextView.
         if (FIRST_RUN) {
           messageTextViewBox = findViewById(R.id.messageTextViewBox);
@@ -298,7 +300,7 @@ waitPlayerAction
             continueGame = true;
           });
           editButton.setOnClickListener(event -> {
-            editTextInput.setText(newContent);
+            editTextInput.setText(gameViewModel.getEditContent().toString());
             editButton.setVisibility(View.GONE);
             editTextInput.setVisibility(View.VISIBLE);
             doneButton.setVisibility(View.VISIBLE);
@@ -312,7 +314,11 @@ waitPlayerAction
               messageTextViewBox.setVisibility(View.VISIBLE);
               messageTextView.setVisibility(View.VISIBLE);
               doneButton.setVisibility(View.VISIBLE);
+              editTextInput.setText(gameViewModel.getEditContent());
+            //waitPlayerOptionLoop();
+
           }
+
         }
 
 
