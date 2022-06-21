@@ -288,13 +288,11 @@ waitPlayerAction
           editTextInput.setVisibility(View.GONE);
 
           doneButton.setOnClickListener(event -> {
-              gameViewModel.setEditContent(editTextInput.getText().toString());
 
             messageTextViewBox.setVisibility(View.GONE);
             messageTextView.setVisibility(View.GONE);
             doneButton.setVisibility(View.GONE);
             editTextInput.setVisibility(View.GONE);
-            gameViewModel.setIsShowingEdit(false);
             Toast.makeText(getApplicationContext(), "Completed", Toast.LENGTH_SHORT).show();
             FIRST_RUN = false;
             continueGame = true;

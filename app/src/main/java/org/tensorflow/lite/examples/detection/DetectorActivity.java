@@ -303,8 +303,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 if ((result.getConfidence() >= RECOGNIZED_CARD_CONFIDENCE && !gameViewModel.getRecognizedCards().contains(resultCard))||cardisAceAccepted){
                                     if (!oldResultCard.getTitle().equals(result.getTitle())){
                                         gameViewModel.setShowBar(true,resultCard.getTitle());
-                                        gameViewModel.setEditContent(resultCard.getTitle());
-                                        gameViewModel.setIsShowingEdit(true);
                                         //waitNSeconds(10);
                                         game.playGame(new Card(gameViewModel.getEditContent()));
                                         game.printBoard();

@@ -318,13 +318,14 @@ public class Game {
                 break;
 
             case DISPLAY_HIDDEN_CARD:
-                gameViewModel.setShowBar(true, "Display hidden card");
-                CameraActivity.waitPlayerOptionLoop();
+
                 System.out.println("************* ENTER DISPLAY_HIDDEN_CARD ********");
                 boolean hiddenCardCanBeDisplayed = false;
                 for (int i = 0; i < 7; i++) {
                     if(cardColumns[i].isEmpty() && hiddenCardsInColumns[i] != 0){
                         hiddenCardCanBeDisplayed = true;
+                        gameViewModel.setShowBar(true, "Display hidden card");
+                        CameraActivity.waitPlayerOptionLoop();
                     }
                 }
                 if(!hiddenCardCanBeDisplayed){
@@ -440,6 +441,37 @@ public class Game {
             }
             System.out.println();
         }
+    }
+
+    public static void fixCardsOnEditedCard(String editedCardTitle) {
+        String lastEditedCardTitle = editedCardTitle;
+        LinkedList<Card> cardsOnEditedCard = new LinkedList<Card>();
+        for (int j = 0; j < 7; j++) {
+            for (int k = 0; k < Game.cardColumns[j].size(); k++) {
+
+                if (((Card) Game.cardColumns[j].get(k)).getTitle().equals(lastEditedCardTitle)) {
+                    for (int h = k + 1; h < Game.cardColumns[j].size(); h++) {
+                        cardsOnEditedCard.add((Card) Game.cardColumns[j].get(h));
+                    }
+                    if (!Game.cardColumns[j].isEmpty())
+                        Game.cardColumns[j].removeAll(cardsOnEditedCard);
+                }
+
+            }
+        }
+        boolean hasAdded = false;
+        int emptyIndex = 0;
+        for (int j = 0; j < 7; j++) {
+            if (Game.cardColumns[j].isEmpty() && Game.hiddenCardsInColumns[j] > 0) {
+                hasAdded = true;
+                Game.cardColumns[j] = cardsOnEditedCard;
+                break;
+            } else if (Game.cardColumns[j].isEmpty()) {
+                emptyIndex = j;
+            }
+        }
+        if (!hasAdded)
+            Game.cardColumns[emptyIndex] = cardsOnEditedCard;
     }
 
     public void printMoves(){

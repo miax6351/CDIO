@@ -56,13 +56,6 @@ public class GameViewModel extends ViewModel {
 
     }
 
-    public void setIsShowingEdit(Boolean isShowingEdit){
-        this.isShowingEdit.postValue(isShowingEdit);
-    }
-
-    public void setEditContent(String editInputContent){
-        this.editInputContent = editInputContent;
-    }
 
 
     public String getSnackBarText(){
