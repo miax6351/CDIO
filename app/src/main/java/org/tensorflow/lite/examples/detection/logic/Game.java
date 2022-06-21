@@ -157,18 +157,26 @@ public class Game {
                     }
                     if (cardColumns[j].isEmpty() || (i == j))
                         continue;
-                    if(isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j){
+                    if((isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j)||isKingMovable((Card) cardColumns[i].getFirst())){
                         movingCard = (Card) cardColumns[i].getFirst();
-                        //for (int k = 0; k < 5; k++) {
-                        //waitNSeconds(1);
-                        gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
-                        CameraActivity.waitPlayerOptionLoop();
-                        System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
-                        cardMoves.add(movingCard.getTitle() + "-" + (j+1));
-                        //}
-                        cardColumns[j].addAll(cardColumns[i]);
-                        cardColumns[i].clear();
-                        NEWEST_EMPTY_COLUMN = i;
+                        if(emptyColoumn!=-1){
+                            cardColumns[emptyColoumn].addAll(cardColumns[i]);
+                            cardColumns[i].clear();
+                            emptyColoumn = -1;
+
+                        }
+                        else {
+                            //for (int k = 0; k < 5; k++) {
+                            //waitNSeconds(1);
+                            gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
+                            CameraActivity.waitPlayerOptionLoop();
+                            System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
+                            cardMoves.add(movingCard.getTitle() + "-" + (j + 1));
+                            //}
+                            cardColumns[j].addAll(cardColumns[i]);
+                            cardColumns[i].clear();
+                            NEWEST_EMPTY_COLUMN = i;
+                        }
                         return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                     }
                 }
