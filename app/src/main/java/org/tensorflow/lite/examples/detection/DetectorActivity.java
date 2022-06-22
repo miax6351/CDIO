@@ -34,10 +34,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -64,6 +66,8 @@ import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
  * objects.
  */
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
+
+
     private static final Logger LOGGER = new Logger();
 
     private Card oldResultCard = new Card("");
@@ -155,6 +159,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 });
 
         tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
+        game = new Game();
     }
 
     protected void updateActiveModel() {

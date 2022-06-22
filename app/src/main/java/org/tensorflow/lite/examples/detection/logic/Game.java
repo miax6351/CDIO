@@ -55,6 +55,16 @@ public class Game {
 
     }
 
+    public void loadGame() {
+        CameraActivity.gameViewModel.loadRecognizedCards();
+        LinkedList<Card> temp = (LinkedList<Card>) gameViewModel.getLoadedCards();
+        for (Card c : temp
+        ) {
+            playGame(c);
+        }
+        gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+    }
+
     public void initializeCardColumns() {
         if (cardColumns == null) {
             cardColumns = new LinkedList[7];

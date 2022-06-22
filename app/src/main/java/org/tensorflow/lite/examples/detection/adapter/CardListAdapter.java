@@ -113,7 +113,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageButton cardSuit;
         private final Button cardRank;
-
         public ViewHolder(View view) {
             super(view);
 

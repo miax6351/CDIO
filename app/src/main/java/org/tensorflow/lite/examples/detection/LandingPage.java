@@ -13,6 +13,7 @@ public class LandingPage extends AppCompatActivity {
 
     Button switchToDetector;
     Button popUpButton;
+    Button loadGameButton;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
@@ -22,6 +23,15 @@ public class LandingPage extends AppCompatActivity {
         setContentView(R.layout.activity_landing_page);
 
         switchToDetector = findViewById(R.id.LandingEnterButton);
+        loadGameButton = findViewById(R.id.LandingLoadButton);
+
+        loadGameButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                switchActivities(true);
+            }
+        });
 
         switchToDetector.setOnClickListener(new View.OnClickListener(){
 
@@ -35,8 +45,9 @@ public class LandingPage extends AppCompatActivity {
     }
 
 
-    private void switchActivities(){
+    private void switchActivities(boolean load){
         Intent switchActivityIntent = new Intent(this, DetectorActivity.class);
+        switchActivityIntent.putExtra("load", load);
         startActivity(switchActivityIntent);
     }
 
@@ -59,7 +70,7 @@ public class LandingPage extends AppCompatActivity {
             public void onClick(View view) {
 
                 dialog.dismiss();
-                switchActivities();
+                switchActivities(false);
             }
         });
 
