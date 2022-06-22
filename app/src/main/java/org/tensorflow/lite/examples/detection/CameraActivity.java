@@ -95,7 +95,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private boolean isProcessingFrame = false;
   private byte[][] yuvBytes = new byte[3][];
   private int[] rgbBytes = null;
-  private boolean load;
+  public static boolean load;
   private int yRowStride;
   protected int defaultModelIndex = 0;
   protected int defaultDeviceIndex = 0;
@@ -137,7 +137,7 @@ waitPlayerAction
   private Snackbar snackbar;
   public static Boolean continueGame =true;
 
-  private boolean FIRST_RUN;
+  public static boolean FIRST_RUN;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -157,19 +157,15 @@ waitPlayerAction
     }
 
     FIRST_RUN = true;
+    load = getIntent().getBooleanExtra("load", false);
     gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
     game = new Game();
     System.out.println("gameViewModel is initialized");
 
 
-    load = getIntent().getBooleanExtra("load", false);
 
     if (load) {
       game.loadGame();
-    }else{
-      CameraActivity.gameViewModel.addRecognizedCard(new Card("6h"));
-      CameraActivity.gameViewModel.addRecognizedCard(new Card("3h"));
-      CameraActivity.gameViewModel.addRecognizedCard(new Card("2h"));
     }
 
     // cardSuit in recyclerview (bottom sheet)
