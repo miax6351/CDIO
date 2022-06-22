@@ -358,6 +358,7 @@ public class TestGameTest {
 
         //gruppe 6
         //insertList = Stream.of(t.d6,t.d9,t.h7,t.c5,t.d4,t.c9,t.ha,t.cj,t.c6,t.ca,t.h2,t.s10,t.dk,t.dq,t.s3,t.sk,t.s7,t.c3,t.sa,t.c8,t.h4,t.d10,t.c2,t.d8,t.ck,t.h3,t.dj,t.s4,t.da,t.h8,t.h6,t.s2,t.d3,t.hj,t.hq,t.d2,t.s8,t.c4,t.s5,t.sj,t.hk,t.cq,t.s9,t.s6,t.sq,t.c10,t.c7,t.h10,t.h5,t.d7,t.d5,t.h9).collect(Collectors.toList());
+
         Collections.reverse(insertList);
        /* for (Card card : insertList){
             System.out.print(card.getTitle() + " ");
