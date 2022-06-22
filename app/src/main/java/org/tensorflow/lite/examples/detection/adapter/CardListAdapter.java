@@ -155,11 +155,10 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Game.fixCardsOnEditedCard(dataset.remove(viewHolder.getAdapterPosition()).getTitle());
+                Game.fixCardsOnEditedCard(dataset.get(viewHolder.getAdapterPosition()).getTitle());
                 Game.recognizedCards.remove(viewHolder.getAdapterPosition());
                 dataset.remove(viewHolder.getAdapterPosition());
                 notifyItemRemoved(viewHolder.getAdapterPosition());
-
             }
         });
 
@@ -178,6 +177,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
 
     }
+
 
     @Override
     public int getItemCount() {
