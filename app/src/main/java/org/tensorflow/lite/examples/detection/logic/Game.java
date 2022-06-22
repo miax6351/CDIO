@@ -326,7 +326,6 @@ public class Game {
             case ANALYZE_CARD_MOVE:
                 System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
                 gameState = handleCheckShownCards();
-                playGame(resultCard);
                 break;
 
             case DISPLAY_HIDDEN_CARD:
@@ -343,7 +342,6 @@ public class Game {
                     gameViewModel.setShowBar(true, "Film talon card");
                     CameraActivity.waitPlayerOptionLoop();
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                    playGame(resultCard);
                     break;
                 }
 
@@ -361,7 +359,6 @@ public class Game {
                             cardColumns[NEWEST_EMPTY_COLUMN].add(resultCard);
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                             NEWEST_EMPTY_COLUMN = -1;
-                            playGame(resultCard);
                             return;
 
                         }
@@ -423,10 +420,8 @@ public class Game {
                         gameViewModel.setShowBar(true,resultCard.getTitle() + " cannot be used anywhere, pick 3 new cards.");
                         recognizedCards.remove(resultCard);
                         CameraActivity.waitPlayerOptionLoop();
-                        playGame(resultCard);
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
-                        playGame(resultCard);
                     }
                 }
                 break;
