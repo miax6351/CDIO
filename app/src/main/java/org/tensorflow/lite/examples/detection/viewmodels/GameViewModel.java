@@ -47,6 +47,9 @@ public class GameViewModel extends ViewModel {
     }
 
     public void setShowBar(Boolean isShow, String content){
+        if (this.content.equals(content)){
+            return;
+        }
         CameraActivity.waitNSeconds(3);
         this.isShowing.postValue(isShow);
         this.content.postValue(content);

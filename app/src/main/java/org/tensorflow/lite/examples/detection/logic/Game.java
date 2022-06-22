@@ -113,14 +113,17 @@ public class Game {
     }
 
     public static Boolean isKingMovable(Card card){
-        if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
-            for (int i = 0; i < 7; i++){
-                //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
-                //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
-                //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
-                if (cardColumns[i].isEmpty()){
-                    emptyColoumn = i;
-                    return true;
+        if (!card.getLockedPosition()) {
+
+            if (card.getTitle().equals("Kh") || card.getTitle().equals("Kd") || card.getTitle().equals("Kc") || card.getTitle().equals("Ks")) {
+                for (int i = 0; i < 7; i++) {
+                    //Så denne funktion bliver kaldt konstant hvilket betyder at den fylder alle de tomme rækker ud
+                    //med en konge så hvis række 1 og 2 er tomme bliver den fyldt med to gange kh.
+                    //hovedfunktionen tjekker alle rækker i gennem så den bliver basically kaldt 7 gange i træk.
+                    if (cardColumns[i].isEmpty()) {
+                        emptyColoumn = i;
+                        return true;
+                    }
                 }
             }
         }
@@ -157,18 +160,34 @@ public class Game {
                     }
                     if (cardColumns[j].isEmpty() || (i == j))
                         continue;
-                    if(isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j){
+                    if((isCardCanBeUsed((Card) cardColumns[j].getLast(),(Card) cardColumns[i].getFirst()) && i!=j)||isKingMovable((Card) cardColumns[i].getFirst())){
                         movingCard = (Card) cardColumns[i].getFirst();
-                        //for (int k = 0; k < 5; k++) {
-                        //waitNSeconds(1);
-                        gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
-                        CameraActivity.waitPlayerOptionLoop();
-                        System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
-                        cardMoves.add(movingCard.getTitle() + "-" + (j+1));
-                        //}
-                        cardColumns[j].addAll(cardColumns[i]);
-                        cardColumns[i].clear();
-                        NEWEST_EMPTY_COLUMN = i;
+                        if(emptyColoumn!=-1){
+                            cardColumns[emptyColoumn].addAll(cardColumns[i]);
+                            ((Card) cardColumns[i].getFirst()).setLockedPosition(true);
+                            NEWEST_EMPTY_COLUMN = i;
+                            gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
+                            CameraActivity.waitPlayerOptionLoop();
+                            System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
+                            cardColumns[i].clear();
+                            emptyColoumn = -1;
+
+                        }else{
+                            movingCard = (Card) cardColumns[i].getFirst();
+                            //for (int k = 0; k < 5; k++) {
+                            //waitNSeconds(1);
+                            gameViewModel.setShowBar(true, "Move " + movingCard.getTitle() + " to " + ((Card) cardColumns[j].getLast()).getTitle());
+                            CameraActivity.waitPlayerOptionLoop();
+
+                            System.out.println("***************** CARD " + movingCard.getTitle() + " CAN BE MOVED TO " + ((Card) cardColumns[j].getLast()).getTitle() + " ************");
+                            //MyResult myResult = new MyResult(movingCard, ((Card) cardColumns[j].getLast()));
+                            cardMoves.add(movingCard.getTitle() + "-" + (j + 1));
+
+                            //}
+                            cardColumns[j].addAll(cardColumns[i]);
+                            cardColumns[i].clear();
+                            NEWEST_EMPTY_COLUMN = i;
+                        }
                         return SOLITARE_STATES.DISPLAY_HIDDEN_CARD;
                     }
                 }
@@ -307,6 +326,7 @@ public class Game {
             case ANALYZE_CARD_MOVE:
                 System.out.println("************* ENTER ANALYZE_CARD_MOVE_PHASE");
                 gameState = handleCheckShownCards();
+                playGame(resultCard);
                 break;
 
             case DISPLAY_HIDDEN_CARD:
@@ -323,6 +343,7 @@ public class Game {
                     gameViewModel.setShowBar(true, "Pick up new card from deck!");
                     CameraActivity.waitPlayerOptionLoop();
                     gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                    playGame(resultCard);
                     break;
                 }
 
@@ -340,6 +361,7 @@ public class Game {
                             cardColumns[NEWEST_EMPTY_COLUMN].add(resultCard);
                             gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
                             NEWEST_EMPTY_COLUMN = -1;
+                            playGame(resultCard);
                             return;
 
                         }
@@ -385,6 +407,7 @@ public class Game {
                                 gameViewModel.setShowBar(true,"Move new card: " + resultCard.getTitle() +" to " + "empty columnn");
                                 CameraActivity.waitPlayerOptionLoop();
                                 System.out.println("------ new card " + resultCard.getTitle() + " can be moved to " + "empty columnn" + "----------------------");
+                                resultCard.setLockedPosition(true);
 
                                 emptyColoumn = -1;
                                 cardCanBeUsed = true;
@@ -400,8 +423,10 @@ public class Game {
                         gameViewModel.setShowBar(true,resultCard.getTitle() + " cannot be used anywhere, pick a new card.");
                         recognizedCards.remove(resultCard);
                         CameraActivity.waitPlayerOptionLoop();
+                        playGame(resultCard);
                     }else{
                         gameState = SOLITARE_STATES.ANALYZE_CARD_MOVE;
+                        playGame(resultCard);
                     }
                 }
                 break;
