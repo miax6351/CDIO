@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
+import org.tensorflow.lite.examples.detection.logic.Card;
 import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
@@ -85,6 +86,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final String ASSET_PATH = "";
   protected int previewWidth = 0;
   protected int previewHeight = 0;
+  public static Context context;
   private boolean debug = false;
   public static RecyclerView cardSuit;
   protected Handler handler;
@@ -93,6 +95,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private boolean isProcessingFrame = false;
   private byte[][] yuvBytes = new byte[3][];
   private int[] rgbBytes = null;
+  public static boolean load;
   private int yRowStride;
   protected int defaultModelIndex = 0;
   protected int defaultDeviceIndex = 0;
@@ -132,9 +135,9 @@ public abstract class CameraActivity extends AppCompatActivity
 waitPlayerAction
  */
   private Snackbar snackbar;
-  public static Boolean continueGame;
+  public static Boolean continueGame =true;
 
-  private boolean FIRST_RUN;
+  public static boolean FIRST_RUN;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -144,6 +147,7 @@ waitPlayerAction
     setContentView(R.layout.tfe_od_activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    context = this;
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     if (hasPermission()) {
@@ -153,9 +157,17 @@ waitPlayerAction
     }
 
     FIRST_RUN = true;
+    load = getIntent().getBooleanExtra("load", false);
     gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
     game = new Game();
     System.out.println("gameViewModel is initialized");
+
+
+
+    if (load) {
+      game.loadGame();
+    }
+
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
     cardSuit.setLayoutManager(new LinearLayoutManager(this));
@@ -274,6 +286,7 @@ waitPlayerAction
     final Observer<String> snackbarContentObserver = new Observer<String>() {
       @Override
       public void onChanged(@Nullable final String newContent) {
+
         // Update the UI, in this case, a TextView.
         if (FIRST_RUN) {
           messageTextViewBox = findViewById(R.id.messageTextViewBox);
@@ -298,7 +311,7 @@ waitPlayerAction
             continueGame = true;
           });
           editButton.setOnClickListener(event -> {
-            editTextInput.setText(newContent);
+            editTextInput.setText(gameViewModel.getEditContent().toString());
             editButton.setVisibility(View.GONE);
             editTextInput.setVisibility(View.VISIBLE);
             doneButton.setVisibility(View.VISIBLE);
@@ -312,7 +325,11 @@ waitPlayerAction
               messageTextViewBox.setVisibility(View.VISIBLE);
               messageTextView.setVisibility(View.VISIBLE);
               doneButton.setVisibility(View.VISIBLE);
+              editTextInput.setText(gameViewModel.getEditContent());
+            //waitPlayerOptionLoop();
+
           }
+
         }
 
 

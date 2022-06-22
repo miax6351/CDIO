@@ -97,20 +97,16 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                 }).setPositiveButton("ja", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         if (suit) {
                             dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
                         } else {
                             dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
                         }
                         notifyItemChanged(index);
-
-
                     }
                 }).setNegativeButton("nej", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                     }
                 });*/
         return builder.create();

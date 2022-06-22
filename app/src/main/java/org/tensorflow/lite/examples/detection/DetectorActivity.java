@@ -34,10 +34,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -64,18 +66,21 @@ import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
  * objects.
  */
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
+
+
     private static final Logger LOGGER = new Logger();
 
+    private Card oldResultCard = new Card("");
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
     private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     //confidence level where the card recognized is accepted. To avoid wrong recognition
     private static final float RECOGNIZED_CARD_CONFIDENCE = 0.9f;
     private static final float RECOGNIZED_SPADES_CONFIDENCE = 0.80f;
+    private static boolean isSpades = false;
     private static final boolean MAINTAIN_ASPECT = true;
     private static final Size DESIRED_PREVIEW_SIZE = new Size(200, 640);
     private static final boolean SAVE_PREVIEW_BITMAP = false;
     private static final float TEXT_SIZE_DIP = 10;
-    private static boolean isSpades = false;
     OverlayView trackingOverlay;
     private Integer sensorOrientation;
 
@@ -128,9 +133,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         previewHeight = size.getHeight();
 
         sensorOrientation = rotation - getScreenOrientation();
-        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
-        LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
         rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
         croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Config.ARGB_8888);
 
@@ -156,6 +159,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 });
 
         tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
+        game = new Game();
     }
 
     protected void updateActiveModel() {
@@ -259,12 +263,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 new Runnable() {
                     @Override
                     public void run() {
-                        LOGGER.i("Running detection on image " + currTimestamp);
                         final long startTime = SystemClock.uptimeMillis();
                         final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
                         lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
 
-                        Log.e("CHECK", "run: " + results.size());
 
                         cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
                         final Canvas canvas = new Canvas(cropCopyBitmap);
@@ -296,7 +298,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                                 /*
                                 GAME LOGIC
                                  */
-
                                 if (result.getTitle().trim().charAt(0) == 'A'){
                                     isSpades = true;
                                 }
@@ -319,6 +320,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
                             }
                         }
+
 
                         tracker.trackResults(mappedRecognitions, currTimestamp);
                         trackingOverlay.postInvalidate();
