@@ -13,15 +13,12 @@ import android.widget.ImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import org.tensorflow.lite.examples.detection.DetectorActivity;
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
-import org.tensorflow.lite.examples.detection.logic.CardEditor;
 import org.tensorflow.lite.examples.detection.logic.Game;
 import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -40,7 +37,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
 
 
-    public synchronized Dialog CreateDialog(int index, int arrayID, boolean suit) {
+    public Dialog CreateDialog(int index, int arrayID, boolean suit) {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -51,34 +48,45 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
             public void onClick(DialogInterface dialogInterface, int i) {
                 choice[0] = i;
                 if (suit) {
-                    CardEditor.EditCard(Game.cardColumns, dataset.get(index), context.getResources().getStringArray(R.array.suitsText)[choice[0]], true);
                     dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
                 } else {
-                    CardEditor.EditCard(Game.cardColumns,dataset.get(index), context.getResources().getStringArray(arrayID)[choice[0]], false);
                     dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
                 }
                 notifyItemChanged(index);
                 dialogInterface.dismiss();
-                Game.fixCardsOnEditedCard(dataset.get(index).getTitle());
 
 
-            }
-        });
+                String lastEditedCardTitle = dataset.get(index).getTitle();
+                LinkedList<Card> cardsOnEditedCard = new LinkedList<Card>();
+                for (int j = 0; j < 7; j++) {
+                    for (int k = 0; k < Game.cardColumns[j].size(); k++) {
 
-              /*  String lastCardUsedTitle = dataset.get(index).getTitle();
-
-                for (int i = 0; i < Game.cardColumns.length-1; i++) {
-                for (int j = 0; j < Game.cardColumns[i].size()-1; j++) {
-                    if( ((Card) Game.cardColumns[i].get(j)).getTitle().equals(lastCardUsedTitle)){
-                        ArrayList<Card> listOfCardsAfter = new ArrayList<>();
-                        for (int k = j+1; k < Game.cardColumns[placement].size()-1; k++) {
-                            listOfCardsAfter.add((Card) Game.cardColumns[placement].get(k));
+                        if (((Card) Game.cardColumns[j].get(k)).getTitle().equals(lastEditedCardTitle)) {
+                            for (int h = k + 1; h < Game.cardColumns[j].size(); h++) {
+                                cardsOnEditedCard.add((Card) Game.cardColumns[j].get(h));
+                            }
+                            if(!Game.cardColumns[j].isEmpty())
+                                Game.cardColumns[j].removeAll(cardsOnEditedCard);
                         }
 
-                        break;
                     }
                 }
-                }*/
+                boolean hasAdded = false;
+                int emptyIndex = 0;
+                for (int j = 0; j < 7; j++) {
+                    if(Game.cardColumns[j].isEmpty() && Game.hiddenCardsInColumns[j] > 0) {
+                        hasAdded = true;
+                        Game.cardColumns[j] = cardsOnEditedCard;
+                        break;
+                    }
+                    else if(Game.cardColumns[j].isEmpty()) {
+                        emptyIndex = j;
+                    }
+                }
+                if(!hasAdded)
+                    Game.cardColumns[emptyIndex] = cardsOnEditedCard;
+            }
+        });
 
        /* builder
                 .setSingleChoiceItems(arrayID, 0, new DialogInterface.OnClickListener() {
@@ -89,20 +97,16 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                 }).setPositiveButton("ja", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         if (suit) {
                             dataset.get(index).fixSuit(context.getResources().getStringArray(R.array.suitsText)[choice[0]]);
                         } else {
                             dataset.get(index).fixRank(context.getResources().getStringArray(arrayID)[choice[0]]);
                         }
                         notifyItemChanged(index);
-
-
                     }
                 }).setNegativeButton("nej", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                     }
                 });*/
         return builder.create();
@@ -113,6 +117,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageButton cardSuit;
         private final Button cardRank;
+
         public ViewHolder(View view) {
             super(view);
 
@@ -155,7 +160,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Game.fixCardsOnEditedCard(dataset.get(viewHolder.getAdapterPosition()).getTitle());
                 Game.recognizedCards.remove(viewHolder.getAdapterPosition());
                 dataset.remove(viewHolder.getAdapterPosition());
                 notifyItemRemoved(viewHolder.getAdapterPosition());
@@ -177,7 +181,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
 
     }
-
 
     @Override
     public int getItemCount() {

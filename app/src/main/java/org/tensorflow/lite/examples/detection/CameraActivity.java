@@ -286,7 +286,6 @@ waitPlayerAction
     final Observer<String> snackbarContentObserver = new Observer<String>() {
       @Override
       public void onChanged(@Nullable final String newContent) {
-        System.out.println(Thread.activeCount());
 
         // Update the UI, in this case, a TextView.
         if (FIRST_RUN) {
