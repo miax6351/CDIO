@@ -68,6 +68,7 @@ public class GameViewModel extends ViewModel {
         state.setRecognizedCards(recognizedCards);
         stateDao.updateState(state);
     }
+
     public void removeRecognizedCard(Card card){
         recognizedCards.remove(card);
     }
