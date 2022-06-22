@@ -14,9 +14,6 @@ public interface GameStateDao {
     @Query("SELECT * FROM GameState WHERE id == :gameId")
     GameState getRecognizedCards(int gameId);
 
-    @Insert
-    void insertAll(GameState... states);
-
     @Update
     void updateState(GameState... states);
 
