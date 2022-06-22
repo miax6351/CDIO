@@ -9,29 +9,36 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hamsa.twosteppickerdialog.TwoStepPickerDialog;
+import org.tensorflow.lite.examples.detection.CameraActivity;
+import org.tensorflow.lite.examples.detection.DetectorActivity;
+
 
 import org.tensorflow.lite.examples.detection.R;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHolder> {
 
+    private GameViewModel gameViewModel;
     private LinkedList<Card> dataset;
     private Context context;
 
-    public CardListAdapter(LinkedList dataset, Context context) {
-        this.dataset = dataset;
+    public CardListAdapter(GameViewModel gameViewModel, Context context) {
         this.context = context;
+        this.gameViewModel = gameViewModel;
+        this.dataset = gameViewModel.getRecognizedCards();
     }
 
 
@@ -114,7 +121,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
         Card card = dataset.get(position);
 
-
         if (Objects.equals(card.getSuit(), "h")) {
             viewHolder.cardSuit.setImageResource(R.drawable.heart);
         } else if (Objects.equals(card.getSuit(), "c")) {
@@ -135,6 +141,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         viewHolder.itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DetectorActivity.recognizedCards.remove(viewHolder.getAdapterPosition());
                 dataset.remove(viewHolder.getAdapterPosition());
                 notifyItemRemoved(viewHolder.getAdapterPosition());
             }

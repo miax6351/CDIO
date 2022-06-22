@@ -40,6 +40,7 @@ import android.os.Trace;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,12 +68,14 @@ import org.tensorflow.lite.examples.detection.adapter.CardListAdapter;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.logic.Card;
+import org.tensorflow.lite.examples.detection.viewmodels.GameViewModel;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
 //        CompoundButton.OnCheckedChangeListener,
         View.OnClickListener {
+
   private static final Logger LOGGER = new Logger();
 
   private static final int PERMISSIONS_REQUEST = 1;
@@ -82,7 +85,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected int previewWidth = 0;
   protected int previewHeight = 0;
   private boolean debug = false;
-  public RecyclerView cardSuit;
+  public static RecyclerView cardSuit;
   protected Handler handler;
   private HandlerThread handlerThread;
   private boolean useCamera2API;
@@ -113,13 +116,13 @@ public abstract class CameraActivity extends AppCompatActivity
 
   ArrayList<String> deviceStrings = new ArrayList<String>();
 
+  protected GameViewModel gameViewModel;
+
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
     super.onCreate(null);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
     setContentView(R.layout.tfe_od_activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -131,19 +134,20 @@ public abstract class CameraActivity extends AppCompatActivity
       requestPermission();
     }
 
-    recognizedCards.add(new Card("5h"));
-    recognizedCards.add(new Card("10s"));
-    recognizedCards.add(new Card("3s"));
-    recognizedCards.add(new Card("8h"));
-    recognizedCards.add(new Card("2d"));
-    recognizedCards.add(new Card("9c"));
 
+
+
+
+
+    gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+    System.out.println("gameViewModel is initialized");
     // cardSuit in recyclerview (bottom sheet)
     cardSuit = findViewById(R.id.recycler_view_card_list);
-    // cardSuit.setLayoutManager(new LinearLayoutManager(this));
-    CardListAdapter adapter = new CardListAdapter(recognizedCards,this);
+    cardSuit.setLayoutManager(new LinearLayoutManager(this));
+    CardListAdapter adapter = new CardListAdapter(gameViewModel,this);
     adapter.getItemCount();
     cardSuit.setAdapter(adapter);
+
 
   /*  // cardRank in recyclerview (bottom sheet)
     RecyclerView cardRank = findViewById(R.id.textView_card_rank);
@@ -212,7 +216,7 @@ public abstract class CameraActivity extends AppCompatActivity
             int height = gestureLayout.getMeasuredHeight();
 
             //TODO change this?
-            sheetBehavior.setPeekHeight(200);
+            sheetBehavior.setPeekHeight(300);
           }
         });
     sheetBehavior.setHideable(false);
