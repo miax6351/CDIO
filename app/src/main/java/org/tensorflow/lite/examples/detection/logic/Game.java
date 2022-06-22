@@ -414,6 +414,37 @@ public class Game {
         hiddenCardsInColumns[column]--;
     }
 
+    public static void fixCardsOnEditedCard(String editedCardTitle) {
+        String lastEditedCardTitle = editedCardTitle;
+        LinkedList<Card> cardsOnEditedCard = new LinkedList<Card>();
+        for (int j = 0; j < 7; j++) {
+            for (int k = 0; k < Game.cardColumns[j].size(); k++) {
+
+                if (((Card) Game.cardColumns[j].get(k)).getTitle().equals(lastEditedCardTitle)) {
+                    for (int h = k + 1; h < Game.cardColumns[j].size(); h++) {
+                        cardsOnEditedCard.add((Card) Game.cardColumns[j].get(h));
+                    }
+                    if (!Game.cardColumns[j].isEmpty())
+                        Game.cardColumns[j].removeAll(cardsOnEditedCard);
+                }
+
+            }
+        }
+        boolean hasAdded = false;
+        int emptyIndex = 0;
+        for (int j = 0; j < 7; j++) {
+            if (Game.cardColumns[j].isEmpty() && Game.hiddenCardsInColumns[j] > 0) {
+                hasAdded = true;
+                Game.cardColumns[j] = cardsOnEditedCard;
+                break;
+            } else if (Game.cardColumns[j].isEmpty()) {
+                emptyIndex = j;
+            }
+        }
+        if (!hasAdded)
+            Game.cardColumns[emptyIndex] = cardsOnEditedCard;
+    }
+
     public void printBoard(){
         int biggestRow = 0;
 
